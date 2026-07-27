@@ -1,0 +1,41 @@
+#!/bin/sh
+ENABLED=yes
+PROCS=qwdtt
+ARGS="-config /opt/etc/qwdtt/config.json"
+PREARGS=""
+DESC="$PROCS"
+PATH=/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin
+if [ "$1" = "delete" ]; then
+	# Stop the service before removing its network state.
+	"$0" stop >/dev/null 2>&1 || true
+
+	CFG=/opt/etc/qwdtt/config.json
+	NETWORK=10.66.0.0/16
+	WAN=br0
+	if [ -f "$CFG" ]; then
+		VALUE=$(sed -n 's/.*"network"[[:space:]]*:[[:space:]]*"\([^" ]*\)".*/\1/p' "$CFG" | head -n 1)
+		[ -n "$VALUE" ] && NETWORK=$VALUE
+		VALUE=$(sed -n 's/.*"wan"[[:space:]]*:[[:space:]]*"\([^" ]*\)".*/\1/p' "$CFG" | head -n 1)
+		[ -n "$VALUE" ] && WAN=$VALUE
+	fi
+
+	iptables -D INPUT -i wdtt0 -j ACCEPT 2>/dev/null || true
+	iptables -D INPUT -i wdtt0 -j QWDTT_PROFILE_IN 2>/dev/null || true
+	iptables -D FORWARD -i wdtt0 -j QWDTT_PROFILE_FWD 2>/dev/null || true
+	iptables -F QWDTT_PROFILE_IN 2>/dev/null || true
+	iptables -F QWDTT_PROFILE_FWD 2>/dev/null || true
+	iptables -X QWDTT_PROFILE_IN 2>/dev/null || true
+	iptables -X QWDTT_PROFILE_FWD 2>/dev/null || true
+	iptables -D FORWARD -i wdtt0 -j ACCEPT 2>/dev/null || true
+	iptables -D FORWARD -o wdtt0 -j ACCEPT 2>/dev/null || true
+	iptables -t nat -D POSTROUTING -s "$NETWORK" -o "$WAN" -j MASQUERADE 2>/dev/null || true
+	[ "$WAN" = "br0" ] || iptables -t nat -D POSTROUTING -s "$NETWORK" -o br0 -j MASQUERADE 2>/dev/null || true
+	rm -f /opt/etc/ndm/netfilter.d/60-qwdtt-netfilter.sh
+	ip link del wdtt0 2>/dev/null || true
+	opkg remove qwdtt >/dev/null 2>&1 || true
+	rm -rf /opt/etc/qwdtt
+	rm -f /opt/bin/qwdtt "$0"
+	exit 0
+fi
+
+. /opt/etc/init.d/rc.func

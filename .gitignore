@@ -1,0 +1,19 @@
+# Go build/cache artifacts
+.gocache*/
+.gomodcache*/
+*.test
+*.out
+
+# Local IDE settings
+.vscode/
+.idea/
+
+# Generated binaries and Entware packages
+dist/
+*.ipk
+
+# Local secrets and runtime configuration
+*.local.json
+config.local.json
+server.key
+server.pub

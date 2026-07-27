@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "mode": "server",
+  "dataDir": "/opt/etc/qwdtt",
+  "webListen": "0.0.0.0:8088",
+  "server": {"publicHost":"127.0.0.1","listenAddr":"0.0.0.0:56000","dtlsPort":56000,"wgPort":56001,"password":"qwerty1234","network":"10.66.66.0/24","vkHash":""},
+  "routing": {"mode":"all","interface":"wdtt0","wan":"br0","clients":[],"networks":[]}
+}

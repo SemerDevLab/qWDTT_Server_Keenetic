@@ -1,0 +1,1251 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090d18">
+<title>qWDTT Control</title>
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#090d18;--surface:#101625;--surface-2:#151d2f;--surface-3:#1a2438;
+  --line:#222e45;--line-soft:#1a2436;--text:#f5f7fc;--muted:#8d9bb5;
+  --primary:#7c6cff;--primary-2:#9a8cff;--cyan:#42d6c5;--green:#43d68c;
+  --red:#ff6680;--yellow:#f4bd62;--shadow:0 24px 60px rgba(0,0,0,.28);
+  --radius:18px;--radius-sm:12px
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{margin:0;min-height:100vh;color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:
+ radial-gradient(circle at 82% -12%,rgba(124,108,255,.16),transparent 30rem),
+ radial-gradient(circle at 8% 100%,rgba(66,214,197,.07),transparent 26rem),var(--bg)}
+button,input,select{font:inherit}
+button{color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--primary-2);outline-offset:2px}
+.shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;padding:24px 18px;border-right:1px solid var(--line-soft);background:rgba(10,14,25,.8);backdrop-filter:blur(18px);z-index:20}
+.brand{display:flex;align-items:center;gap:12px;padding:3px 8px 27px}
+.brand-mark{position:relative;width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,var(--primary-2),#6254ed);box-shadow:0 10px 26px rgba(124,108,255,.3)}
+.brand-mark:before,.brand-mark:after{content:"";position:absolute;border:2px solid white;border-radius:50%}
+.brand-mark:before{inset:9px}.brand-mark:after{inset:15px;background:#fff}
+.brand strong{display:block;font-size:17px;letter-spacing:-.02em}.brand span{display:block;color:var(--muted);font-size:11px}
+.nav{display:grid;gap:5px}.nav-button{display:flex;align-items:center;gap:11px;width:100%;padding:11px 12px;border:0;border-radius:11px;background:transparent;color:var(--muted);cursor:pointer;text-align:left;transition:.18s ease}
+.nav-button:hover{background:var(--surface-2);color:var(--text)}.nav-button.active{color:#fff;background:linear-gradient(90deg,rgba(124,108,255,.2),rgba(124,108,255,.07));box-shadow:none}
+.nav-button svg{width:19px;height:19px;flex:none}.nav-button span{font-weight:650}
+.sidebar-foot{position:absolute;left:18px;right:18px;bottom:22px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.mini-status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.mini-status b{display:block;color:var(--text);font-size:13px}.top-version{margin:0 2px;color:#71809b;font-size:10px;white-space:nowrap}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#59657a;box-shadow:0 0 0 5px rgba(89,101,122,.1);transition:.2s}
+.status-dot.on{background:var(--green);box-shadow:0 0 0 5px rgba(67,214,140,.12),0 0 16px rgba(67,214,140,.5)}
+.main{min-width:0;padding:0 34px 40px}
+.topbar{height:86px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.title h1{font-size:23px;line-height:1.2;letter-spacing:-.035em;margin:0}.title p{color:var(--muted);margin:4px 0 0;font-size:12px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.connection-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(16,22,37,.8);color:var(--muted);font-size:12px}
+.view{display:none;max-width:1200px;margin:0 auto}.view.active{display:block;animation:enter .22s ease}
+@keyframes enter{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.hero{position:relative;overflow:hidden;padding:28px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,rgba(25,34,54,.97),rgba(13,19,33,.97));box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:320px;height:320px;right:-150px;top:-180px;border-radius:50%;background:var(--primary);filter:blur(70px);opacity:.17;pointer-events:none}
+.eyebrow{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.hero-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hero-traffic{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:100%;margin-top:20px}
+.hero-traffic-item{position:relative;overflow:hidden;min-height:104px;padding:18px 20px;border:1px solid rgba(123,141,176,.2);border-radius:19px;background:linear-gradient(145deg,rgba(20,29,47,.78),rgba(8,13,24,.58));box-shadow:inset 0 1px rgba(255,255,255,.025),0 8px 22px rgba(0,0,0,.1)}
+.hero-traffic-label{display:flex;align-items:center;gap:7px;color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.hero-traffic-label svg{width:15px;height:15px}.hero-traffic-item.down .hero-traffic-label{color:#60c9ff}.hero-traffic-item.up .hero-traffic-label{color:#aa92ff}.hero-traffic-item.total .hero-traffic-label{color:var(--green)}
+.hero-traffic-value{display:block;margin-top:9px;font-size:25px;font-weight:780;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:9px 15px;border:1px solid transparent;border-radius:11px;background:linear-gradient(135deg,var(--primary),#6758ee);color:#fff;font-weight:750;cursor:pointer;box-shadow:0 9px 24px rgba(124,108,255,.18);transition:.18s ease}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06)}.btn:active{transform:none}.btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.btn.secondary{background:var(--surface-3);border-color:var(--line);box-shadow:none}.btn.ghost{background:transparent;border-color:var(--line);box-shadow:none;color:var(--muted)}.btn.danger{background:rgba(255,102,128,.1);border-color:rgba(255,102,128,.22);color:#ff91a4;box-shadow:none}.btn.small{min-height:34px;padding:7px 11px;font-size:12px}
+.btn svg{width:17px;height:17px}
+.grid{display:grid;gap:16px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:17px}
+.card{border:1px solid var(--line);border-radius:var(--radius);background:rgba(16,22,37,.86);box-shadow:0 12px 34px rgba(0,0,0,.12)}
+.metric{padding:18px}.metric-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:12px}.metric-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:rgba(124,108,255,.1);color:var(--primary-2)}.metric-icon svg{width:16px}
+.metric-value{margin-top:13px;font-size:23px;font-weight:780;letter-spacing:-.035em}.metric-note{margin-top:2px;color:var(--muted);font-size:11px}
+.overview-grid{grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);margin-top:17px}.overview-grid.single{grid-template-columns:1fr}.overview-grid.single .quick-list{grid-template-columns:repeat(4,1fr)}
+.profiles-layout{display:grid;grid-template-columns:1fr;gap:10px}.overview-profiles{margin-top:10px}
+.panel{padding:21px}.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}.panel-head h2{margin:0;font-size:16px;letter-spacing:-.02em}.panel-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.link-list{display:grid;gap:10px}.link-row{display:grid;grid-template-columns:92px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 11px;border:1px solid var(--line-soft);border-radius:12px;background:rgba(8,13,24,.48)}
+.link-type{color:var(--muted);font-size:11px;font-weight:750;text-transform:uppercase;letter-spacing:.06em}.link-value{overflow:hidden;color:#cbd4e7;font:12px ui-monospace,SFMono-Regular,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap}
+.icon-btn{display:grid;place-items:center;width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--muted);cursor:pointer}.icon-btn:hover{color:#fff;border-color:#394966}.icon-btn svg{width:15px}
+.quick-list{display:grid;gap:9px}.quick-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:12px;background:var(--surface-2)}.quick-row span{color:var(--muted);font-size:12px}.quick-row b{font-size:12px;text-align:right}
+.section-heading{display:flex;align-items:flex-end;justify-content:space-between;margin:2px 0 18px}.section-heading h1{margin:0;font-size:24px;letter-spacing:-.035em}.section-heading p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.toolbar-row{display:flex;justify-content:flex-end;margin:0 0 8px}
+.settings-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:17px}.settings-stack{display:grid;gap:17px}.settings-side{align-self:start;position:sticky;top:103px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{min-width:0}.field.wide{grid-column:1/-1}
+.field label{display:block;margin:0 0 7px;color:#b6c0d3;font-size:12px;font-weight:680}.field-hint{margin-top:6px;color:#697993;font-size:10px}
+.input-wrap{position:relative}.input-wrap .suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#63718a;font-size:11px;pointer-events:none}
+input,select{width:100%;height:42px;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:#0c1220;color:var(--text);transition:.18s}
+input:hover,select:hover{border-color:#33415d}input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(124,108,255,.1);outline:none}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#71809b 50%),linear-gradient(135deg,#71809b 50%,transparent 50%);background-position:calc(100% - 16px) 18px,calc(100% - 11px) 18px;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+.inline-field{display:flex;gap:8px}.inline-field input{flex:1}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0}.switch-copy b{display:block;font-size:13px}.switch-copy span{color:var(--muted);font-size:11px}
+.switch{position:relative;width:45px;height:25px;flex:none}.switch input{position:absolute;opacity:0}.switch span{position:absolute;inset:0;border-radius:999px;background:#293449;cursor:pointer;transition:.2s}.switch span:after{content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 2px 5px #0005;transition:.2s}.switch input:checked+span{background:var(--primary)}.switch input:checked+span:after{transform:translateX(20px)}
+.form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.message{font-size:12px;color:var(--green)}.message.error{color:var(--red)}
+.info-note{display:flex;gap:10px;padding:12px;border:1px solid rgba(124,108,255,.16);border-radius:12px;background:rgba(124,108,255,.07);color:#aeb9d0;font-size:11px}.info-note svg{width:16px;flex:none;color:var(--primary-2)}
+.profile-editors{display:grid;gap:9px}.profile-editor{padding:11px;border:1px solid var(--line-soft);border-radius:12px;background:linear-gradient(135deg,rgba(12,18,32,.88),rgba(8,13,24,.62))}
+.profile-editor-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:0}.profile-editor-title{display:flex;align-items:center;gap:8px;min-width:0;font-weight:750}.profile-name-title{overflow:hidden;width:170px;flex:none;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.profile-head-right{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;margin-left:auto}.profile-head-metrics{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px}
+.profile-editor-grid{display:grid;grid-template-columns:minmax(130px,.3fr) minmax(150px,.27fr) minmax(220px,.43fr);gap:9px}.profile-actions{display:flex;align-items:center;gap:7px}.profile-port{width:98px;justify-content:center;overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis}
+.profile-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;padding-left:6px}.profile-badge{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 7px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);color:#aab7cd;font-size:9px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}.profile-status{width:11px;height:11px;flex:none;border:2px solid #55627a;border-radius:50%;background:#222c3e;box-shadow:0 0 0 4px rgba(85,98,122,.08);transition:.2s}.profile-status.connected{border-color:var(--green);background:var(--green);box-shadow:0 0 0 4px rgba(67,214,140,.1),0 0 10px rgba(67,214,140,.38)}.profile-sessions{width:66px;justify-content:center;overflow:hidden;color:#b8aefe;text-overflow:ellipsis}.profile-traffic-group{display:inline-flex;align-items:center;width:261px;min-height:23px;overflow:hidden;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);font-size:9px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}.profile-traffic-group span{box-sizing:border-box;overflow:hidden;padding:3px 6px;text-align:center;text-overflow:ellipsis}.profile-traffic-group .profile-stat{width:78px}.profile-traffic-group .profile-total{width:102px}.profile-traffic-group span+span{border-left:1px solid var(--line-soft)}.profile-stat.down{color:#60c9ff}.profile-stat.up{color:#aa92ff}.profile-total{color:#9aa8bf}
+.profile-edit-panel{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft)}.profile-editor.editing .profile-edit-panel{display:block;animation:enter .18s ease}.profile-footer{display:flex;justify-content:flex-end;gap:7px;margin-top:9px}.profile-footer .btn{min-height:28px;padding:5px 9px;font-size:9px}.edit-profile.active{border-color:rgba(124,108,255,.35);background:rgba(124,108,255,.12);color:#d7d2ff}
+.profile-firewall{grid-column:1/-1;padding:12px;border:1px solid rgba(124,108,255,.2);border-radius:10px;background:rgba(124,108,255,.05)}.profile-firewall-head{margin-bottom:10px}.profile-firewall-head b{font-size:12px}.profile-firewall-head span{display:block;margin-top:2px;color:var(--muted);font-size:11px}.profile-firewall-grid{display:grid;grid-template-columns:minmax(260px,1.35fr) 120px 105px minmax(300px,1.5fr) minmax(180px,.8fr);gap:9px}.profile-firewall textarea{min-height:62px;resize:vertical}
+.firewall-rules{display:grid;gap:9px;margin-bottom:10px}.firewall-rule{padding:10px;border:1px solid var(--line-soft);border-radius:9px;background:rgba(8,13,24,.42)}.firewall-rule-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:#b9c4d8;font-size:11px}.firewall-rule-actions{display:flex;gap:4px}.firewall-rule-actions .icon-btn{width:25px;height:25px;font-size:13px}.firewall-rule-add{margin-top:2px}
+.firewall-rule-name{width:min(280px,55%);padding:5px 8px;font-size:11px;font-weight:700}
+.firewall-rule-enabled-field .switch{margin:0}.firewall-rule .field-hint{display:none}.firewall-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}.global-firewall-card{margin-top:10px}.global-firewall-card.is-collapsed>#globalFirewallEditor{display:none}.firewall-panel-actions{display:flex;align-items:center;gap:7px}.firewall-collapse-btn{width:92px;min-width:92px}.firewall-summary,.profiles-summary{display:block;margin-top:5px;color:#9a8eff;font-size:10px;font-weight:650}.profiles-card.is-collapsed>#profileEditors,.profiles-card.is-collapsed>.profiles-footer{display:none}.profiles-footer{display:flex;justify-content:flex-end;margin-top:10px}.firewall-rule-enabled-field{order:-1;display:flex;align-items:center;justify-content:center}
+.settings-side{grid-column:1/-1}.settings-side .card{padding:0;border:0;background:transparent;box-shadow:none}.settings-side .panel-head,.settings-side .info-note{display:none}.settings-side .form-actions{justify-content:flex-end;margin-top:10px}
+#logs{display:flex;flex-direction:column}.toolbar-row{order:2;display:flex;justify-content:flex-end;width:100%;margin-top:10px}.logs+.toolbar-row{order:2}
+.view#logs{display:none}.view#logs.active{display:block}.view#logs .card{display:flex;flex-direction:column}.view#logs .card>.toolbar-row{order:2;justify-content:flex-end;margin:10px 0 0}
+.settings-layout{grid-template-columns:minmax(0,1fr)}.settings-side{grid-column:1;width:100%}
+#settings.view{width:100%;max-width:1360px}
+#settings .settings-layout,#settings .settings-stack{width:100%;min-width:0}
+#settings .settings-side{width:100%;grid-column:1/-1}
+.profile-firewall-grid{grid-template-columns:58px minmax(220px,1.05fr) minmax(220px,1.25fr) 105px 95px minmax(220px,1.25fr) minmax(170px,.9fr)}.firewall-rule-name-field input{width:100%}.firewall-rule-handle{display:inline-flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--line-soft);border-radius:7px;color:#aebbd1;font-size:10px;cursor:grab;user-select:none}.firewall-rule-handle:active{cursor:grabbing}.firewall-rule-handle .rule-priority{color:var(--primary-2);font-variant-numeric:tabular-nums}.firewall-rule-handle .rule-id{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.firewall-rule-enabled{width:34px!important;height:18px!important}
+.firewall-rule{cursor:grab}.firewall-rule.dragging{opacity:.45}.firewall-rule.drag-over{border-color:var(--primary-2);box-shadow:0 0 0 2px rgba(124,108,255,.18)}
+.profile-link-card{display:grid;grid-template-columns:minmax(120px,.35fr) minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:1px solid var(--line-soft);border-radius:10px;background:rgba(8,13,24,.48)}
+.profile-identity{min-width:0}.profile-identity b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.profile-identity span{color:var(--muted);font-size:9px}.profile-link-actions{display:flex;gap:5px}
+.profile-live{display:flex!important;align-items:center;gap:5px;margin-top:2px}.profile-live.connected{color:var(--green)!important}.profile-live:before{content:"";width:6px;height:6px;border-radius:50%;background:#59657a}.profile-live.connected:before{background:var(--green);box-shadow:0 0 8px rgba(67,214,140,.5)}
+.profile-speed{display:flex;gap:8px;color:#aebbd1;font-size:9px;white-space:nowrap}.profile-speed .down{color:#60c9ff}.profile-speed .up{color:#aa92ff}.editor-live{color:var(--muted);font-size:9px}.editor-live.connected{color:var(--green)}
+.log-toolbar{display:flex;gap:8px}.logs{height:min(62vh,610px);overflow:auto;padding:9px;border:1px solid var(--line-soft);border-radius:13px;background:#090e19;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;scrollbar-color:#33405a transparent}
+.log-line{display:grid;grid-template-columns:78px 56px minmax(0,1fr);gap:8px;padding:5px 7px;border-radius:7px}.log-line:hover{background:#11192a}.log-time{color:#586781}.log-level{font-weight:800}.log-level.INFO{color:#68b7ff}.log-level.ERROR{color:var(--red)}.log-level.WARN{color:var(--yellow)}.log-level.DEBUG{color:#9c8eff}.log-message{color:#b7c2d7;overflow-wrap:anywhere}.empty{display:grid;place-items:center;min-height:250px;color:var(--muted);text-align:center}
+.qr-modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.76);backdrop-filter:blur(12px);z-index:100}.qr-modal.open{display:grid}.qr-dialog{position:relative;width:min(430px,100%);padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center;animation:enter .2s ease}.qr-dialog h2{margin:0 0 4px;font-size:18px}.qr-dialog p{margin:0 0 15px;color:var(--muted);font-size:11px}.qr-dialog img{display:block;width:245px;max-width:100%;margin:0 auto;padding:9px;border-radius:14px;background:#fff}.qr-link-box{margin-top:13px;padding:9px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#090e19;text-align:left}.qr-link-box code{display:block;overflow-wrap:anywhere;color:#aebbd1;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.qr-copy{width:100%;margin-top:8px}.qr-close{position:absolute;right:13px;top:13px}
+.toast-stack{position:fixed;right:22px;bottom:22px;display:grid;gap:8px;z-index:200}.toast{min-width:260px;max-width:380px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#192238;box-shadow:var(--shadow);animation:toastIn .22s ease}.toast.error{border-color:rgba(255,102,128,.35)}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
+.spinner{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:1000px){.metrics{grid-template-columns:repeat(2,1fr)}.overview-grid,.settings-layout{grid-template-columns:1fr}.settings-side{position:static}}
+@media(max-width:760px){
+  .shell{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));border:1px solid var(--line);border-width:1px 0 0;background:rgba(10,14,25,.94)}
+  .brand,.sidebar-foot{display:none}.nav{grid-template-columns:repeat(3,1fr);gap:4px}.nav-button{justify-content:center;flex-direction:column;gap:2px;padding:6px 4px;font-size:10px}.nav-button.active{box-shadow:none;background:rgba(124,108,255,.16)}.nav-button svg{width:18px}.nav-button span{font-size:10px}
+  .main{padding:0 15px calc(86px + env(safe-area-inset-bottom))}.topbar{height:70px}.title h1{font-size:19px}.title p,.connection-pill span{display:none}.connection-pill{padding:9px}.top-actions .btn{padding:8px 10px}.top-actions .btn span{display:none}
+  .hero{padding:21px}.hero-traffic{width:100%}.profiles-layout{grid-template-columns:1fr}.panel{padding:17px}.link-row{grid-template-columns:70px minmax(0,1fr) auto}.form-grid{grid-template-columns:1fr}.field.wide{grid-column:auto}.section-heading{align-items:flex-start}.log-toolbar{flex-wrap:wrap}
+  .profile-editor-grid,.profile-link-card,.profile-firewall-grid{grid-template-columns:1fr}.profile-link-actions{justify-content:flex-end}.profile-name-title{width:min(170px,55vw)}.profile-editor-head{align-items:flex-start;flex-wrap:wrap}.profile-head-right{width:100%}.profile-head-metrics{justify-content:flex-start;flex:1}
+}
+@media(max-width:430px){.hero-traffic{gap:5px}.hero-traffic-item{padding:9px 8px;border-radius:13px}.hero-traffic-label{font-size:8px}.hero-traffic-value{font-size:14px}.link-type{display:none}.link-row{grid-template-columns:minmax(0,1fr) auto}.form-actions{align-items:stretch;flex-direction:column}.form-actions .btn{width:100%}}
+
+/* Compact desktop density: keep the modern visual language without turning
+   the router panel into a spacious analytics dashboard. */
+@media(min-width:761px){
+  .shell{grid-template-columns:196px minmax(0,1fr)}
+  .sidebar{padding:15px 12px}
+  .brand{gap:9px;padding:1px 7px 15px}
+  .brand-mark{width:31px;height:31px;border-radius:9px}
+  .brand-mark:before{inset:7px}.brand-mark:after{inset:12px}
+  .brand strong{font-size:15px}.brand span{font-size:10px}
+  .nav{gap:3px}.nav-button{gap:9px;padding:8px 10px;border-radius:9px}
+  .nav-button svg{width:17px;height:17px}.nav-button span{font-size:12px}
+  .sidebar-foot{left:12px;right:12px;bottom:14px;padding:10px;border-radius:11px}
+  .mini-status{font-size:10px}.mini-status b{font-size:11px}
+
+  .main{padding:0 22px 24px}
+  .topbar{height:59px}
+  .title h1{font-size:18px}.title p{margin-top:1px;font-size:10px}
+  .connection-pill{padding:6px 10px;font-size:10px}
+  .top-actions{gap:7px}
+  .view{max-width:1320px}
+
+  .hero{padding:17px 20px;border-radius:17px}
+  .eyebrow{gap:6px;font-size:10px}
+  .hero-traffic{gap:6px;margin-top:11px}
+  .hero-traffic-item{min-height:69px;padding:9px 11px;border-radius:14px}
+  .hero-traffic-label{font-size:8px}.hero-traffic-label svg{width:11px;height:11px}
+  .hero-traffic-value{margin-top:2px;font-size:14px}
+
+  .btn{min-height:34px;padding:7px 12px;border-radius:9px;font-size:12px}
+  .btn.small{min-height:29px;padding:5px 9px;font-size:10px}
+  .btn svg{width:14px;height:14px}
+  .metrics{gap:10px;margin-top:10px}
+  .metric{padding:12px 13px}
+  .metric-head{font-size:10px}.metric-icon{width:26px;height:26px;border-radius:7px}.metric-icon svg{width:14px}
+  .metric-value{margin-top:7px;font-size:18px}.metric-note{font-size:9px}
+
+  .overview-grid{gap:10px;margin-top:10px}
+  .card{border-radius:13px}
+  .panel{padding:14px}
+  .panel-head{gap:10px;margin-bottom:11px}
+  .panel-head h2{font-size:13px}.panel-head p{margin-top:2px;font-size:10px}
+  .link-list{gap:7px}.link-row{grid-template-columns:70px minmax(0,1fr) auto;gap:8px;padding:6px 8px;border-radius:9px}
+  .link-type{font-size:9px}.link-value{font-size:10px}
+  .icon-btn{width:27px;height:27px;border-radius:7px}.icon-btn svg{width:13px}
+  .quick-list{grid-template-columns:1fr 1fr;gap:6px}
+  .quick-row{padding:8px;border-radius:8px}.quick-row span,.quick-row b{font-size:10px}
+
+  .section-heading{margin:0 0 10px}
+  .section-heading h1{font-size:18px}.section-heading p{margin-top:1px;font-size:10px}
+  .settings-layout{grid-template-columns:minmax(0,1fr) 225px;gap:10px}
+  .settings-stack{gap:10px}.settings-side{top:70px}
+  .form-grid{gap:9px 11px}
+  .field label{margin-bottom:4px;font-size:10px}.field-hint{margin-top:3px;font-size:9px}
+  input,select{height:34px;padding:0 9px;border-radius:8px;font-size:11px}
+  select{background-position:calc(100% - 14px) 14px,calc(100% - 9px) 14px}
+  .input-wrap .suffix{right:9px;font-size:9px}
+  .inline-field{gap:6px}
+  .switch-row{padding:6px 0}.switch-copy b{font-size:11px}.switch-copy span{font-size:9px}
+  .switch{width:39px;height:21px}.switch span:after{width:15px;height:15px}.switch input:checked+span:after{transform:translateX(18px)}
+  .form-actions{gap:8px;margin-top:11px}.message{font-size:10px}
+  .info-note{gap:7px;padding:8px;border-radius:8px;font-size:9px}.info-note svg{width:14px}
+  .profile-editors{gap:6px}.profile-editor{padding:8px;border-radius:9px}.profile-editor-grid{grid-template-columns:minmax(100px,.3fr) minmax(130px,.27fr) minmax(160px,.43fr);gap:6px}.profile-link-card{padding:6px}
+
+  .log-toolbar{gap:6px}
+  .logs{height:calc(100vh - 142px);padding:6px;font-size:10px}
+  .log-line{grid-template-columns:65px 47px minmax(0,1fr);gap:6px;padding:3px 5px}
+  .qr-dialog{padding:20px}.qr-dialog img{width:230px}
+  .toast-stack{right:14px;bottom:14px}.toast{min-width:220px;padding:9px 11px;font-size:11px}
+}
+
+/* ===== qWDTT refined compact UI ===== */
+:root{
+  --bg:#070b13;
+  --surface:#0d1421;
+  --surface-2:#121b2b;
+  --surface-3:#172236;
+  --line:#202c40;
+  --line-soft:#182235;
+  --text:#f5f7fb;
+  --muted:#8391a8;
+  --primary:#7767ff;
+  --primary-2:#9a8eff;
+  --cyan:#4cc9f0;
+  --green:#41d69a;
+  --red:#ff6b82;
+  --yellow:#f4bd62;
+  --shadow:0 18px 48px rgba(0,0,0,.26);
+  --radius:14px;
+  --radius-sm:9px
+}
+
+html{scrollbar-color:#2a3850 transparent}
+body{
+  background:
+    radial-gradient(circle at 75% -15%,rgba(119,103,255,.13),transparent 29rem),
+    radial-gradient(circle at 5% 95%,rgba(76,201,240,.055),transparent 24rem),
+    linear-gradient(180deg,#080c15 0%,#070b13 100%);
+  letter-spacing:-.006em
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E")
+}
+
+.shell{grid-template-columns:184px minmax(0,1fr)}
+.sidebar{
+  padding:13px 10px;
+  border-right-color:rgba(131,145,168,.12);
+  background:rgba(8,12,21,.82);
+  box-shadow:8px 0 30px rgba(0,0,0,.08)
+}
+.brand{gap:9px;padding:3px 7px 14px}
+.brand-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(145deg,#9b91ff 0%,#7564ff 48%,#5545d7 100%);
+  box-shadow:0 7px 20px rgba(119,103,255,.28),inset 0 1px rgba(255,255,255,.22)
+}
+.brand strong{font-size:14px}
+.brand span{font-size:9px}
+.nav{gap:3px}
+.nav-button{
+  min-height:36px;
+  gap:9px;
+  padding:8px 10px;
+  border:1px solid transparent;
+  border-radius:9px;
+  font-size:11px
+}
+.nav-button:hover{
+  border-color:rgba(131,145,168,.1);
+  background:rgba(18,27,43,.72)
+}
+.nav-button.active{
+  border-color:rgba(119,103,255,.18);
+  background:linear-gradient(90deg,rgba(119,103,255,.18),rgba(119,103,255,.055));
+  box-shadow:none
+}
+.nav-button svg{width:16px;height:16px}
+.sidebar-foot{left:10px;right:10px;bottom:12px;padding:9px 10px;border-radius:10px}
+.status-dot{width:8px;height:8px}
+
+.main{padding:0 18px 22px}
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:15;
+  height:56px;
+  background:linear-gradient(180deg,rgba(7,11,19,.96) 55%,rgba(7,11,19,0));
+  backdrop-filter:blur(10px)
+}
+.title h1{font-size:17px}
+.title p{font-size:9px}
+.top-actions{gap:7px}
+.connection-pill{
+  padding:5px 9px;
+  border-color:rgba(131,145,168,.16);
+  background:rgba(13,20,33,.76);
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+  font-size:9px
+}
+.view{max-width:1360px}
+
+.hero{
+  padding:14px 16px;
+  border-radius:15px;
+  border-color:rgba(131,145,168,.15);
+  background:
+    linear-gradient(135deg,rgba(21,31,49,.96),rgba(10,15,26,.96));
+  box-shadow:0 14px 38px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.025)
+}
+.hero:after{
+  width:240px;height:240px;right:-110px;top:-150px;
+  filter:blur(62px);opacity:.13
+}
+.hero-traffic{gap:7px;margin-top:9px}
+.hero-traffic-item{
+  min-height:62px;
+  padding:8px 10px;
+  border-radius:11px;
+  border-color:rgba(131,145,168,.13);
+  background:linear-gradient(145deg,rgba(19,29,46,.78),rgba(8,13,23,.58));
+  box-shadow:inset 0 1px rgba(255,255,255,.018)
+}
+.hero-traffic-item:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:2px;
+  opacity:.7
+}
+.hero-traffic-item.down:after{background:linear-gradient(90deg,#4cc9f0,transparent)}
+.hero-traffic-item.up:after{background:linear-gradient(90deg,#9686ff,transparent)}
+.hero-traffic-item.total:after{background:linear-gradient(90deg,#41d69a,transparent)}
+.hero-traffic-label{font-size:7.5px;letter-spacing:.075em}
+.hero-traffic-label svg{width:11px;height:11px}
+.hero-traffic-value{margin-top:1px;font-size:14px}
+
+.btn{
+  min-height:32px;
+  padding:6px 11px;
+  border-radius:8px;
+  font-size:11px;
+  box-shadow:0 7px 18px rgba(119,103,255,.16)
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.small{min-height:27px;padding:4px 8px;font-size:9px}
+.btn.secondary{
+  background:linear-gradient(180deg,#19243a,#141d30);
+  border-color:#27344a
+}
+.btn.ghost:hover{background:#141d2e;color:#fff}
+.btn.danger:hover{background:rgba(255,107,130,.16)}
+.icon-btn{width:26px;height:26px;border-radius:7px}
+
+.card{
+  border-color:rgba(131,145,168,.135);
+  background:linear-gradient(180deg,rgba(14,21,35,.94),rgba(11,17,29,.92));
+  box-shadow:0 9px 26px rgba(0,0,0,.1),inset 0 1px rgba(255,255,255,.02)
+}
+.panel{padding:12px}
+.panel-head{margin-bottom:9px;align-items:center}
+.panel-head h2{font-size:12px}
+.panel-head p{font-size:9px}
+.overview-profiles{margin-top:8px}
+
+.profile-editors{gap:5px}
+.profile-editor{
+  padding:7px 8px;
+  border-radius:9px;
+  transition:border-color .18s,background .18s,transform .18s;
+  background:linear-gradient(135deg,rgba(13,20,33,.92),rgba(9,14,24,.7))
+}
+.profile-editor:hover{
+  border-color:#2c3a53;
+  background:linear-gradient(135deg,rgba(16,24,39,.96),rgba(10,15,26,.76))
+}
+.profile-editor.editing{
+  border-color:rgba(119,103,255,.32);
+  box-shadow:0 0 0 2px rgba(119,103,255,.055)
+}
+.profile-editor-head{gap:8px}
+.profile-summary{gap:8px;padding-left:2px}
+.profile-name-title{width:148px;font-size:11px}
+.profile-status{width:9px;height:9px;border-width:1px;box-shadow:0 0 0 3px rgba(85,98,122,.07)}
+.profile-status.connected{box-shadow:0 0 0 3px rgba(65,214,154,.08),0 0 9px rgba(65,214,154,.3)}
+.profile-head-right{gap:6px}
+.profile-head-metrics{gap:5px}
+.profile-badge{
+  min-height:20px;
+  padding:2px 6px;
+  border-radius:6px;
+  background:rgba(17,27,44,.72);
+  font-size:8px
+}
+.profile-traffic-group{
+  width:228px;
+  min-height:20px;
+  border-radius:6px;
+  font-size:8px
+}
+.profile-traffic-group span{padding:2px 5px}
+.profile-traffic-group .profile-stat{width:68px}
+.profile-traffic-group .profile-total{width:92px}
+.profile-port{width:82px}
+.profile-editor .switch{width:34px;height:18px}
+.profile-editor .switch span:after{width:12px;height:12px}
+.profile-editor .switch input:checked+span:after{transform:translateX(16px)}
+.profile-edit-panel{margin-top:7px;padding-top:7px}
+.profile-editor-grid{
+  grid-template-columns:minmax(110px,.3fr) minmax(125px,.25fr) minmax(170px,.45fr);
+  gap:6px
+}
+.profile-footer{margin-top:7px}
+
+.section-heading{margin-bottom:8px}
+.section-heading h1{font-size:17px}
+.settings-layout{grid-template-columns:minmax(0,1fr) 218px;gap:8px}
+.settings-stack{gap:8px}
+.settings-side{top:64px}
+#settings .settings-layout{grid-template-columns:minmax(0,1fr)}
+.form-grid{gap:8px 9px}
+.field label{margin-bottom:3px;font-size:9px}
+.field-hint{margin-top:3px;font-size:8px}
+input,select{
+  height:32px;
+  padding:0 9px;
+  border-radius:7px;
+  border-color:#202c40;
+  background:#09101c;
+  font-size:10px;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.18)
+}
+input:hover,select:hover{border-color:#32415c}
+input:focus,select:focus{box-shadow:0 0 0 2px rgba(119,103,255,.11)}
+select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
+.input-wrap .suffix{right:8px;font-size:8px}
+.switch-row{padding:5px 0}
+.switch-copy b{font-size:10px}
+.switch-copy span{font-size:8px}
+.switch{width:37px;height:20px}
+.switch span:after{width:14px;height:14px}
+.switch input:checked+span:after{transform:translateX(17px)}
+.info-note{padding:7px;font-size:8px;line-height:1.45}
+.form-actions{margin-top:8px;gap:7px;align-items:flex-start;flex-direction:column}
+.form-actions .btn{width:100%}
+.message{font-size:9px}
+
+.toolbar-row{margin-bottom:6px}
+.logs{
+  height:calc(100vh - 124px);
+  padding:5px;
+  border-radius:9px;
+  font-size:9px;
+  line-height:1.5
+}
+.log-line{
+  grid-template-columns:61px 42px minmax(0,1fr);
+  gap:5px;
+  padding:3px 5px;
+  border-radius:5px
+}
+.log-line:nth-child(even){background:rgba(255,255,255,.012)}
+.log-line:hover{background:#111a2a}
+
+.qr-dialog{
+  width:min(380px,100%);
+  padding:18px;
+  border-radius:16px
+}
+.qr-dialog img{width:220px}
+.toast{border-radius:10px}
+
+@media(max-width:1100px){
+  .profile-head-right{flex-wrap:wrap}
+  .profile-head-metrics{order:3;width:100%;justify-content:flex-start}
+  .profile-summary{align-self:flex-start}
+}
+
+@media(max-width:760px){
+  .sidebar{
+    padding:6px max(7px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
+    background:rgba(8,12,21,.96)
+  }
+  .nav-button{min-height:42px;padding:5px 3px}
+  .main{padding:0 10px calc(76px + env(safe-area-inset-bottom))}
+  .topbar{height:54px}
+  .hero{padding:12px}
+  .hero-traffic{gap:5px}
+  .hero-traffic-item{padding:7px 8px}
+  .panel{padding:10px}
+  .profile-editor-head{align-items:center}
+  .profile-head-right{width:auto;flex:1}
+  .profile-head-metrics{width:100%}
+  .profile-traffic-group{width:100%;max-width:228px}
+  .profile-editor-grid,.profile-firewall-grid{grid-template-columns:1fr}
+  .settings-layout{grid-template-columns:1fr}
+  .settings-side{position:static}
+}
+
+@media(max-width:520px){
+  .hero-traffic{grid-template-columns:1fr}
+  .hero-traffic-item{min-height:52px}
+  .hero-traffic-value{font-size:15px}
+  .profile-editor-head{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .profile-summary{min-width:0}
+  .profile-name-title{width:auto;max-width:46vw}
+  .profile-head-right{display:contents}
+  .profile-head-metrics{grid-column:1/-1;order:4}
+  .profile-editor .switch{grid-column:2;grid-row:1}
+  .profile-connect,.edit-profile{grid-column:auto}
+  .profile-traffic-group{max-width:none}
+  .profile-port{display:none}
+}
+
+
+/* Center traffic labels and values */
+.hero-traffic-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  padding-top:12px;
+}
+
+.hero-traffic-label{
+  width:100%;
+  justify-content:center;
+}
+
+.hero-traffic-value{
+  width:100%;
+  margin-top:7px;
+  text-align:center;
+}
+
+
+/* Redesigned transport panel */
+.traffic-section-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:12px;
+}
+.traffic-section-head h2{
+  margin:0;
+  color:#f4f7ff;
+  font-size:15px;
+  font-weight:760;
+  letter-spacing:-.02em;
+}
+.traffic-section-head p{
+  margin:4px 0 0;
+  color:#77859d;
+  font-size:9px;
+}
+.traffic-live{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 8px;
+  border:1px solid rgba(67,214,140,.18);
+  border-radius:999px;
+  background:rgba(67,214,140,.07);
+  color:#69e7aa;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.08em;
+}
+.traffic-live i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#43d68c;
+  box-shadow:0 0 10px rgba(67,214,140,.85);
+}
+.traffic-live.offline{
+  border-color:rgba(131,145,168,.18);
+  background:rgba(131,145,168,.07);
+  color:var(--muted);
+}
+.traffic-live.offline i{
+  background:#59657a;
+  box-shadow:none;
+}
+
+.hero-traffic{
+  gap:10px;
+  margin-top:12px;
+}
+.hero-traffic-item{
+  --accent:#4cc9f0;
+  position:relative;
+  display:flex;
+  min-height:142px;
+  padding:14px 15px 10px;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:flex-start;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 22% 4%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 44%),
+    linear-gradient(145deg,rgba(18,29,48,.96),rgba(8,14,25,.92));
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.035),
+    0 10px 24px rgba(0,0,0,.17);
+  text-align:left;
+}
+.hero-traffic-item.up{--accent:#9a63ff}
+.hero-traffic-item.total{--accent:#37d795}
+.hero-traffic-item:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.025),transparent 34%);
+}
+.hero-traffic-item:after{display:none}
+
+.traffic-card-top{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.traffic-icon{
+  display:grid;
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  place-items:center;
+  border:1px solid color-mix(in srgb,var(--accent) 65%,transparent);
+  border-radius:50%;
+  background:color-mix(in srgb,var(--accent) 9%,transparent);
+  color:var(--accent);
+  box-shadow:0 0 18px color-mix(in srgb,var(--accent) 12%,transparent);
+}
+.traffic-icon svg{
+  width:18px;
+  height:18px;
+}
+.hero-traffic-label{
+  display:block;
+  width:auto;
+  color:var(--accent)!important;
+  font-size:9px;
+  font-weight:720;
+  letter-spacing:.015em;
+  line-height:1.25;
+  text-align:left;
+  text-transform:none;
+}
+.traffic-number-wrap{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:baseline;
+  justify-content:center;
+  min-height:49px;
+  padding:5px 4px 0;
+}
+.hero-traffic-value{
+  width:100%;
+  margin:0;
+  color:#edf3ff;
+  font-size:25px;
+  font-weight:790;
+  line-height:1;
+  letter-spacing:-.045em;
+  text-align:center;
+  text-shadow:0 0 18px rgba(174,196,255,.10);
+}
+.traffic-sparkline{
+  position:absolute;
+  right:15px;
+  bottom:8px;
+  left:15px;
+  width:calc(100% - 30px);
+  height:35px;
+  overflow:visible;
+  opacity:.95;
+}
+.traffic-sparkline .traffic-line{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:1.7;
+  vector-effect:non-scaling-stroke;
+  filter:drop-shadow(0 0 4px color-mix(in srgb,var(--accent) 45%,transparent));
+}
+.traffic-sparkline .traffic-area{
+  fill:color-mix(in srgb,var(--accent) 10%,transparent);
+}
+
+@media(max-width:700px){
+  .traffic-section-head{align-items:flex-start}
+  .traffic-section-head p{display:none}
+  .hero-traffic{grid-template-columns:1fr}
+  .hero-traffic-item{min-height:126px}
+}
+
+/* Slightly larger desktop typography for comfortable reading across all tabs. */
+@media(min-width:761px){
+  .firewall-rule-enabled-field .switch{transform:translateY(7px)}
+  .brand span{font-size:10px}
+  .nav-button{font-size:12px}
+  .mini-status{font-size:11px}.mini-status b{font-size:12px}
+  .title h1{font-size:19px}.title p{font-size:10px}
+  .connection-pill{font-size:10px}
+  .eyebrow{font-size:11px}
+  .hero-traffic-label{font-size:10px}
+  .hero-traffic-value{font-size:26px}
+  .btn{font-size:12px}.btn.small{font-size:10px}
+  .panel-head h2{font-size:13px}.panel-head p{font-size:10px}
+  .metric-head{font-size:11px}.metric-note{font-size:10px}
+  .link-type{font-size:10px}.link-value{font-size:11px}
+  .quick-row span,.quick-row b{font-size:11px}
+  .section-heading h1{font-size:19px}.section-heading p{font-size:11px}
+  .field label{font-size:10px}.field-hint{font-size:9px}
+  input,select,textarea{font-size:11px}
+  .input-wrap .suffix{font-size:9px}
+  .switch-copy b{font-size:11px}.switch-copy span{font-size:9px}
+  .info-note{font-size:9px}.message{font-size:10px}
+  .profile-name-title{font-size:12px}
+  .profile-badge,.profile-traffic-group{font-size:9px}
+  .logs{font-size:10px}
+  .toast{font-size:12px}
+}
+
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark"></div><div><strong>qWDTT</strong><span>Router control</span></div></div>
+    <nav class="nav">
+      <button class="nav-button active" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Обзор</span></button>
+      <button class="nav-button" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.95 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.95a1.7 1.7 0 0 0-.34-1.88L4.2 7l2.83-2.83.06.06A1.7 1.7 0 0 0 8.95 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08a1.7 1.7 0 0 0 1.03 1.53 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 7l-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg><span>Настройки</span></button>
+      <button class="nav-button" data-view="logs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>Журнал</span></button>
+    </nav>
+    <div class="sidebar-foot"><div class="mini-status"><i class="status-dot" data-status-dot></i><div><b data-status-text>Проверка…</b><span>DTLS-сервер</span></div></div></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="title"><h1 id="pageTitle">Обзор</h1><p id="pageSubtitle">Состояние защищённого туннеля</p></div>
+      <div class="top-actions">
+        <span class="top-version" id="appVersionTop">Версия —</span>
+        <div class="connection-pill"><i class="status-dot" data-status-dot></i><span data-status-text>Проверка…</span></div>
+        <button class="btn small secondary" id="headerToggle"><span>Управление</span></button>
+      </div>
+    </header>
+
+    <section class="view active" id="overview">
+      <div class="hero">
+        <div class="hero-top">
+          <div class="eyebrow"><i class="status-dot" data-status-dot></i><span id="heroEyebrow">Проверяем состояние</span></div>
+        </div>
+        <div class="traffic-section-head">
+          <div>
+            <h2>Трафик в реальном времени</h2>
+            <p>Текущая скорость соединения и общий объём данных</p>
+          </div>
+          <span class="traffic-live" id="trafficLive"><i></i><span>LIVE</span></span>
+        </div>
+
+        <div class="hero-traffic">
+          <div class="hero-traffic-item down">
+            <div class="traffic-card-top">
+              <span class="traffic-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M12 3v14M6 11l6 6 6-6"/>
+                </svg>
+              </span>
+              <span class="hero-traffic-label">Входящая скорость</span>
+            </div>
+            <div class="traffic-number-wrap">
+              <strong class="hero-traffic-value" id="rxRate">0 бит/с</strong>
+            </div>
+            <svg class="traffic-sparkline" data-series="rx" viewBox="0 0 320 42" preserveAspectRatio="none" aria-hidden="true">
+              <path class="traffic-area" d="M0 35 L18 34 L34 28 L51 31 L70 19 L88 29 L106 34 L123 23 L140 35 L158 24 L177 31 L194 25 L211 31 L231 27 L248 35 L266 17 L284 11 L302 21 L320 15 L320 42 L0 42 Z"/>
+              <path class="traffic-line" d="M0 35 L18 34 L34 28 L51 31 L70 19 L88 29 L106 34 L123 23 L140 35 L158 24 L177 31 L194 25 L211 31 L231 27 L248 35 L266 17 L284 11 L302 21 L320 15"/>
+            </svg>
+          </div>
+
+          <div class="hero-traffic-item up">
+            <div class="traffic-card-top">
+              <span class="traffic-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M12 21V7M6 13l6-6 6 6"/>
+                </svg>
+              </span>
+              <span class="hero-traffic-label">Исходящая скорость</span>
+            </div>
+            <div class="traffic-number-wrap">
+              <strong class="hero-traffic-value" id="txRate">0 бит/с</strong>
+            </div>
+            <svg class="traffic-sparkline" data-series="tx" viewBox="0 0 320 42" preserveAspectRatio="none" aria-hidden="true">
+              <path class="traffic-area" d="M0 31 L17 23 L34 28 L52 19 L68 20 L85 29 L102 21 L119 31 L136 22 L153 35 L170 29 L187 37 L205 34 L222 25 L240 34 L258 18 L275 12 L292 18 L307 15 L320 26 L320 42 L0 42 Z"/>
+              <path class="traffic-line" d="M0 31 L17 23 L34 28 L52 19 L68 20 L85 29 L102 21 L119 31 L136 22 L153 35 L170 29 L187 37 L205 34 L222 25 L240 34 L258 18 L275 12 L292 18 L307 15 L320 26"/>
+            </svg>
+          </div>
+
+          <div class="hero-traffic-item total">
+            <div class="traffic-card-top">
+              <span class="traffic-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m12 3 8 4-8 4-8-4 8-4Z"/>
+                  <path d="m4 12 8 4 8-4"/>
+                  <path d="m4 17 8 4 8-4"/>
+                </svg>
+              </span>
+              <span class="hero-traffic-label">Суммарный трафик</span>
+            </div>
+            <div class="traffic-number-wrap">
+              <strong class="hero-traffic-value" id="totalTraffic">0 Б</strong>
+            </div>
+            <svg class="traffic-sparkline" data-series="total" viewBox="0 0 320 42" preserveAspectRatio="none" aria-hidden="true">
+              <path class="traffic-area" d="M0 30 L17 34 L34 30 L51 32 L68 26 L85 25 L102 15 L119 29 L136 33 L153 21 L170 34 L187 25 L204 34 L221 27 L238 32 L255 24 L272 29 L289 18 L306 19 L320 8 L320 42 L0 42 Z"/>
+              <path class="traffic-line" d="M0 30 L17 34 L34 30 L51 32 L68 26 L85 25 L102 15 L119 29 L136 33 L153 21 L170 34 L187 25 L204 34 L221 27 L238 32 L255 24 L272 29 L289 18 L306 19 L320 8"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="profiles-layout overview-profiles">
+        <div class="card panel profiles-card is-collapsed">
+          <div class="panel-head"><div><h2>Профили подключения</h2><p>Настройки, состояние и ссылка каждого клиента в одной карточке</p><span class="profiles-summary" id="profilesSummary">Профилей: 0 · Включено: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleProfiles" type="button" aria-expanded="false">Развернуть</button></div></div>
+          <div class="profile-editors" id="profileEditors"></div>
+          <div class="profiles-footer"><button class="btn small secondary" id="addProfile" type="button">+ Профиль</button></div>
+        </div>
+      </div>
+      <div class="card panel global-firewall-card is-collapsed">
+        <div class="panel-head"><div><h2>Общий firewall</h2><p>Единые правила доступа для всех подключённых профилей</p><span class="firewall-summary" id="firewallSummary">Правил: 0 · Активных: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleFirewall" type="button" aria-expanded="false">Развернуть</button></div></div>
+        <div id="globalFirewallEditor"></div>
+      </div>
+    </section>
+
+    <section class="view" id="settings">
+      <form id="configForm" class="settings-layout">
+        <div class="settings-stack">
+          <div class="card panel">
+            <div class="panel-head"><div><h2>Сервис</h2><p>Автозапуск и порт панели управления</p></div></div>
+            <div class="switch-row"><div class="switch-copy"><b>Запускать автоматически</b><span>Сервис будет активирован после загрузки роутера</span></div><label class="switch"><input id="enabled" type="checkbox"><span></span></label></div>
+            <div class="form-grid">
+              <div class="field"><label for="webListen">Порт веб-панели</label><div class="input-wrap"><input id="webListen" type="number" min="1" max="65535" required><span class="suffix">TCP</span></div></div>
+              <div class="field"><label for="wan">WAN-интерфейс</label><select id="wan"></select></div>
+            </div>
+            <input id="dataDir" type="hidden"><input id="mode" type="hidden" value="server"><input id="interface" type="hidden" value="wdtt0">
+          </div>
+
+          <div class="card panel">
+            <div class="panel-head"><div><h2>Сетевой сервер</h2><p>Адрес подключения и параметры туннеля</p></div></div>
+            <div class="form-grid">
+              <div class="field wide"><label for="publicHost">Публичный IP или DDNS</label><div class="inline-field"><input id="publicHost" placeholder="vpn.example.com" required><button class="btn small secondary" id="detectPublicIP" type="button">Определить</button></div></div>
+              <div class="field"><label for="listenAddr">DTLS-порт</label><div class="input-wrap"><input id="listenAddr" type="number" min="1" max="65535" required><span class="suffix">UDP</span></div></div>
+              <div class="field"><label for="wgPort">WireGuard-порт</label><div class="input-wrap"><input id="wgPort" type="number" min="1" max="65535" required><span class="suffix">UDP</span></div></div>
+              <div class="field"><label for="vpnPort">Локальный VPN-порт</label><input id="vpnPort" type="number" min="1" max="65535" required></div>
+              <div class="field"><label for="network">Сеть клиентов</label><input id="network" placeholder="10.66.66.0/24" required></div>
+              <div class="field wide"><label for="password">Пароль подключения</label><input id="password" type="text" autocomplete="off" required><div class="field-hint">Пароль входит в ссылку подключения — используйте уникальное значение.</div></div>
+            </div>
+          </div>
+
+        </div>
+
+        <aside class="settings-side">
+          <div class="card panel">
+            <div class="panel-head"><div><h2>Применение</h2><p>Сервис будет безопасно перезапущен</p></div></div>
+            <div class="info-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Активные подключения кратковременно прервутся и смогут подключиться снова автоматически.</span></div>
+            <div class="form-actions"><button class="btn" id="saveButton" type="submit">Сохранить и применить</button><span class="message" id="message"></span></div>
+          </div>
+        </aside>
+      </form>
+    </section>
+
+    <section class="view" id="logs">
+      <div class="toolbar-row"><div class="log-toolbar"><button class="btn small ghost" id="copyLogs">Копировать</button><button class="btn small danger" id="clearLogs">Очистить</button></div></div>
+      <div class="card panel"><div class="logs" id="logOutput"><div class="empty">Журнал пока пуст</div></div></div>
+    </section>
+  </main>
+</div>
+
+<div class="qr-modal" id="qrModal">
+  <div class="qr-dialog">
+    <button class="icon-btn qr-close" id="qrClose" type="button">×</button>
+    <h2>Подключение qWDTT</h2><p>Отсканируйте код официальным приложением</p>
+    <img id="qrImage" alt="QR-код подключения">
+    <div class="qr-link-box"><code id="qrLink">Загрузка ссылки…</code></div>
+    <button class="btn small secondary qr-copy" id="qrCopy" type="button">Копировать ссылку</button>
+  </div>
+</div>
+<div class="toast-stack" id="toasts"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const viewMeta={
+  overview:["Обзор","Состояние защищённого туннеля"],
+  settings:["Настройки","Конфигурация сервера и маршрутизации"],
+  logs:["Журнал","Диагностика работы сервиса"]
+};
+let appState=null,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),globalFirewall={rules:[]};
+const trafficHistory={rx:[],tx:[],total:[]},trafficHistoryLimit=32;
+
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+function normalizeVKHash(value){
+  let hash=String(value??"").trim(),marker="/call/join/",index=hash.toLowerCase().indexOf(marker);
+  if(index>=0)hash=hash.slice(index+marker.length);
+  return hash.replace(/^\/+|[\/?#].*$/g,"").trim();
+}
+function portOnly(value){
+  const match=String(value||"").match(/:(\d+)$/);
+  return match?match[1]:String(value||"").replace(/\D/g,"");
+}
+function csv(value){return Array.isArray(value)?value.join(", "):""}
+function setValue(id,value){const el=$(id);if(el)el.value=value??""}
+function formatBytes(value,rate=false){
+  let n=Number(value)||0,units=["Б","КБ","МБ","ГБ","ТБ"],i=0;
+  while(n>=1024&&i<units.length-1){n/=1024;i++}
+  const digits=i===0?0:n>=100?0:n>=10?1:2;
+  return n.toFixed(digits)+" "+units[i]+(rate?"/с":"");
+}
+function formatRate(value){
+  let n=(Number(value)||0)*8,units=["бит/с","Кбит/с","Мбит/с","Гбит/с","Тбит/с"],i=0;
+  while(n>=1000&&i<units.length-1){n/=1000;i++}
+  const digits=i===0?0:n>=100?0:n>=10?1:2;
+  return n.toFixed(digits)+" "+units[i];
+}
+function updateTrafficChart(name,value){
+  const values=trafficHistory[name];
+  values.push(Math.max(0,Number(value)||0));
+  if(values.length>trafficHistoryLimit)values.shift();
+  const points=values.length===1?Array(trafficHistoryLimit).fill(values[0]):values;
+  const width=320,height=42,top=4,bottom=38;
+  let min=name==="total"?Math.min(...points):0,max=Math.max(...points);
+  if(max<=min)max=min+1;
+  const coords=points.map((item,index)=>{
+    const x=points.length===1?0:index*width/(points.length-1);
+    const y=bottom-(item-min)/(max-min)*(bottom-top);
+    return [x,y];
+  });
+  const line=coords.map(([x,y],index)=>(index?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)).join(" ");
+  const area=line+" L "+width+" "+height+" L 0 "+height+" Z";
+  const chart=document.querySelector(`.traffic-sparkline[data-series="${name}"]`);
+  if(!chart)return;
+  chart.querySelector(".traffic-line").setAttribute("d",line);
+  chart.querySelector(".traffic-area").setAttribute("d",area);
+}
+function updateTrafficCharts(traffic){
+  const rx=Number(traffic.rxRate)||0,tx=Number(traffic.txRate)||0;
+  const total=(Number(traffic.rxBytes)||0)+(Number(traffic.txBytes)||0);
+  updateTrafficChart("rx",rx);updateTrafficChart("tx",tx);updateTrafficChart("total",total);
+}
+function toast(text,error=false){
+  const el=document.createElement("div");el.className="toast"+(error?" error":"");el.textContent=text;
+  $("toasts").appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+async function request(url,options){
+  const response=await fetch(url,{cache:"no-store",...options});
+  const responsePath=new URL(response.url,location.href).pathname,contentType=response.headers.get("content-type")||"";
+  if(response.status===401||response.status===403||responsePath==="/login"||(response.ok&&contentType.includes("text/html"))){
+    if(!authRedirecting){authRedirecting=true;window.location.replace("/login")}
+    throw new Error("auth redirect");
+  }
+  if(!response.ok)throw new Error((await response.text()).trim()||`HTTP ${response.status}`);
+  return response;
+}
+function switchView(name){
+  document.querySelectorAll(".view").forEach(el=>el.classList.toggle("active",el.id===name));
+  document.querySelectorAll("[data-view]").forEach(el=>el.classList.toggle("active",el.dataset.view===name));
+  $("pageTitle").textContent=viewMeta[name][0];$("pageSubtitle").textContent=viewMeta[name][1];
+  if(name==="logs")loadLogs();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderStatus(running){
+  document.querySelectorAll("[data-status-dot]").forEach(el=>el.classList.toggle("on",running));
+  document.querySelectorAll("[data-status-text]").forEach(el=>el.textContent=running?"Сервер работает":"Сервер выключен");
+  $("heroEyebrow").textContent=running?"Соединения принимаются":"Транспорт остановлен";
+  $("trafficLive").classList.toggle("offline",!running);
+  $("trafficLive").querySelector("span").textContent=running?"LIVE":"OFFLINE";
+  $("headerToggle").textContent=running?"Остановить":"Запустить";
+}
+function renderState(state,fillForm=false){
+  appState=state;const c=state.config,s=c.server,r=c.routing,t=state.traffic||{},version="Версия "+(state.version||"dev");$("appVersionTop").textContent=version;
+  renderStatus(state.running);
+  $("rxRate").textContent=formatRate(t.rxRate);$("txRate").textContent=formatRate(t.txRate);
+  $("totalTraffic").textContent=formatBytes((Number(t.rxBytes)||0)+(Number(t.txBytes)||0));
+  updateTrafficCharts(t);
+  if(fillForm&&!dirty){
+    $("enabled").checked=!!c.enabled;setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||8088);
+    setValue("publicHost",s.publicHost);setValue("listenAddr",portOnly(s.listenAddr)||s.dtlsPort||56000);
+    setValue("wgPort",s.wgPort||56001);setValue("vpnPort",s.vpnPort||9000);setValue("password",s.password);
+    setValue("network",s.network);setValue("interface",r.interface||"wdtt0");
+    profiles=(s.profiles||[]).map(profile=>({...profile}));globalFirewall=c.firewall||{rules:[]};renderProfileEditors();updateProfilesSummary();renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();
+  }
+  updateProfileTelemetry(state.profileTraffic||{});
+}
+async function loadState(fillForm=false){
+  try{renderState(await request("/api/qwdtt/state").then(r=>r.json()),fillForm)}
+  catch(error){if(authRedirecting)return;renderStatus(false);toast("Не удалось получить состояние: "+error.message,true)}
+}
+async function loadLinks(){
+  try{
+    const list=appState?.config?.server?.profiles||[];
+    if(!list.length)return;
+    const links=await Promise.all(list.map(profile=>request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(profile.id)).then(r=>r.text())));
+    list.forEach((profile,index)=>{
+      profileLinks.set(profile.id,links[index].trim());
+      const card=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===profile.id);
+      if(!card)return;
+      card.querySelector(".profile-connect").disabled=false;
+    });
+    updateProfileTelemetry(appState?.profileTraffic||{});
+  }catch(error){if(authRedirecting)return;toast("Не удалось загрузить ссылки: "+error.message,true)}
+}
+async function loadInterfaces(){
+  try{
+    const list=await request("/api/qwdtt/interfaces").then(r=>r.json()),selected=appState?.config?.routing?.wan||"br0";
+    $("wan").innerHTML="";
+    [...new Set([selected,...list])].filter(Boolean).forEach(name=>{const option=document.createElement("option");option.value=name;option.textContent=name;option.selected=name===selected;$("wan").appendChild(option)});
+  }catch(error){if(authRedirecting)return;toast("Не удалось получить интерфейсы: "+error.message,true)}
+}
+async function setServer(enabled){
+  if(busy)return;busy=true;
+  const buttons=[$("headerToggle")];buttons.forEach(b=>b.disabled=true);
+  try{
+    await request("/api/qwdtt/toggle",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({enabled})});
+    await loadState(true);toast(enabled?"Сервер запущен":"Сервер остановлен");
+  }catch(error){toast("Ошибка управления: "+error.message,true)}
+  finally{busy=false;buttons.forEach(b=>b.disabled=false)}
+}
+function formConfig(){
+  return {
+    enabled:$("enabled").checked,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,client:{},
+    server:{publicHost:$("publicHost").value.trim(),listenAddr:"0.0.0.0:"+$("listenAddr").value,dtlsPort:+$("listenAddr").value,wgPort:+$("wgPort").value,vpnPort:+$("vpnPort").value,password:$("password").value,network:$("network").value.trim(),vkHash:"",profiles:readProfiles()},
+    firewall:{rules:readFirewallRules($("globalFirewallEditor"))},
+    routing:{mode:"all",interface:$("interface").value||"wdtt0",wan:$("wan").value,clients:[],networks:[]}
+  };
+}
+function readFirewallRules(container){
+  return [...(container?.querySelectorAll(".firewall-rule")||[])].map((rule,index)=>({id:rule.dataset.ruleId||`rule-${index+1}`,name:rule.querySelector(".firewall-rule-name")?.value.trim()||`Правило ${index+1}`,enabled:rule.querySelector(".firewall-rule-enabled")?.checked!==false,action:rule.querySelector(".firewall-rule-action").value,protocol:rule.querySelector(".firewall-rule-protocol").value,sourceAddresses:rule.querySelector(".firewall-rule-sources")?.value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean)||[],addresses:rule.querySelector(".firewall-rule-addresses").value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean),ports:rule.querySelector(".firewall-rule-ports").value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean)}));
+}
+function readProfiles(){
+  return [...document.querySelectorAll(".profile-editor")].map(card=>{
+    return {id:card.dataset.id,name:card.querySelector(".profile-name").value.trim(),enabled:card.querySelector(".profile-enabled").checked,
+      clientIP:card.dataset.clientIp,vkHash:normalizeVKHash(card.querySelector(".profile-hash").value),dtlsPort:+$("listenAddr").value,accessMode:"all",
+      firewall:{}}
+  });
+}
+function firewallEditor(profile,index){
+  const firewall=profile.firewall||{};
+  const legacy=firewall.rules?.length?firewall.rules:(firewall.addresses?.length||firewall.ports?.length?[{action:firewall.addressMode==="block"||firewall.portMode==="block"?"block":"allow",protocol:"all",addresses:firewall.addresses||[],ports:firewall.ports||[]}]:[]);
+  const ruleEditor=(rule,index)=>`<div class="firewall-rule" data-rule-index="${index}"><div class="firewall-rule-top"><b>Правило ${index+1}</b><div class="firewall-rule-actions"><button class="icon-btn firewall-rule-up" type="button" title="Выше">↑</button><button class="icon-btn firewall-rule-down" type="button" title="Ниже">↓</button><button class="icon-btn firewall-rule-remove" type="button" title="Удалить">×</button></div></div><div class="profile-firewall-grid"><div class="field"><label>Действие</label><select class="firewall-rule-action"><option value="allow" ${rule.action!=="block"?"selected":""}>Разрешить</option><option value="block" ${rule.action==="block"?"selected":""}>Запретить</option></select></div><div class="field"><label>Протокол</label><select class="firewall-rule-protocol"><option value="all" ${!rule.protocol||rule.protocol==="all"?"selected":""}>Все</option><option value="tcp" ${rule.protocol==="tcp"?"selected":""}>TCP</option><option value="udp" ${rule.protocol==="udp"?"selected":""}>UDP</option></select></div><div class="field"><label>Адреса / подсети</label><textarea class="firewall-rule-addresses" placeholder="192.168.1.0/24, 8.8.8.8">${escapeHTML((rule.addresses||[]).join(", "))}</textarea></div><div class="field"><label>Порты</label><input class="firewall-rule-ports" placeholder="80, 443, 1000-1100" value="${escapeHTML((rule.ports||[]).join(", "))}"><div class="field-hint">Пусто — любые порты</div></div></div></div>`;
+  return `<div class="profile-firewall"><div class="profile-firewall-head"><b>Правила доступа профиля</b><span>Правила применяются сверху вниз. Пустые адреса или порты означают «любые».</span></div><div class="firewall-rules">${legacy.map(ruleEditor).join("")}</div><button class="btn small secondary firewall-rule-add" type="button">+ Добавить правило</button></div>`;
+}
+function renderGlobalFirewall(firewall){
+  const box=$("globalFirewallEditor");if(!box)return;box.innerHTML=firewallEditor({firewall},0);box.querySelectorAll(".firewall-rule").forEach((rule,index)=>{rule.draggable=true;rule.querySelectorAll(".firewall-rule-up,.firewall-rule-down").forEach(button=>button.remove());const data=firewall.rules?.[index]||{},name=rule.querySelector(".firewall-rule-top b"),nameInput=document.createElement("input");nameInput.className="firewall-rule-name";nameInput.placeholder=`Правило ${index+1}`;nameInput.value=data.name||`Правило ${index+1}`;if(name)name.replaceWith(nameInput);const protocol=rule.querySelector(".firewall-rule-protocol"),current=protocol.value;protocol.innerHTML='<option value="ipv4">IPv4</option><option value="tcp">TCP</option><option value="udp">UDP</option>';protocol.value=current==="all"||!current?"ipv4":current;const sourceField=document.createElement("div");sourceField.className="field";sourceField.innerHTML='<label>Адрес источника / подсети</label><input class="firewall-rule-sources" placeholder="10.66.66.2, 10.66.66.3, 192.168.1.0/24" value="'+escapeHTML((data.sourceAddresses||[]).join(", "))+'">';const destination=rule.querySelector(".firewall-rule-addresses"),destinationField=destination?.closest(".field");if(destination&&destinationField){const input=document.createElement("input");input.className="firewall-rule-addresses";input.placeholder="192.168.1.1, 192.168.1.0/24";input.value=destination.value.replace(/[\n]+/g,", ");destination.replaceWith(input);destinationField.querySelector("label")?.replaceChildren("Адрес назначения / подсети")};rule.querySelector(".profile-firewall-grid")?.prepend(sourceField)});
+}
+function updateFirewallSummary(firewall){
+  const summary=$("firewallSummary"),rules=firewall?.rules||[];if(!summary)return;
+  const active=rules.filter(rule=>rule.enabled!==false).length,allow=rules.filter(rule=>rule.action!=="block").length,block=rules.length-allow;
+  summary.textContent=`Правил: ${rules.length} · Активных: ${active} · Разрешающих: ${allow} · Запрещающих: ${block}`;
+}
+function layoutFirewallRuleNames(){
+  document.querySelectorAll("#globalFirewallEditor .firewall-rule").forEach(rule=>{const name=rule.querySelector(".firewall-rule-name"),grid=rule.querySelector(".profile-firewall-grid");if(!name||!grid||grid.contains(name))return;const field=document.createElement("div");field.className="field firewall-rule-name-field";field.innerHTML="<label>Имя</label>";field.append(name);grid.prepend(field)});
+}
+function enhanceFirewallRuleControls(firewall){
+  document.querySelectorAll("#globalFirewallEditor .firewall-rule").forEach((rule,index)=>{const data=firewall.rules?.[index]||{};rule.dataset.ruleId=data.id||`rule-${Date.now().toString(36)}-${index+1}`;rule.draggable=false;const top=rule.querySelector(".firewall-rule-top"),handle=document.createElement("span");handle.className="firewall-rule-handle";handle.draggable=true;handle.innerHTML='<span>☷</span><span class="rule-priority">Приоритет '+(index+1)+'</span>';top?.prepend(handle);const enabledField=document.createElement("div");enabledField.className="field firewall-rule-enabled-field";enabledField.innerHTML='<label class="switch"><input class="firewall-rule-enabled" type="checkbox" '+(data.enabled===false?"":"checked")+'><span></span></label>';rule.querySelector(".profile-firewall-grid")?.prepend(enabledField)});
+}
+function setupFirewallFooter(){
+  const box=$("globalFirewallEditor"),add=box?.querySelector(".firewall-rule-add");if(!box||!add)return;const footer=document.createElement("div");footer.className="firewall-footer";const save=document.createElement("button");save.className="btn small";save.type="button";save.textContent="Сохранить firewall";save.onclick=event=>saveConfig(event,save);footer.append(add,save);box.append(footer);
+}
+function setupFirewallCollapse(){
+  const card=document.querySelector(".global-firewall-card"),toggle=$("toggleFirewall");if(!card||!toggle)return;
+  const sync=()=>{const collapsed=card.classList.contains("is-collapsed");toggle.textContent=collapsed?"Развернуть":"Свернуть";toggle.setAttribute("aria-expanded",String(!collapsed))};
+  toggle.onclick=()=>{card.classList.toggle("is-collapsed");sync()};sync();
+}
+function updateProfilesSummary(){
+  const summary=$("profilesSummary");if(!summary)return;
+  const enabled=profiles.filter(profile=>profile.enabled!==false).length;
+  const telemetry=appState?.profileTraffic||{},active=profiles.filter(profile=>telemetry[profile.id]?.connected).length;
+  summary.textContent=`Профилей: ${profiles.length} · Включено: ${enabled} · Активно: ${active}`;
+}
+function setupProfilesCollapse(){
+  const card=document.querySelector(".profiles-card"),toggle=$("toggleProfiles");if(!card||!toggle)return;
+  const sync=()=>{const collapsed=card.classList.contains("is-collapsed");toggle.textContent=collapsed?"Развернуть":"Свернуть";toggle.setAttribute("aria-expanded",String(!collapsed))};
+  toggle.onclick=()=>{card.classList.toggle("is-collapsed");sync()};sync();
+}
+function openProfilesCard(){
+  const card=document.querySelector(".profiles-card");if(!card)return;
+  card.classList.remove("is-collapsed");const toggle=$("toggleProfiles");if(toggle){toggle.textContent="Свернуть";toggle.setAttribute("aria-expanded","true")}
+}
+function renderProfileEditors(){
+  const box=$("profileEditors");
+  updateProfilesSummary();
+  if(!profiles.length){box.innerHTML='<div class="empty">Создайте первый профиль подключения</div>';return}
+  box.innerHTML=profiles.map((profile,index)=>`
+    <div class="profile-editor" data-id="${escapeHTML(profile.id)}" data-client-ip="${escapeHTML(profile.clientIP)}" data-traffic-profile="${escapeHTML(profile.id)}">
+      <div class="profile-editor-head">
+        <div class="profile-summary">
+          <span class="profile-status" title="Не подключён" aria-label="Не подключён"></span>
+          <div class="profile-editor-title"><span class="profile-name-title">${escapeHTML(profile.name||"Профиль клиента")}</span></div>
+        </div>
+        <div class="profile-head-right">
+          <div class="profile-head-metrics"><span class="profile-badge profile-sessions">0 сессий</span><span class="profile-traffic-group"><span class="profile-stat down">↓ 0 бит/с</span><span class="profile-stat up">↑ 0 бит/с</span><span class="profile-total">Σ 0 Б</span></span><span class="profile-badge profile-port">WG ${escapeHTML(profile.clientIP||"автоматически")}</span></div>
+          <label class="switch"><input class="profile-enabled" type="checkbox" ${profile.enabled?"checked":""}><span></span></label>
+          <button class="btn small secondary profile-connect" type="button" data-profile-id="${escapeHTML(profile.id)}" ${profile.clientIP?"":"disabled"}>QR и ссылка</button>
+          <button class="btn small ghost edit-profile" type="button" aria-expanded="false">Редактировать</button>
+        </div>
+      </div>
+      <div class="profile-edit-panel">
+        <div class="profile-editor-grid">
+          <div class="field"><label>Название</label><input class="profile-name" value="${escapeHTML(profile.name)}" required></div>
+          <div class="field"><label>VK hash</label><input class="profile-hash" value="${escapeHTML(normalizeVKHash(profile.vkHash))}" required></div>
+        </div>
+        <div class="profile-footer"><button class="btn small danger remove-profile" type="button" data-profile-id="${escapeHTML(profile.id)}">Удалить профиль</button><button class="btn small save-profile" type="button">Сохранить</button></div>
+      </div>
+    </div>`).join("");
+  updateProfileTelemetry(appState?.profileTraffic||{});
+  updateProfilesSummary();
+  loadLinks();
+}
+function updateProfileTelemetry(telemetry){
+  const sessionLabel=count=>{const n=Math.abs(Number(count)||0)%100,m=n%10;return `${count} ${n>10&&n<20?"сессий":m===1?"сессия":m>=2&&m<=4?"сессии":"сессий"}`};
+  document.querySelectorAll("[data-traffic-profile]").forEach(card=>{
+    const metric=telemetry[card.dataset.trafficProfile]||{},status=card.querySelector(".profile-status"),sessions=card.querySelector(".profile-sessions");
+    const statusText=metric.connected?"Подключён":metric.lastSeen?"Не в сети":"Не подключён";
+    status.classList.toggle("connected",!!metric.connected);status.title=statusText;status.setAttribute("aria-label",statusText);
+    sessions.textContent=sessionLabel(metric.sessions||0);
+    card.querySelector(".down").textContent="↓ "+formatRate(metric.rxRate||0);
+    card.querySelector(".up").textContent="↑ "+formatRate(metric.txRate||0);
+    card.querySelector(".profile-total").textContent="Σ "+formatBytes((metric.rxBytes||0)+(metric.txBytes||0));
+  });
+  updateProfilesSummary();
+}
+function addProfile(){
+  openProfilesCard();
+  if(document.querySelector(".profile-editor"))profiles=readProfiles();
+  profiles.push({id:"profile-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name:"Новый профиль",enabled:true,clientIP:"",vkHash:"",dtlsPort:+$("listenAddr").value||56000,accessMode:"all",firewall:{rules:[]}});
+  renderProfileEditors();dirty=true;
+  const card=$("profileEditors").lastElementChild,edit=card?.querySelector(".edit-profile");
+  if(card&&edit){card.classList.add("editing");edit.classList.add("active");edit.textContent="Скрыть";edit.setAttribute("aria-expanded","true");card.querySelector(".profile-name")?.focus()}
+}
+async function saveConfig(event,button=$("saveButton")){
+  event.preventDefault();if(busy)return;busy=true;
+  const original=button.textContent;button.disabled=true;button.innerHTML='<i class="spinner"></i> Применение…';
+  $("message").textContent="";$("message").className="message";
+  try{
+    await request("/api/qwdtt/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formConfig())});
+    dirty=false;await Promise.all([loadState(true),loadLinks()]);$("message").textContent="Настройки применены";toast("Конфигурация сохранена");
+  }catch(error){$("message").textContent=error.message;$("message").className="message error";toast("Ошибка: "+error.message,true)}
+  finally{busy=false;button.disabled=false;button.textContent=original}
+}
+async function detectPublicIP(silent=false){
+  const button=$("detectPublicIP"),old=button.textContent;button.disabled=true;button.textContent="Поиск…";
+  try{
+    const iface=$("wan").value;
+    if(!iface)throw new Error("WAN-интерфейс не выбран");
+    const response=await request("/api/qwdtt/interface-ip?name="+encodeURIComponent(iface));
+    const result=await response.json();
+    if(!result.ip)throw new Error("IPv4-адрес не найден");
+    $("publicHost").value=result.ip;dirty=true;toast("IP интерфейса роутера определён");
+  }catch(error){if(!silent&&!authRedirecting)toast("Не удалось определить IP: "+error.message,true)}
+  finally{button.disabled=false;button.textContent=old}
+}
+async function loadLogs(){
+  try{
+    const entries=await request("/api/qwdtt/logs").then(r=>r.json()),box=$("logOutput");
+    if(!entries?.length){box.innerHTML='<div class="empty">Журнал пока пуст</div>';return}
+    box.innerHTML=entries.map(item=>{
+      const date=new Date(item.time),time=Number.isNaN(date.getTime())?String(item.time||""):date.toLocaleTimeString("ru-RU",{hour12:false});
+      const level=String(item.level||"INFO").toUpperCase();
+      return `<div class="log-line"><span class="log-time">${escapeHTML(time)}</span><span class="log-level ${escapeHTML(level)}">${escapeHTML(level)}</span><span class="log-message">${escapeHTML(item.message)}</span></div>`;
+    }).join("");
+    box.scrollTop=box.scrollHeight;
+  }catch(error){toast("Не удалось загрузить журнал: "+error.message,true)}
+}
+async function copyText(value){
+  if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}
+  const area=document.createElement("textarea");area.value=value;area.style.cssText="position:fixed;opacity:0";document.body.appendChild(area);area.select();
+  if(!document.execCommand("copy"))throw new Error("copy failed");area.remove();
+}
+
+document.querySelectorAll("[data-view]").forEach(button=>button.addEventListener("click",()=>switchView(button.dataset.view)));
+$("headerToggle").onclick=()=>setServer(!appState?.running);
+$("configForm").onsubmit=saveConfig;$("detectPublicIP").onclick=detectPublicIP;
+async function openQR(id=""){
+  $("qrImage").src="/api/qwdtt/link-qr?t="+Date.now()+(id?"&id="+encodeURIComponent(id):"");
+  $("qrLink").textContent=profileLinks.get(id)||"Загрузка ссылки…";$("qrCopy").dataset.link=profileLinks.get(id)||"";
+  $("qrModal").classList.add("open");
+  if(id&&!profileLinks.has(id)){
+    try{const link=(await request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(id)).then(r=>r.text())).trim();profileLinks.set(id,link);$("qrLink").textContent=link;$("qrCopy").dataset.link=link}
+    catch(error){$("qrLink").textContent="Не удалось загрузить ссылку";toast(error.message,true)}
+  }
+}
+$("qrClose").onclick=()=>$("qrModal").classList.remove("open");$("qrModal").onclick=e=>{if(e.target===$("qrModal"))$("qrModal").classList.remove("open")};
+$("qrCopy").onclick=async()=>{const link=$("qrCopy").dataset.link;if(!link)return;try{await copyText(link);toast("Ссылка профиля скопирована")}catch(_){toast("Не удалось скопировать",true)}};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("qrModal").classList.remove("open")});
+$("addProfile").onclick=addProfile;
+$("profileEditors").addEventListener("click",event=>{
+  const card=event.target.closest(".profile-editor"),edit=event.target.closest(".edit-profile"),save=event.target.closest(".save-profile"),remove=event.target.closest(".remove-profile");
+  const firewallAction=event.target.closest(".firewall-rule-add,.firewall-rule-remove,.firewall-rule-up,.firewall-rule-down");
+  if(firewallAction&&card){
+    const id=card.dataset.id;profiles=readProfiles();const profile=profiles.find(item=>item.id===id);if(!profile)return;
+    profile.firewall=profile.firewall||{};profile.firewall.rules=profile.firewall.rules||[];
+    const rule=firewallAction.closest(".firewall-rule"),index=rule?Number(rule.dataset.ruleIndex):-1;
+    if(firewallAction.classList.contains("firewall-rule-add"))profile.firewall.rules.push({action:"allow",protocol:"all",addresses:[],ports:[]});
+    if(firewallAction.classList.contains("firewall-rule-remove")&&index>=0)profile.firewall.rules.splice(index,1);
+    if(firewallAction.classList.contains("firewall-rule-up")&&index>0)[profile.firewall.rules[index-1],profile.firewall.rules[index]]=[profile.firewall.rules[index],profile.firewall.rules[index-1]];
+    if(firewallAction.classList.contains("firewall-rule-down")&&index>=0&&index<profile.firewall.rules.length-1)[profile.firewall.rules[index+1],profile.firewall.rules[index]]=[profile.firewall.rules[index],profile.firewall.rules[index+1]];
+    renderProfileEditors();dirty=true;const refreshed=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===id),refreshedEdit=refreshed?.querySelector(".edit-profile");if(refreshed&&refreshedEdit){refreshed.classList.add("editing");refreshedEdit.classList.add("active");refreshedEdit.textContent="Скрыть";refreshedEdit.setAttribute("aria-expanded","true")}return;
+  }
+  if(edit&&card){const open=card.classList.toggle("editing");edit.classList.toggle("active",open);edit.textContent=open?"Скрыть":"Редактировать";edit.setAttribute("aria-expanded",String(open));return}
+  if(save){saveConfig(event,save);return}
+  if(remove){profiles=readProfiles().filter(profile=>profile.id!==remove.dataset.profileId);renderProfileEditors();dirty=true;saveConfig(event,remove);return}
+});
+$("profileEditors").addEventListener("input",event=>{
+  dirty=true;
+  if(event.target.classList.contains("profile-name")){
+    const title=event.target.closest(".profile-editor")?.querySelector(".profile-name-title");
+    if(title)title.textContent=event.target.value.trim()||"Профиль клиента";
+  }
+});
+$("profileEditors").addEventListener("change",event=>{
+  if(!event.target.classList.contains("profile-enabled"))return;
+  saveConfig({preventDefault(){}},event.target.closest(".profile-editor").querySelector(".save-profile"));
+});
+$("globalFirewallEditor").addEventListener("click",event=>{
+  const action=event.target.closest(".firewall-rule-add,.firewall-rule-remove,.firewall-rule-up,.firewall-rule-down");if(!action)return;
+  globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};globalFirewall.rules=globalFirewall.rules||[];
+  const row=action.closest(".firewall-rule"),index=row?Number(row.dataset.ruleIndex):-1;
+  if(action.classList.contains("firewall-rule-add"))globalFirewall.rules.push({name:`Правило ${globalFirewall.rules.length+1}`,action:"allow",family:"ipv4",protocol:"ipv4",addresses:[],ports:[]});
+  if(action.classList.contains("firewall-rule-remove")&&index>=0)globalFirewall.rules.splice(index,1);
+  if(action.classList.contains("firewall-rule-up")&&index>0)[globalFirewall.rules[index-1],globalFirewall.rules[index]]=[globalFirewall.rules[index],globalFirewall.rules[index-1]];
+  if(action.classList.contains("firewall-rule-down")&&index>=0&&index<globalFirewall.rules.length-1)[globalFirewall.rules[index+1],globalFirewall.rules[index]]=[globalFirewall.rules[index],globalFirewall.rules[index+1]];
+  renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();dirty=true;
+});
+let draggedFirewallIndex=-1;
+$("globalFirewallEditor").addEventListener("dragstart",event=>{if(event.target.closest("input,textarea,select,button,[contenteditable=\"true\"]")){event.preventDefault();return}const rule=event.target.closest(".firewall-rule");if(!rule)return;draggedFirewallIndex=Number(rule.dataset.ruleIndex);rule.classList.add("dragging");event.dataTransfer?.setData("text/plain",String(draggedFirewallIndex));});
+$("globalFirewallEditor").addEventListener("dragover",event=>{const rule=event.target.closest(".firewall-rule");if(!rule)return;event.preventDefault();document.querySelectorAll(".firewall-rule.drag-over").forEach(item=>item.classList.remove("drag-over"));rule.classList.add("drag-over");});
+$("globalFirewallEditor").addEventListener("dragend",event=>{event.target.closest(".firewall-rule")?.classList.remove("dragging");document.querySelectorAll(".firewall-rule.drag-over").forEach(item=>item.classList.remove("drag-over"));draggedFirewallIndex=-1;});
+$("globalFirewallEditor").addEventListener("drop",event=>{const target=event.target.closest(".firewall-rule");if(!target||draggedFirewallIndex<0)return;event.preventDefault();const targetIndex=Number(target.dataset.ruleIndex);globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};const [moved]=globalFirewall.rules.splice(draggedFirewallIndex,1);globalFirewall.rules.splice(targetIndex,0,moved);renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();dirty=true;draggedFirewallIndex=-1;});
+$("globalFirewallEditor").addEventListener("change",event=>{if(!event.target.classList.contains("firewall-rule-enabled")&&!event.target.classList.contains("firewall-rule-action"))return;globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};updateFirewallSummary(globalFirewall);dirty=true;});
+$("profileEditors").addEventListener("click",event=>{const connect=event.target.closest(".profile-connect");if(connect)openQR(connect.dataset.profileId)});
+document.querySelectorAll("#configForm input,#configForm select").forEach(el=>el.addEventListener("input",()=>dirty=true));
+$("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
+$("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
+const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
+setupFirewallCollapse();
+setupProfilesCollapse();
+
+(async function init(){
+  await loadState(true);await Promise.all([loadLinks(),loadInterfaces()]);
+  const publicHost=$("publicHost").value.trim();
+  if(!publicHost||publicHost==="127.0.0.1"||publicHost==="0.0.0.0")await detectPublicIP(true);
+  setInterval(()=>loadState(false),1000);setInterval(()=>{if($("logs").classList.contains("active"))loadLogs()},3000);
+})();
+</script>
+</body>
+</html>
