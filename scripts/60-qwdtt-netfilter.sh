@@ -26,6 +26,10 @@ if [ "$table" = nat ]; then
 	run -t nat -D PREROUTING -p udp --dport "$DTLS" -j REDIRECT --to-ports "$DTLS" || true
 	 run -t nat -C POSTROUTING -s "$NETWORK" -o "$WAN" -j MASQUERADE || \
 	 run -t nat -A POSTROUTING -s "$NETWORK" -o "$WAN" -j MASQUERADE
+	# The configured WAN can be the LAN bridge (br0), while the actual uplink
+	# may be dynamically named. Keep NAT independent of the egress interface.
+	run -t nat -C POSTROUTING -s "$NETWORK" -j MASQUERADE || \
+		run -t nat -A POSTROUTING -s "$NETWORK" -j MASQUERADE
 	if [ "$WAN" != br0 ]; then
 		run -t nat -C POSTROUTING -s "$NETWORK" -o br0 -j MASQUERADE || \
 		run -t nat -A POSTROUTING -s "$NETWORK" -o br0 -j MASQUERADE

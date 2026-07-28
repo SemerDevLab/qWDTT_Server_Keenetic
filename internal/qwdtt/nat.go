@@ -78,6 +78,16 @@ func EnsureNATMode(ctx context.Context, r CommandRunner, wan, network string, in
 			return e
 		}
 	}
+	// Do not depend solely on the configured interface here. On Keenetic the
+	// LAN bridge is commonly configured as wan=br0, while the actual Internet
+	// uplink may be ppp0 or another dynamically named interface. A source-only
+	// rule keeps tunnel clients NATed on whichever interface owns the default
+	// route, while remaining limited to the qWDTT network.
+	if err := r.Run(ctx, "iptables", "-t", "nat", "-C", "POSTROUTING", "-s", network, "-j", "MASQUERADE"); err != nil {
+		if err := r.Run(ctx, "iptables", "-t", "nat", "-A", "POSTROUTING", "-s", network, "-j", "MASQUERADE"); err != nil {
+			return err
+		}
+	}
 	// Keenetic commonly uses br0 for the LAN bridge and a different
 	// interface for the Internet uplink.  Tunnel clients must be masqueraded
 	// on the LAN bridge as well, otherwise replies from 192.168.1.0/24 (and

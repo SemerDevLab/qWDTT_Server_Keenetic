@@ -21,6 +21,6 @@ func generateWGKeyPair() (string, string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(p[:]), base64.StdEncoding.EncodeToString(pub), nil
 }
-func buildClientWGConfig(serverPublic, clientPrivate, clientIP, clientPort string) string {
-	return fmt.Sprintf("[Interface]\nPrivateKey = %s\nAddress = %s/32\nDNS = 1.1.1.1\nMTU = 1280\n\n[Peer]\nPublicKey = %s\nAllowedIPs = 0.0.0.0/0\nEndpoint = 127.0.0.1:%s\nPersistentKeepalive = 25\n", clientPrivate, clientIP, serverPublic, clientPort)
+func buildClientWGConfig(serverPublic, clientPrivate, clientIP, clientPort, dns string) string {
+	return fmt.Sprintf("[Interface]\nPrivateKey = %s\nAddress = %s/32\nDNS = %s\nMTU = 1280\n\n[Peer]\nPublicKey = %s\nAllowedIPs = 0.0.0.0/0\nEndpoint = 127.0.0.1:%s\nPersistentKeepalive = 25\n", clientPrivate, clientIP, dns, serverPublic, clientPort)
 }

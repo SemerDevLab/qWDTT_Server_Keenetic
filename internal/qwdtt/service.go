@@ -316,7 +316,7 @@ func (s Service) handleConnection(ctx context.Context, conn net.Conn, profiles m
 			_, _ = conn.Write([]byte("NOCONF"))
 			return
 		}
-		_, _ = conn.Write([]byte(buildClientWGConfig(serverPublic, peer.priv, peer.ip, port)))
+		_, _ = conn.Write([]byte(buildClientWGConfig(serverPublic, peer.priv, peer.ip, port, s.clientDNS())))
 		_ = conn.SetReadDeadline(time.Now().Add(connectionSetupTimeout))
 		n, err = conn.Read(buf)
 		if err != nil {
@@ -353,6 +353,46 @@ func (s Service) handleConnection(ctx context.Context, conn net.Conn, profiles m
 	if err := s.proxyWG(ctx, conn, buf[:n], profileTraffic); err != nil {
 		s.Logs.Add("INFO", "[DTLS %s profile=%s] WireGuard proxy stopped: %v", remote, profile.ID, err)
 	}
+}
+
+// clientDNS returns the DNS resolver reachable through the local router.
+// Explicit routing.dns values remain supported; otherwise use the router's
+// WireGuard address instead of sending client DNS requests to a public resolver.
+func (s Service) clientDNS() string {
+	for _, value := range s.Config.Routing.DNS {
+		if value = strings.TrimSpace(value); value != "" {
+			return value
+		}
+	}
+	// Keenetic's DNS proxy normally listens on the LAN bridge address, not on
+	// the service-owned WireGuard address. Prefer that local address so clients
+	// can actually reach the router resolver through the tunnel.
+	for _, interfaceName := range []string{"br0", s.Config.Routing.WAN} {
+		if interfaceName = strings.TrimSpace(interfaceName); interfaceName == "" {
+			continue
+		}
+		iface, err := net.InterfaceByName(interfaceName)
+		if err != nil {
+			continue
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			continue
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch value := addr.(type) {
+			case *net.IPNet:
+				ip = value.IP
+			case *net.IPAddr:
+				ip = value.IP
+			}
+			if ip = ip.To4(); ip != nil && !ip.IsLoopback() {
+				return ip.String()
+			}
+		}
+	}
+	return "192.168.1.1"
 }
 
 func commandKind(command string) string {
