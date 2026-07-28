@@ -1125,7 +1125,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
               <div class="field"><label for="listenAddr">DTLS-порт</label><div class="input-wrap"><input id="listenAddr" type="number" min="1" max="65535" required></div></div>
               <div class="field"><label for="vpnPort">Локальный VPN-порт</label><input id="vpnPort" type="number" min="1" max="65535" required></div>
               <div class="field"><label for="wgPort">WireGuard-порт</label><div class="input-wrap"><input id="wgPort" type="number" min="1" max="65535" required></div></div>
-              <div class="field"><label for="password">Пароль подключения</label><input id="password" type="text" autocomplete="off" required></div>
+              <div class="field"><label for="password">Пароль подключения</label><div class="inline-field"><input id="password" type="text" autocomplete="off" required><button class="btn small secondary" id="generatePassword" type="button">Сгенерировать</button></div></div>
             </div>
           </div>
 
@@ -1559,6 +1559,16 @@ $("globalFirewallEditor").addEventListener("drop",event=>{const target=event.tar
 $("globalFirewallEditor").addEventListener("change",event=>{if(!event.target.classList.contains("firewall-rule-enabled")&&!event.target.classList.contains("firewall-rule-action"))return;globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};updateFirewallSummary(globalFirewall);setDirty(true);});
 $("profileEditors").addEventListener("click",event=>{const connect=event.target.closest(".profile-connect");if(connect)openQR(connect.dataset.profileId)});
 document.querySelectorAll("#configForm input,#configForm select").forEach(el=>["input","change"].forEach(type=>el.addEventListener(type,()=>setDirty(true))));
+$("generatePassword").onclick=()=>{
+  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789",length=24,limit=256-(256%alphabet.length);
+  let password="";
+  while(password.length<length){
+    const bytes=crypto.getRandomValues(new Uint8Array(length-password.length));
+    for(const byte of bytes){if(byte<limit)password+=alphabet[byte%alphabet.length]}
+  }
+  $("password").value=password;setDirty(true);$("password").focus();$("password").select();
+  toast("Новый пароль сгенерирован");
+};
 $("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
 $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
