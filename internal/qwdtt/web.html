@@ -33,7 +33,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .nav-button:hover{background:var(--surface-2);color:var(--text)}.nav-button.active{color:#fff;background:linear-gradient(90deg,rgba(124,108,255,.2),rgba(124,108,255,.07));box-shadow:none}
 .nav-button svg{width:19px;height:19px;flex:none}.nav-button span{font-weight:650}
 .sidebar-foot{position:absolute;left:18px;right:18px;bottom:22px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
-.mini-status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.mini-status b{display:block;color:var(--text);font-size:13px}.top-version{margin:0 2px;color:#71809b;font-size:10px;white-space:nowrap}
+.mini-status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.mini-status b{display:block;color:var(--text);font-size:13px}.top-version-wrap{display:flex;align-items:center;gap:6px}.top-version{margin:0 2px;color:#71809b;font-size:10px;white-space:nowrap}.update-indicator{position:relative;display:grid;place-items:center;width:27px;height:27px;padding:0;border:1px solid rgba(67,214,140,.35);border-radius:9px;background:rgba(67,214,140,.1);color:var(--green);cursor:pointer;box-shadow:0 0 16px rgba(67,214,140,.12);animation:updatePulse 2s ease-in-out infinite}.update-indicator[hidden]{display:none}.update-indicator:hover{border-color:var(--green);background:rgba(67,214,140,.17)}.update-indicator svg{width:15px;height:15px}.update-indicator:after{content:"";position:absolute;right:2px;top:2px;width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}@keyframes updatePulse{50%{box-shadow:0 0 22px rgba(67,214,140,.28)}}
 .status-dot{width:9px;height:9px;border-radius:50%;background:#59657a;box-shadow:0 0 0 5px rgba(89,101,122,.1);transition:.2s}
 .status-dot.on{background:var(--green);box-shadow:0 0 0 5px rgba(67,214,140,.12),0 0 16px rgba(67,214,140,.5)}
 .main{min-width:0;padding:0 34px 40px}
@@ -106,6 +106,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .log-toolbar{display:flex;gap:8px}.logs{height:min(62vh,610px);overflow:auto;padding:9px;border:1px solid var(--line-soft);border-radius:13px;background:#090e19;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;scrollbar-color:#33405a transparent}
 .log-line{display:grid;grid-template-columns:78px 56px minmax(0,1fr);gap:8px;padding:5px 7px;border-radius:7px}.log-line:hover{background:#11192a}.log-time{color:#586781}.log-level{font-weight:800}.log-level.INFO{color:#68b7ff}.log-level.ERROR{color:var(--red)}.log-level.WARN{color:var(--yellow)}.log-level.DEBUG{color:#9c8eff}.log-message{color:#b7c2d7;overflow-wrap:anywhere}.empty{display:grid;place-items:center;min-height:250px;color:var(--muted);text-align:center}
 .qr-modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.76);backdrop-filter:blur(12px);z-index:100}.qr-modal.open{display:grid}.qr-dialog{position:relative;width:min(430px,100%);padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center;animation:enter .2s ease}.qr-dialog h2{margin:0 0 4px;font-size:18px}.qr-dialog p{margin:0 0 15px;color:var(--muted);font-size:11px}.qr-dialog img{display:block;width:245px;max-width:100%;margin:0 auto;padding:9px;border-radius:14px;background:#fff}.qr-link-box{margin-top:13px;padding:9px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#090e19;text-align:left}.qr-link-box code{display:block;overflow-wrap:anywhere;color:#aebbd1;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.qr-copy{width:100%;margin-top:8px}.qr-close{position:absolute;right:13px;top:13px}
+.update-dialog{text-align:left}.update-dialog h2{margin-bottom:5px}.update-dialog>p{margin-bottom:18px}.update-versions{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:16px;border:1px solid var(--line-soft);border-radius:14px;background:#090e19}.update-version{min-width:0}.update-version span{display:block;margin-bottom:5px;color:var(--muted);font-size:10px}.update-version strong{display:block;overflow:hidden;font-size:15px;text-overflow:ellipsis;white-space:nowrap}.update-version.latest strong{color:var(--green)}.update-arrow{color:var(--primary-2);font-size:20px}.update-architecture{margin-top:10px;color:var(--muted);font-size:10px}.update-message{min-height:16px;margin-top:12px;color:var(--muted);font-size:11px}.update-message.error{color:var(--red)}.update-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 .toast-stack{position:fixed;right:22px;bottom:22px;display:grid;gap:8px;z-index:200}.toast{min-width:260px;max-width:380px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#192238;box-shadow:var(--shadow);animation:toastIn .22s ease}.toast.error{border-color:rgba(255,102,128,.35)}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
 .spinner{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:1000px){.metrics{grid-template-columns:repeat(2,1fr)}.overview-grid,.settings-layout{grid-template-columns:1fr}.settings-side{position:static}}
@@ -735,7 +736,12 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     <header class="topbar">
       <div class="title"><h1 id="pageTitle">Обзор</h1><p id="pageSubtitle">Состояние защищённого туннеля</p></div>
       <div class="top-actions">
-        <span class="top-version" id="appVersionTop">Версия —</span>
+        <div class="top-version-wrap">
+          <span class="top-version" id="appVersionTop">Версия —</span>
+          <button class="update-indicator" id="updateIndicator" type="button" title="Доступно обновление" aria-label="Доступно обновление" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 5-5m-5 5-5-5"/><path d="M5 20h14"/></svg>
+          </button>
+        </div>
         <div class="connection-pill"><i class="status-dot" data-status-dot></i><span data-status-text>Проверка…</span></div>
         <button class="btn small secondary" id="headerToggle"><span>Управление</span></button>
       </div>
@@ -830,11 +836,6 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
       <form id="configForm" class="settings-layout">
         <div class="settings-stack">
           <div class="card panel">
-            <div class="panel-head"><div><h2>Обновление</h2><p>Проверка и установка последнего IPK из GitHub Releases</p></div></div>
-            <div class="update-row"><div><b id="updateCurrent">Текущая версия: —</b><span id="updateLatest">Последняя версия: не проверялась</span></div><div class="form-actions"><button class="btn small secondary" id="checkUpdate" type="button">Проверить</button><button class="btn small" id="installUpdate" type="button" hidden>Установить</button></div></div>
-            <div class="field-hint" id="updateMessage"></div>
-          </div>
-          <div class="card panel">
             <div class="panel-head"><div><h2>Сервис</h2><p>Автозапуск и порт панели управления</p></div></div>
             <div class="switch-row"><div class="switch-copy"><b>Запускать автоматически</b><span>Сервис будет активирован после загрузки роутера</span></div><label class="switch"><input id="enabled" type="checkbox"><span></span></label></div>
             <div class="form-grid">
@@ -884,6 +885,24 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     <button class="btn small secondary qr-copy" id="qrCopy" type="button">Копировать ссылку</button>
   </div>
 </div>
+<div class="qr-modal" id="updateModal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle">
+  <div class="qr-dialog update-dialog">
+    <button class="icon-btn qr-close" id="updateClose" type="button" aria-label="Закрыть">×</button>
+    <h2 id="updateModalTitle">Доступно обновление</h2>
+    <p>Можно установить новую версию qWDTT. Во время обновления сервис кратковременно перезапустится.</p>
+    <div class="update-versions">
+      <div class="update-version"><span>Установлена</span><strong id="updateCurrent">—</strong></div>
+      <div class="update-arrow">→</div>
+      <div class="update-version latest"><span>Новая версия</span><strong id="updateLatest">—</strong></div>
+    </div>
+    <div class="update-architecture" id="updateArchitecture"></div>
+    <div class="update-message" id="updateMessage"></div>
+    <div class="update-dialog-actions">
+      <button class="btn small secondary" id="updateCancel" type="button">Отмена</button>
+      <button class="btn small" id="installUpdate" type="button">Обновить</button>
+    </div>
+  </div>
+</div>
 <div class="toast-stack" id="toasts"></div>
 
 <script>
@@ -893,7 +912,8 @@ const viewMeta={
   settings:["Настройки","Конфигурация сервера и маршрутизации"],
   logs:["Журнал","Диагностика работы сервиса"]
 };
-let appState=null,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),globalFirewall={rules:[]};
+let appState=null,updateInfo=null,updateCheckPending=false,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),globalFirewall={rules:[]};
+const updateCheckInterval=30*60*1000;
 const trafficHistory={rx:[],tx:[],total:[]},trafficHistoryLimit=32;
 
 function escapeHTML(value){
@@ -1244,29 +1264,40 @@ $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toa
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
 function renderUpdate(info){
   if(!info)return;
-  $("updateCurrent").textContent="Текущая версия: "+(info.current||"dev")+" ("+(info.architecture||"неизвестная архитектура")+")";
-  $("updateLatest").textContent=info.latest?"Последняя версия: "+info.latest:"Последняя версия: не найдена";
+  updateInfo=info;
+  $("updateCurrent").textContent=info.current||"dev";
+  $("updateLatest").textContent=info.latest||"—";
+  $("updateArchitecture").textContent="Архитектура пакета: "+(info.architecture||"неизвестна");
   const installing=info.status==="installing";
-  $("checkUpdate").disabled=installing;
-  $("installUpdate").hidden=!info.available||installing;
+  $("updateIndicator").hidden=!info.available;
+  $("installUpdate").hidden=!info.available&&!installing;
   $("installUpdate").disabled=installing;
+  $("installUpdate").innerHTML=installing?'<i class="spinner"></i> Установка…':"Обновить";
+  $("updateMessage").classList.toggle("error",Boolean(info.error));
   if(info.status==="installed")$("updateMessage").textContent="Обновление установлено. Сервис перезапускается.";
   else if(info.error)$("updateMessage").textContent="Ошибка обновления: "+info.error;
   else if(installing)$("updateMessage").textContent="Обновление устанавливается…";
-  else if(info.latest&&!info.available)$("updateMessage").textContent="Установлена последняя версия.";
   else $("updateMessage").textContent="";
 }
 async function checkUpdate(){
-  $("checkUpdate").disabled=true;
-  $("updateMessage").textContent="Проверка релизов GitHub…";
+  if(updateCheckPending)return;
+  updateCheckPending=true;
   try{renderUpdate(await request("/api/qwdtt/update/check" ).then(r=>r.json()))}
-  catch(error){$("updateMessage").textContent="Не удалось проверить обновления: "+error.message}
-  finally{$("checkUpdate").disabled=false}
+  catch(error){console.warn("Не удалось проверить обновления:",error)}
+  finally{updateCheckPending=false}
 }
-$("checkUpdate").onclick=checkUpdate;
+$("updateIndicator").onclick=()=>{$("updateModal").classList.add("open")};
+function closeUpdateModal(){if(updateInfo?.status!=="installing")$("updateModal").classList.remove("open")}
+$("updateClose").onclick=closeUpdateModal;
+$("updateCancel").onclick=closeUpdateModal;
+$("updateModal").addEventListener("click",event=>{if(event.target===$("updateModal"))closeUpdateModal()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"&&$("updateModal").classList.contains("open"))closeUpdateModal()});
 $("installUpdate").onclick=async()=>{
-  if(!confirm("Установить новую версию qWDTT? Сервис временно перезапустится."))return;
-  try{const response=await request("/api/qwdtt/update/install",{method:"POST"});renderUpdate(await response.json());toast("Обновление запущено")}
+  try{
+    const response=await request("/api/qwdtt/update/install",{method:"POST"}),result=await response.json();
+    renderUpdate({...updateInfo,...result,latest:result.version||updateInfo?.latest});
+    toast("Обновление запущено");
+  }
   catch(error){toast(error.message,true)}
 };
 setupFirewallCollapse();
@@ -1276,7 +1307,7 @@ setupProfilesCollapse();
   await loadState(true);checkUpdate();await Promise.all([loadLinks(),loadInterfaces()]);
   const publicHost=$("publicHost").value.trim();
   if(!publicHost||publicHost==="127.0.0.1"||publicHost==="0.0.0.0")await detectPublicIP(true);
-  setInterval(()=>loadState(false),1000);setInterval(()=>{if($("logs").classList.contains("active"))loadLogs()},3000);
+  setInterval(()=>loadState(false),1000);setInterval(()=>{if($("logs").classList.contains("active"))loadLogs()},3000);setInterval(checkUpdate,updateCheckInterval);
 })();
 </script>
 </body>

@@ -80,6 +80,64 @@ echo "Web panel: http://$LAN_IP:$WEB_PORT"
 echo "DTLS: UDP $DTLS_PORT"
 exit 0
 '@
+	Write-Text (Join-Path $control "prerm") @'
+#!/bin/sh
+# Keep configuration and network state intact while opkg replaces the package.
+[ "$1" = "upgrade" ] && exit 0
+
+INIT=/opt/etc/init.d/S99qwdtt
+CFG=/opt/etc/qwdtt/config.json
+NETWORK=10.66.0.0/16
+WAN=br0
+INTERFACE=wdtt0
+
+if [ -f "$CFG" ]; then
+    VALUE=$(sed -n 's/.*"network"[[:space:]]*:[[:space:]]*"\([^" ]*\)".*/\1/p' "$CFG" | head -n 1)
+    [ -n "$VALUE" ] && NETWORK=$VALUE
+    VALUE=$(sed -n 's/.*"wan"[[:space:]]*:[[:space:]]*"\([^" ]*\)".*/\1/p' "$CFG" | head -n 1)
+    [ -n "$VALUE" ] && WAN=$VALUE
+    VALUE=$(sed -n 's/.*"interface"[[:space:]]*:[[:space:]]*"\([^" ]*\)".*/\1/p' "$CFG" | head -n 1)
+    [ -n "$VALUE" ] && INTERFACE=$VALUE
+fi
+
+if [ -x "$INIT" ]; then
+    "$INIT" stop >/dev/null 2>&1 || true
+else
+    killall qwdtt >/dev/null 2>&1 || true
+fi
+
+# Remove both current profile chains and rules used by older releases.
+iptables -D INPUT -i "$INTERFACE" -j QWDTT_PROFILE_IN 2>/dev/null || true
+iptables -D FORWARD -i "$INTERFACE" -j QWDTT_PROFILE_FWD 2>/dev/null || true
+iptables -F QWDTT_PROFILE_IN 2>/dev/null || true
+iptables -F QWDTT_PROFILE_FWD 2>/dev/null || true
+iptables -X QWDTT_PROFILE_IN 2>/dev/null || true
+iptables -X QWDTT_PROFILE_FWD 2>/dev/null || true
+iptables -D INPUT -i "$INTERFACE" -j ACCEPT 2>/dev/null || true
+iptables -D FORWARD -i "$INTERFACE" -j ACCEPT 2>/dev/null || true
+iptables -D FORWARD -o "$INTERFACE" -j ACCEPT 2>/dev/null || true
+iptables -t nat -D POSTROUTING -s "$NETWORK" -o "$WAN" -j MASQUERADE 2>/dev/null || true
+iptables -t nat -D POSTROUTING -s "$NETWORK" -j MASQUERADE 2>/dev/null || true
+[ "$WAN" = "br0" ] || iptables -t nat -D POSTROUTING -s "$NETWORK" -o br0 -j MASQUERADE 2>/dev/null || true
+ip link del "$INTERFACE" 2>/dev/null || true
+exit 0
+'@
+	Write-Text (Join-Path $control "postrm") @'
+#!/bin/sh
+# Never erase user data when this package is merely being upgraded/replaced.
+[ "$1" = "upgrade" ] && exit 0
+
+killall qwdtt >/dev/null 2>&1 || true
+rm -rf /opt/etc/qwdtt
+rm -f /opt/bin/qwdtt
+rm -f /opt/etc/init.d/S99qwdtt
+rm -f /opt/etc/ndm/netfilter.d/60-qwdtt-netfilter.sh
+rm -f /tmp/qwdtt-opkg-was-running
+rm -f /opt/tmp/qwdtt-update-*.ipk
+rm -f /opt/tmp/qwdtt-update-runner-*.sh
+rm -f /opt/tmp/qwdtt-update.log
+exit 0
+'@
 	# config.json is created by postinst and intentionally is not registered as
 	# an opkg conffile. This avoids resolve_conffiles warnings and keeps the
 	# user's configuration untouched on reinstall/upgrade.
