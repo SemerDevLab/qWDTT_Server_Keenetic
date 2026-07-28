@@ -830,6 +830,11 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
       <form id="configForm" class="settings-layout">
         <div class="settings-stack">
           <div class="card panel">
+            <div class="panel-head"><div><h2>Обновление</h2><p>Проверка и установка последнего IPK из GitHub Releases</p></div></div>
+            <div class="update-row"><div><b id="updateCurrent">Текущая версия: —</b><span id="updateLatest">Последняя версия: не проверялась</span></div><div class="form-actions"><button class="btn small secondary" id="checkUpdate" type="button">Проверить</button><button class="btn small" id="installUpdate" type="button" hidden>Установить</button></div></div>
+            <div class="field-hint" id="updateMessage"></div>
+          </div>
+          <div class="card panel">
             <div class="panel-head"><div><h2>Сервис</h2><p>Автозапуск и порт панели управления</p></div></div>
             <div class="switch-row"><div class="switch-copy"><b>Запускать автоматически</b><span>Сервис будет активирован после загрузки роутера</span></div><label class="switch"><input id="enabled" type="checkbox"><span></span></label></div>
             <div class="form-grid">
@@ -1237,11 +1242,38 @@ document.querySelectorAll("#configForm input,#configForm select").forEach(el=>el
 $("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
 $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
+function renderUpdate(info){
+  if(!info)return;
+  $("updateCurrent").textContent="Текущая версия: "+(info.current||"dev")+" ("+(info.architecture||"неизвестная архитектура")+")";
+  $("updateLatest").textContent=info.latest?"Последняя версия: "+info.latest:"Последняя версия: не найдена";
+  const installing=info.status==="installing";
+  $("checkUpdate").disabled=installing;
+  $("installUpdate").hidden=!info.available||installing;
+  $("installUpdate").disabled=installing;
+  if(info.status==="installed")$("updateMessage").textContent="Обновление установлено. Сервис перезапускается.";
+  else if(info.error)$("updateMessage").textContent="Ошибка обновления: "+info.error;
+  else if(installing)$("updateMessage").textContent="Обновление устанавливается…";
+  else if(info.latest&&!info.available)$("updateMessage").textContent="Установлена последняя версия.";
+  else $("updateMessage").textContent="";
+}
+async function checkUpdate(){
+  $("checkUpdate").disabled=true;
+  $("updateMessage").textContent="Проверка релизов GitHub…";
+  try{renderUpdate(await request("/api/qwdtt/update/check" ).then(r=>r.json()))}
+  catch(error){$("updateMessage").textContent="Не удалось проверить обновления: "+error.message}
+  finally{$("checkUpdate").disabled=false}
+}
+$("checkUpdate").onclick=checkUpdate;
+$("installUpdate").onclick=async()=>{
+  if(!confirm("Установить новую версию qWDTT? Сервис временно перезапустится."))return;
+  try{const response=await request("/api/qwdtt/update/install",{method:"POST"});renderUpdate(await response.json());toast("Обновление запущено")}
+  catch(error){toast(error.message,true)}
+};
 setupFirewallCollapse();
 setupProfilesCollapse();
 
 (async function init(){
-  await loadState(true);await Promise.all([loadLinks(),loadInterfaces()]);
+  await loadState(true);checkUpdate();await Promise.all([loadLinks(),loadInterfaces()]);
   const publicHost=$("publicHost").value.trim();
   if(!publicHost||publicHost==="127.0.0.1"||publicHost==="0.0.0.0")await detectPublicIP(true);
   setInterval(()=>loadState(false),1000);setInterval(()=>{if($("logs").classList.contains("active"))loadLogs()},3000);

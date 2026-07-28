@@ -28,6 +28,16 @@ rm -f "$STATE"
 if pidof qwdtt >/dev/null 2>&1; then
     echo running > "$STATE"
     /opt/etc/init.d/S99qwdtt stop >/dev/null 2>&1 || killall qwdtt >/dev/null 2>&1 || true
+    # The updater is started by qwdtt itself. Wait until the old process has
+    # really exited so opkg/postinst can bind the web and DTLS ports cleanly.
+    for WAIT in 1 2 3 4 5 6 7 8 9 10; do
+        pidof qwdtt >/dev/null 2>&1 || break
+        sleep 1
+    done
+    if pidof qwdtt >/dev/null 2>&1; then
+        killall qwdtt >/dev/null 2>&1 || true
+        sleep 1
+    fi
 fi
 exit 0
 '@
