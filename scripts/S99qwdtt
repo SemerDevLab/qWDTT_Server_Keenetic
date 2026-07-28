@@ -109,13 +109,6 @@ if [ "$1" = "check" ]; then
 	exit 1
 fi
 
-if [ "$1" = "start" ]; then
-	if ! "$0" check; then
-		echo 'qWDTT was not started because the dependency check failed.' >&2
-		exit 1
-	fi
-fi
-
 if [ "$1" = "delete" ]; then
 	# Stop the service before removing its network state.
 	"$0" stop >/dev/null 2>&1 || true

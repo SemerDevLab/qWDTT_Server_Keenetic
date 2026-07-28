@@ -20,7 +20,6 @@ foreach($t in $targets){
 	$hook = (Get-Content "scripts/60-qwdtt-netfilter.sh" -Raw) -replace "`r`n", "`n" -replace "`r", "`n"
 	[IO.File]::WriteAllText((Join-Path $data "opt/etc/ndm/netfilter.d/60-qwdtt-netfilter.sh"), $hook, [Text.Encoding]::ASCII)
 	Copy-Item "qwdtt.config.example.json" (Join-Path $data "opt/etc/qwdtt/config.example.json")
-	Copy-Item "qwdtt.config.example.json" (Join-Path $data "opt/etc/qwdtt/config.json")
 	Write-Text (Join-Path $control "control") "Package: qwdtt`nVersion: $Version-$Release`nArchitecture: $($t.Arch)`nMaintainer: qWDTT`nSection: net`nPriority: optional`nDepends: wireguard-tools, iptables`nDescription: qWDTT client and server for Keenetic routers."
 	Write-Text (Join-Path $control "preinst") @'
 #!/bin/sh
@@ -43,6 +42,14 @@ fi
 # Verify the complete installation before starting the service. Do not hide a
 # failed check: opkg must report the installation as incomplete.
 INIT=/opt/etc/init.d/S99qwdtt
+CFG=/opt/etc/qwdtt/config.json
+if [ ! -f "$CFG" ]; then
+    cp /opt/etc/qwdtt/config.example.json "$CFG" || {
+        echo "qWDTT could not create the initial config: $CFG" >&2
+        exit 1
+    }
+    chmod 600 "$CFG"
+fi
 if ! "$INIT" check; then
     echo "qWDTT was installed but was not started: dependency check failed." >&2
     echo "Run '$INIT check' to see the failed checks." >&2
@@ -63,9 +70,9 @@ echo "Web panel: http://$LAN_IP:$WEB_PORT"
 echo "DTLS: UDP $DTLS_PORT"
 exit 0
 '@
-	# Keep user settings and generated WireGuard identity across reinstall/
-	# upgrade. opkg treats entries in this file as persistent conffiles.
-	Write-Text (Join-Path $control "conffiles") "/opt/etc/qwdtt/config.json"
+	# config.json is created by postinst and intentionally is not registered as
+	# an opkg conffile. This avoids resolve_conffiles warnings and keeps the
+	# user's configuration untouched on reinstall/upgrade.
  Write-Text (Join-Path $pkg "debian-binary") "2.0"
 	go run ./cmd/ipkpack -out (Join-Path $OutDir ("qwdtt_${Version}-${Release}_$($t.Arch)-kn.ipk")) -pkg $pkg
 	if($LASTEXITCODE -ne 0){ throw "Packaging failed for $($t.Arch)" }
