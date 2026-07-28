@@ -43,6 +43,46 @@ check_config_value() {
 	fi
 }
 
+check_web_port() {
+	WEB_PORT=$(sed -n 's/.*"webListen"[[:space:]]*:[[:space:]]*"[^:]*:\([0-9][0-9]*\)".*/\1/p' "$CFG" | head -n 1)
+	if [ -z "$WEB_PORT" ]; then
+		check_fail 'webListen does not contain a valid TCP port'
+		return
+	fi
+	if [ "$WEB_PORT" -lt 1 ] 2>/dev/null || [ "$WEB_PORT" -gt 65535 ] 2>/dev/null; then
+		check_fail "webListen port is out of range: $WEB_PORT"
+		return
+	fi
+	check_ok "webListen port: $WEB_PORT"
+
+	if command -v netstat >/dev/null 2>&1; then
+		if netstat -ln 2>/dev/null | awk -v port=":$WEB_PORT" '$4 ~ port "$" {found=1} END {exit !found}'; then
+			PORT_IN_USE=1
+		else
+			PORT_IN_USE=0
+		fi
+	elif command -v ss >/dev/null 2>&1; then
+		if ss -ltn 2>/dev/null | awk -v port=":$WEB_PORT" '$4 ~ port "$" {found=1} END {exit !found}'; then
+			PORT_IN_USE=1
+		else
+			PORT_IN_USE=0
+		fi
+	else
+		check_fail 'cannot check web port: netstat or ss is not installed'
+		return
+	fi
+
+	if [ "$PORT_IN_USE" -eq 1 ]; then
+		if pidof qwdtt >/dev/null 2>&1; then
+			check_ok "web port is listening while qwdtt is running: $WEB_PORT"
+		else
+			check_fail "web port is already occupied: $WEB_PORT"
+		fi
+	else
+		check_ok "web port is free: $WEB_PORT"
+	fi
+}
+
 if [ "$1" = "check" ]; then
 	CHECK_FAILED=0
 	CFG=/opt/etc/qwdtt/config.json
@@ -76,6 +116,7 @@ if [ "$1" = "check" ]; then
 		check_config_value 'server.dtlsPort' '"dtlsPort"[[:space:]]*:[[:space:]]*[0-9]'
 		check_config_value 'server.wgPort' '"wgPort"[[:space:]]*:[[:space:]]*[0-9]'
 		check_config_value 'webListen' '"webListen"[[:space:]]*:[[:space:]]*"[^"]\+"'
+		check_web_port
 	fi
 
 	if iptables -L >/dev/null 2>&1; then

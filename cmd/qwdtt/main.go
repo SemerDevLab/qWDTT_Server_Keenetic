@@ -19,7 +19,7 @@ func main() {
 		log.Fatalf("qwdtt config: %v", err)
 	}
 	if cfg.WebListen == "" {
-		cfg.WebListen = "0.0.0.0:8088"
+		cfg.WebListen = "0.0.0.0:3333"
 	}
 	logs := qwdtt.NewLogBook()
 	logs.Add("INFO", "qWDTT server starting")

@@ -978,7 +978,7 @@ function renderState(state,fillForm=false){
   $("totalTraffic").textContent=formatBytes((Number(t.rxBytes)||0)+(Number(t.txBytes)||0));
   updateTrafficCharts(t);
   if(fillForm&&!dirty){
-    $("enabled").checked=!!c.enabled;setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||8088);
+    $("enabled").checked=!!c.enabled;setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||3333);
     setValue("publicHost",s.publicHost);setValue("listenAddr",portOnly(s.listenAddr)||s.dtlsPort||56000);
     setValue("wgPort",s.wgPort||56001);setValue("vpnPort",s.vpnPort||9000);setValue("password",s.password);
     setValue("network",s.network);setValue("interface",r.interface||"wdtt0");

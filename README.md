@@ -67,7 +67,7 @@ opkg install /opt/tmp/qwdtt_0.1.0-20_aarch64-3.10-kn.ipk
 Веб-панель по умолчанию доступна на:
 
 ```text
-http://АДРЕС_РОУТЕРА:8088/
+http://АДРЕС_РОУТЕРА:3333/
 ```
 
 Для входа используются учётные данные Keenetic.
@@ -101,7 +101,7 @@ cp /opt/etc/qwdtt/config.json /opt/tmp/qwdtt-config.backup.json
 ```json
 {
   "enabled": false,
-  "webListen": "0.0.0.0:8088",
+  "webListen": "0.0.0.0:3333",
   "server": {
     "publicHost": "vpn.example.com",
     "listenAddr": "0.0.0.0:56000",

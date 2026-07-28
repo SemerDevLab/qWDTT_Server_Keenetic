@@ -61,7 +61,7 @@ if ! "$INIT" start; then
 fi
 WEB_PORT=$(sed -n 's/.*"webListen"[[:space:]]*:[[:space:]]*"[^:]*:\([0-9][0-9]*\)".*/\1/p' /opt/etc/qwdtt/config.json | head -n 1)
 DTLS_PORT=$(sed -n 's/.*"dtlsPort"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' /opt/etc/qwdtt/config.json | awk '$1 + 0 > 0 { print; exit }')
-[ -n "$WEB_PORT" ] || WEB_PORT=8088
+[ -n "$WEB_PORT" ] || WEB_PORT=3333
 [ -n "$DTLS_PORT" ] || DTLS_PORT=56000
 LAN_IP=$(ip -4 addr show br0 2>/dev/null | sed -n 's/.*inet \([0-9.]*\)\/.*/\1/p' | head -n 1)
 [ -n "$LAN_IP" ] || LAN_IP=0.0.0.0
