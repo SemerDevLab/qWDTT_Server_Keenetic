@@ -38,9 +38,20 @@ STATE=/tmp/qwdtt-opkg-was-running
 if [ -f "$STATE" ]; then
     rm -f "$STATE"
 fi
-# Start immediately after installation or upgrade. The init script also has
-# ENABLED=yes, so the service will start automatically after reboot.
-/opt/etc/init.d/S99qwdtt start >/dev/null 2>&1 || true
+
+# Dependencies from control/Depends must be installed before postinst runs.
+# Verify the complete installation before starting the service. Do not hide a
+# failed check: opkg must report the installation as incomplete.
+INIT=/opt/etc/init.d/S99qwdtt
+if ! "$INIT" check; then
+    echo "qWDTT was installed but was not started: dependency check failed." >&2
+    echo "Run '$INIT check' to see the failed checks." >&2
+    exit 1
+fi
+if ! "$INIT" start; then
+    echo "qWDTT installation completed, but automatic start failed." >&2
+    exit 1
+fi
 WEB_PORT=$(sed -n 's/.*"webListen"[[:space:]]*:[[:space:]]*"[^:]*:\([0-9][0-9]*\)".*/\1/p' /opt/etc/qwdtt/config.json | head -n 1)
 DTLS_PORT=$(sed -n 's/.*"dtlsPort"[[:space:]]*:[[:space:]]*\([0-9][0-9]*\).*/\1/p' /opt/etc/qwdtt/config.json | awk '$1 + 0 > 0 { print; exit }')
 [ -n "$WEB_PORT" ] || WEB_PORT=8088

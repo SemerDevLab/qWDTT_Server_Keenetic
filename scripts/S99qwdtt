@@ -5,6 +5,117 @@ ARGS="-config /opt/etc/qwdtt/config.json"
 PREARGS=""
 DESC="$PROCS"
 PATH=/opt/sbin:/opt/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+check_ok() {
+	printf '[  OK  ] %s\n' "$1"
+}
+
+check_warn() {
+	printf '[ WARN ] %s\n' "$1"
+}
+
+check_fail() {
+	printf '[ FAIL ] %s\n' "$1"
+	CHECK_FAILED=1
+}
+
+check_command() {
+	if command -v "$1" >/dev/null 2>&1; then
+		check_ok "command: $1"
+	else
+		check_fail "command not found: $1"
+	fi
+}
+
+check_file() {
+	if [ -e "$1" ]; then
+		check_ok "file: $1"
+	else
+		check_fail "missing file: $1"
+	fi
+}
+
+check_config_value() {
+	if grep -q "$2" "$CFG"; then
+		check_ok "config: $1"
+	else
+		check_fail "config value is missing: $1"
+	fi
+}
+
+if [ "$1" = "check" ]; then
+	CHECK_FAILED=0
+	CFG=/opt/etc/qwdtt/config.json
+
+	echo "qWDTT dependency check"
+	echo "----------------------"
+	check_command qwdtt
+	check_command ip
+	check_command iptables
+	check_command wg
+	check_command pidof
+	check_command sed
+	check_command grep
+	check_command awk
+
+	check_file /opt/bin/qwdtt
+	check_file "$CFG"
+	check_file /opt/etc/init.d/rc.func
+	check_file /opt/etc/ndm/netfilter.d/60-qwdtt-netfilter.sh
+
+	if [ -d /opt/etc/qwdtt ] && [ -w /opt/etc/qwdtt ]; then
+		check_ok "directory writable: /opt/etc/qwdtt"
+	else
+		check_fail "directory is missing or not writable: /opt/etc/qwdtt"
+	fi
+
+	if [ -f "$CFG" ]; then
+		check_config_value 'mode=server' '"mode"[[:space:]]*:[[:space:]]*"server"'
+		check_config_value 'server.network' '"network"[[:space:]]*:[[:space:]]*"[^"]\+"'
+		check_config_value 'server.password' '"password"[[:space:]]*:[[:space:]]*"[^"]\+"'
+		check_config_value 'server.dtlsPort' '"dtlsPort"[[:space:]]*:[[:space:]]*[0-9]'
+		check_config_value 'server.wgPort' '"wgPort"[[:space:]]*:[[:space:]]*[0-9]'
+		check_config_value 'webListen' '"webListen"[[:space:]]*:[[:space:]]*"[^"]\+"'
+	fi
+
+	if iptables -L >/dev/null 2>&1; then
+		check_ok 'iptables is accessible'
+	else
+		check_fail 'iptables is not accessible (root permissions or kernel support)'
+	fi
+	if ip link show >/dev/null 2>&1; then
+		check_ok 'network interfaces are accessible'
+	else
+		check_fail 'ip link is not accessible'
+	fi
+
+	if pidof qwdtt >/dev/null 2>&1; then
+		check_ok 'qwdtt process is running'
+		if ip link show wdtt0 >/dev/null 2>&1; then
+			check_ok 'WireGuard interface exists: wdtt0'
+		else
+			check_warn 'qwdtt is running but interface wdtt0 was not found'
+		fi
+	else
+		check_warn 'qwdtt process is not running (runtime checks skipped)'
+	fi
+
+	echo "----------------------"
+	if [ "$CHECK_FAILED" -eq 0 ]; then
+		echo 'CHECK PASSED: required dependencies and files are available.'
+		exit 0
+	fi
+	echo 'CHECK FAILED: fix the items marked FAIL before starting qWDTT.'
+	exit 1
+fi
+
+if [ "$1" = "start" ]; then
+	if ! "$0" check; then
+		echo 'qWDTT was not started because the dependency check failed.' >&2
+		exit 1
+	fi
+fi
+
 if [ "$1" = "delete" ]; then
 	# Stop the service before removing its network state.
 	"$0" stop >/dev/null 2>&1 || true
