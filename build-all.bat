@@ -1,4 +1,4 @@
-@echo off
+Логин@echo off
 setlocal
 cd /d "%~dp0"
 set VERSION=%~1

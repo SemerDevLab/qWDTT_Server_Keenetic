@@ -15,6 +15,8 @@
   --radius:18px;--radius-sm:12px
 }
 *{box-sizing:border-box}
+body{-webkit-user-select:none;user-select:none}
+input,textarea,select,code,pre,[contenteditable="true"],.logs,.logs *{-webkit-user-select:text;user-select:text}
 html{min-height:100%;background:var(--bg)}
 body{margin:0;min-height:100vh;color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:
  radial-gradient(circle at 82% -12%,rgba(124,108,255,.16),transparent 30rem),
@@ -79,17 +81,23 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .inline-field{display:flex;gap:8px}.inline-field input{flex:1}
 .switch-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0}.switch-copy b{display:block;font-size:13px}.switch-copy span{color:var(--muted);font-size:11px}
 .switch{position:relative;width:45px;height:25px;flex:none}.switch input{position:absolute;opacity:0}.switch span{position:absolute;inset:0;border-radius:999px;background:#293449;cursor:pointer;transition:.2s}.switch span:after{content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 2px 5px #0005;transition:.2s}.switch input:checked+span{background:var(--primary)}.switch input:checked+span:after{transform:translateX(20px)}
+.service-inline-row{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(170px,.65fr) minmax(300px,1.35fr);align-items:end;gap:15px}
+.server-ports-row{display:grid;grid-template-columns:repeat(3,minmax(125px,.7fr)) minmax(220px,1.3fr);gap:8px 9px}
 .form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.message{font-size:12px;color:var(--green)}.message.error{color:var(--red)}
 .info-note{display:flex;gap:10px;padding:12px;border:1px solid rgba(124,108,255,.16);border-radius:12px;background:rgba(124,108,255,.07);color:#aeb9d0;font-size:11px}.info-note svg{width:16px;flex:none;color:var(--primary-2)}
 .profile-editors{display:grid;gap:9px}.profile-editor{padding:11px;border:1px solid var(--line-soft);border-radius:12px;background:linear-gradient(135deg,rgba(12,18,32,.88),rgba(8,13,24,.62))}
+.profile-editors>.empty{min-height:64px}
 .profile-editor-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:0}.profile-editor-title{display:flex;align-items:center;gap:8px;min-width:0;font-weight:750}.profile-name-title{overflow:hidden;width:170px;flex:none;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.profile-head-right{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;margin-left:auto}.profile-head-metrics{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px}
-.profile-editor-grid{display:grid;grid-template-columns:minmax(130px,.3fr) minmax(150px,.27fr) minmax(220px,.43fr);gap:9px}.profile-actions{display:flex;align-items:center;gap:7px}.profile-port{width:98px;justify-content:center;overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis}
-.profile-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;padding-left:6px}.profile-badge{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 7px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);color:#aab7cd;font-size:9px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}.profile-status{width:11px;height:11px;flex:none;border:2px solid #55627a;border-radius:50%;background:#222c3e;box-shadow:0 0 0 4px rgba(85,98,122,.08);transition:.2s}.profile-status.connected{border-color:var(--green);background:var(--green);box-shadow:0 0 0 4px rgba(67,214,140,.1),0 0 10px rgba(67,214,140,.38)}.profile-sessions{width:66px;justify-content:center;overflow:hidden;color:#b8aefe;text-overflow:ellipsis}.profile-traffic-group{display:inline-flex;align-items:center;width:261px;min-height:23px;overflow:hidden;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);font-size:9px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}.profile-traffic-group span{box-sizing:border-box;overflow:hidden;padding:3px 6px;text-align:center;text-overflow:ellipsis}.profile-traffic-group .profile-stat{width:78px}.profile-traffic-group .profile-total{width:102px}.profile-traffic-group span+span{border-left:1px solid var(--line-soft)}.profile-stat.down{color:#60c9ff}.profile-stat.up{color:#aa92ff}.profile-total{color:#9aa8bf}
+.profile-editor-grid{display:grid;grid-template-columns:58px minmax(105px,.2fr) minmax(260px,.8fr);gap:9px}.profile-actions{display:flex;align-items:center;gap:7px}.profile-port{width:98px;justify-content:center;overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis}
+.profile-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;padding-left:6px}.profile-badge{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 7px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);color:#aab7cd;font-size:9px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}.profile-status{width:11px;height:11px;flex:none;border:2px solid #55627a;border-radius:50%;background:#222c3e;box-shadow:0 0 0 4px rgba(85,98,122,.08);transition:.2s}.profile-status.enabled{border-color:var(--green);background:var(--green);box-shadow:0 0 0 4px rgba(67,214,140,.1),0 0 10px rgba(67,214,140,.38)}.profile-online{width:64px;justify-content:center;color:#77849a}.profile-online.connected{border-color:rgba(67,214,140,.26);background:rgba(67,214,140,.08);color:var(--green)}.profile-sessions{width:66px;justify-content:center;overflow:hidden;color:#b8aefe;text-overflow:ellipsis}.profile-traffic-group{display:inline-flex;align-items:center;width:261px;min-height:23px;overflow:hidden;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);font-size:9px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}.profile-traffic-group span{box-sizing:border-box;overflow:hidden;padding:3px 6px;text-align:center;text-overflow:ellipsis}.profile-traffic-group .profile-stat{width:78px}.profile-traffic-group .profile-total{width:102px}.profile-traffic-group span+span{border-left:1px solid var(--line-soft)}.profile-stat.down{color:#60c9ff}.profile-stat.up{color:#aa92ff}.profile-total{color:#9aa8bf}
 .profile-edit-panel{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft)}.profile-editor.editing .profile-edit-panel{display:block;animation:enter .18s ease}.profile-footer{display:flex;justify-content:flex-end;gap:7px;margin-top:9px}.profile-footer .btn{min-height:28px;padding:5px 9px;font-size:9px}.edit-profile.active{border-color:rgba(124,108,255,.35);background:rgba(124,108,255,.12);color:#d7d2ff}
+.profile-enabled-field{display:flex;align-items:center;justify-content:center;padding-top:13px}.profile-enabled-field .switch{margin:0}
 .profile-firewall{grid-column:1/-1;padding:12px;border:1px solid rgba(124,108,255,.2);border-radius:10px;background:rgba(124,108,255,.05)}.profile-firewall-head{margin-bottom:10px}.profile-firewall-head b{font-size:12px}.profile-firewall-head span{display:block;margin-top:2px;color:var(--muted);font-size:11px}.profile-firewall-grid{display:grid;grid-template-columns:minmax(260px,1.35fr) 120px 105px minmax(300px,1.5fr) minmax(180px,.8fr);gap:9px}.profile-firewall textarea{min-height:62px;resize:vertical}
+.global-firewall-card .profile-firewall{padding:0;border:0;border-radius:0;background:transparent}
 .firewall-rules{display:grid;gap:9px;margin-bottom:10px}.firewall-rule{padding:10px;border:1px solid var(--line-soft);border-radius:9px;background:rgba(8,13,24,.42)}.firewall-rule-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:#b9c4d8;font-size:11px}.firewall-rule-actions{display:flex;gap:4px}.firewall-rule-actions .icon-btn{width:25px;height:25px;font-size:13px}.firewall-rule-add{margin-top:2px}
+.firewall-rules>.firewall-empty{min-height:48px}
 .firewall-rule-name{width:min(280px,55%);padding:5px 8px;font-size:11px;font-weight:700}
-.firewall-rule-enabled-field .switch{margin:0}.firewall-rule .field-hint{display:none}.firewall-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}.global-firewall-card{margin-top:10px}.global-firewall-card.is-collapsed>#globalFirewallEditor{display:none}.firewall-panel-actions{display:flex;align-items:center;gap:7px}.firewall-collapse-btn{width:92px;min-width:92px}.firewall-summary,.profiles-summary{display:block;margin-top:5px;color:#9a8eff;font-size:10px;font-weight:650}.profiles-card.is-collapsed>#profileEditors,.profiles-card.is-collapsed>.profiles-footer{display:none}.profiles-footer{display:flex;justify-content:flex-end;margin-top:10px}.firewall-rule-enabled-field{order:-1;display:flex;align-items:center;justify-content:center}
+.firewall-rule-enabled-field .switch{margin:0}.firewall-rule .field-hint{display:none}.firewall-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}.global-firewall-card{margin-top:10px}.global-firewall-card.is-collapsed>#globalFirewallEditor{display:none}.firewall-panel-actions{display:flex;align-items:center;gap:7px}.firewall-collapse-btn{width:38px;min-width:38px;height:27px;min-height:27px;padding:0}.firewall-summary,.profiles-summary{display:block;margin-top:5px;color:#9a8eff;font-size:10px;font-weight:650}.profiles-card.is-collapsed>#profileEditors,.profiles-card.is-collapsed>.profiles-footer{display:none}.profiles-footer{display:flex;justify-content:flex-end;margin-top:10px}.firewall-rule-enabled-field{order:-1;display:flex;align-items:center;justify-content:center}
 .settings-side{grid-column:1/-1}.settings-side .card{padding:0;border:0;background:transparent;box-shadow:none}.settings-side .panel-head,.settings-side .info-note{display:none}.settings-side .form-actions{justify-content:flex-end;margin-top:10px}
 #logs{display:flex;flex-direction:column}.toolbar-row{order:2;display:flex;justify-content:flex-end;width:100%;margin-top:10px}.logs+.toolbar-row{order:2}
 .view#logs{display:none}.view#logs.active{display:block}.view#logs .card{display:flex;flex-direction:column}.view#logs .card>.toolbar-row{order:2;justify-content:flex-end;margin:10px 0 0}
@@ -97,6 +105,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 #settings.view{width:100%;max-width:1360px}
 #settings .settings-layout,#settings .settings-stack{width:100%;min-width:0}
 #settings .settings-side{width:100%;grid-column:1/-1}
+.settings-save-fab{display:flex;align-items:center;justify-content:flex-end;animation:toastIn .2s ease}.settings-save-fab[hidden]{display:none}.settings-save-fab .btn{min-width:104px}
 .profile-firewall-grid{grid-template-columns:58px minmax(220px,1.05fr) minmax(220px,1.25fr) 105px 95px minmax(220px,1.25fr) minmax(170px,.9fr)}.firewall-rule-name-field input{width:100%}.firewall-rule-handle{display:inline-flex;align-items:center;gap:8px;padding:4px 8px;border:1px solid var(--line-soft);border-radius:7px;color:#aebbd1;font-size:10px;cursor:grab;user-select:none}.firewall-rule-handle:active{cursor:grabbing}.firewall-rule-handle .rule-priority{color:var(--primary-2);font-variant-numeric:tabular-nums}.firewall-rule-handle .rule-id{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.firewall-rule-enabled{width:34px!important;height:18px!important}
 .firewall-rule{cursor:grab}.firewall-rule.dragging{opacity:.45}.firewall-rule.drag-over{border-color:var(--primary-2);box-shadow:0 0 0 2px rgba(124,108,255,.18)}
 .profile-link-card{display:grid;grid-template-columns:minmax(120px,.35fr) minmax(0,1fr) auto;align-items:center;gap:10px;padding:9px;border:1px solid var(--line-soft);border-radius:10px;background:rgba(8,13,24,.48)}
@@ -110,11 +119,12 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .toast-stack{position:fixed;right:22px;bottom:22px;display:grid;gap:8px;z-index:200}.toast{min-width:260px;max-width:380px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#192238;box-shadow:var(--shadow);animation:toastIn .22s ease}.toast.error{border-color:rgba(255,102,128,.35)}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
 .spinner{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:1000px){.metrics{grid-template-columns:repeat(2,1fr)}.overview-grid,.settings-layout{grid-template-columns:1fr}.settings-side{position:static}}
+@media(max-width:850px){.service-inline-row{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){
   .shell{display:block}.sidebar{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;padding:7px max(8px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));border:1px solid var(--line);border-width:1px 0 0;background:rgba(10,14,25,.94)}
   .brand,.sidebar-foot{display:none}.nav{grid-template-columns:repeat(3,1fr);gap:4px}.nav-button{justify-content:center;flex-direction:column;gap:2px;padding:6px 4px;font-size:10px}.nav-button.active{box-shadow:none;background:rgba(124,108,255,.16)}.nav-button svg{width:18px}.nav-button span{font-size:10px}
   .main{padding:0 15px calc(86px + env(safe-area-inset-bottom))}.topbar{height:70px}.title h1{font-size:19px}.title p,.connection-pill span{display:none}.connection-pill{padding:9px}.top-actions .btn{padding:8px 10px}.top-actions .btn span{display:none}
-  .hero{padding:21px}.hero-traffic{width:100%}.profiles-layout{grid-template-columns:1fr}.panel{padding:17px}.link-row{grid-template-columns:70px minmax(0,1fr) auto}.form-grid{grid-template-columns:1fr}.field.wide{grid-column:auto}.section-heading{align-items:flex-start}.log-toolbar{flex-wrap:wrap}
+  .hero{padding:21px}.hero-traffic{width:100%}.profiles-layout{grid-template-columns:1fr}.panel{padding:17px}.link-row{grid-template-columns:70px minmax(0,1fr) auto}.form-grid,.service-inline-row,.server-ports-row{grid-template-columns:1fr}.field.wide{grid-column:auto}.section-heading{align-items:flex-start}.log-toolbar{flex-wrap:wrap}
   .profile-editor-grid,.profile-link-card,.profile-firewall-grid{grid-template-columns:1fr}.profile-link-actions{justify-content:flex-end}.profile-name-title{width:min(170px,55vw)}.profile-editor-head{align-items:flex-start;flex-wrap:wrap}.profile-head-right{width:100%}.profile-head-metrics{justify-content:flex-start;flex:1}
 }
 @media(max-width:430px){.hero-traffic{gap:5px}.hero-traffic-item{padding:9px 8px;border-radius:13px}.hero-traffic-label{font-size:8px}.hero-traffic-value{font-size:14px}.link-type{display:none}.link-row{grid-template-columns:minmax(0,1fr) auto}.form-actions{align-items:stretch;flex-direction:column}.form-actions .btn{width:100%}}
@@ -368,7 +378,7 @@ body:before{
 .profile-summary{gap:8px;padding-left:2px}
 .profile-name-title{width:148px;font-size:11px}
 .profile-status{width:9px;height:9px;border-width:1px;box-shadow:0 0 0 3px rgba(85,98,122,.07)}
-.profile-status.connected{box-shadow:0 0 0 3px rgba(65,214,154,.08),0 0 9px rgba(65,214,154,.3)}
+.profile-status.enabled{box-shadow:0 0 0 3px rgba(65,214,154,.08),0 0 9px rgba(65,214,154,.3)}
 .profile-head-right{gap:6px}
 .profile-head-metrics{gap:5px}
 .profile-badge{
@@ -393,7 +403,7 @@ body:before{
 .profile-editor .switch input:checked+span:after{transform:translateX(16px)}
 .profile-edit-panel{margin-top:7px;padding-top:7px}
 .profile-editor-grid{
-  grid-template-columns:minmax(110px,.3fr) minmax(125px,.25fr) minmax(170px,.45fr);
+  grid-template-columns:58px minmax(105px,.2fr) minmax(260px,.8fr);
   gap:6px
 }
 .profile-footer{margin-top:7px}
@@ -522,43 +532,23 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
 
 /* Redesigned transport panel */
-.traffic-section-head{
-  position:relative;
-  z-index:2;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  margin-top:12px;
-}
-.traffic-section-head h2{
-  margin:0;
-  color:#f4f7ff;
-  font-size:15px;
-  font-weight:760;
-  letter-spacing:-.02em;
-}
-.traffic-section-head p{
-  margin:4px 0 0;
-  color:#77859d;
-  font-size:9px;
-}
 .traffic-live{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  padding:5px 8px;
+  gap:8px;
+  min-height:24px;
+  padding:3px 8px;
   border:1px solid rgba(67,214,140,.18);
   border-radius:999px;
   background:rgba(67,214,140,.07);
   color:#69e7aa;
-  font-size:8px;
-  font-weight:800;
-  letter-spacing:.08em;
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:.05em;
 }
 .traffic-live i{
-  width:6px;
-  height:6px;
+  width:8px;
+  height:8px;
   border-radius:50%;
   background:#43d68c;
   box-shadow:0 0 10px rgba(67,214,140,.85);
@@ -572,6 +562,25 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   background:#59657a;
   box-shadow:none;
 }
+.traffic-status-row{display:flex;align-items:center;gap:7px}
+.active-clients-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:50px;
+  min-height:24px;
+  padding:3px 6px;
+  border:1px solid rgba(131,145,168,.18);
+  border-radius:999px;
+  background:rgba(131,145,168,.07);
+  color:var(--muted);
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:.05em;
+  white-space:nowrap;
+}
+.active-clients-badge svg{width:13px;height:13px}
 
 .hero-traffic{
   gap:10px;
@@ -581,63 +590,88 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   --accent:#4cc9f0;
   position:relative;
   display:flex;
-  min-height:142px;
-  padding:14px 15px 10px;
+  min-height:132px;
+  padding:13px 14px 10px;
   flex-direction:column;
   align-items:stretch;
   justify-content:flex-start;
   overflow:hidden;
-  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);
-  border-radius:15px;
-  background:
-    radial-gradient(circle at 22% 4%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 44%),
-    linear-gradient(145deg,rgba(18,29,48,.96),rgba(8,14,25,.92));
+  border:1px solid color-mix(in srgb,var(--accent) 14%,rgba(132,149,180,.16));
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(17,26,43,.96),rgba(8,14,24,.94));
   box-shadow:
-    inset 0 1px rgba(255,255,255,.035),
-    0 10px 24px rgba(0,0,0,.17);
+    inset 0 1px rgba(255,255,255,.025),
+    0 8px 20px rgba(0,0,0,.14);
   text-align:left;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
 }
 .hero-traffic-item.up{--accent:#9a63ff}
 .hero-traffic-item.total{--accent:#37d795}
-.hero-traffic-item:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(120deg,rgba(255,255,255,.025),transparent 34%);
+.hero-traffic-item:hover{
+  transform:none;
+  border-color:color-mix(in srgb,var(--accent) 25%,transparent);
+  box-shadow:inset 0 1px rgba(255,255,255,.03),0 9px 22px rgba(0,0,0,.16);
 }
-.hero-traffic-item:after{display:none}
+.hero-traffic-item:before,.hero-traffic-item:after{display:none}
 
 .traffic-card-top{
   position:relative;
   z-index:2;
   display:flex;
   align-items:center;
-  gap:10px;
+  justify-content:flex-end;
+}
+.traffic-kind-icon{
+  display:inline-flex;
+  width:104px;
+  height:28px;
+  align-items:center;
+  justify-content:space-between;
+  gap:3px;
+  padding:3px 3px 3px 8px;
+  border:1px solid color-mix(in srgb,var(--accent) 18%,transparent);
+  border-radius:8px;
+  background:rgba(8,14,24,.42);
+  color:color-mix(in srgb,var(--accent) 70%,#fff);
+}
+.traffic-kind-icon svg{
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+  padding:3px;
+  border-radius:6px;
+  background:color-mix(in srgb,var(--accent) 11%,transparent);
+}
+.traffic-kind-icon>span{
+  flex:1;
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:.01em;
+  text-align:center;
 }
 .traffic-icon{
   display:grid;
-  width:34px;
-  height:34px;
-  flex:0 0 34px;
+  width:32px;
+  height:32px;
+  flex:0 0 32px;
   place-items:center;
-  border:1px solid color-mix(in srgb,var(--accent) 65%,transparent);
-  border-radius:50%;
-  background:color-mix(in srgb,var(--accent) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);
+  border-radius:9px;
+  background:color-mix(in srgb,var(--accent) 7%,transparent);
   color:var(--accent);
-  box-shadow:0 0 18px color-mix(in srgb,var(--accent) 12%,transparent);
+  box-shadow:none;
 }
 .traffic-icon svg{
-  width:18px;
-  height:18px;
+  width:17px;
+  height:17px;
 }
 .hero-traffic-label{
   display:block;
   width:auto;
-  color:var(--accent)!important;
+  color:#aeb9ce!important;
   font-size:9px;
-  font-weight:720;
-  letter-spacing:.015em;
+  font-weight:680;
+  letter-spacing:.025em;
   line-height:1.25;
   text-align:left;
   text-transform:none;
@@ -647,45 +681,45 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   z-index:2;
   display:flex;
   align-items:baseline;
-  justify-content:center;
-  min-height:49px;
-  padding:5px 4px 0;
+  justify-content:flex-start;
+  min-height:48px;
+  padding:7px 2px 0;
 }
 .hero-traffic-value{
   width:100%;
   margin:0;
   color:#edf3ff;
+  font-family:"Segoe UI Variable Display","Segoe UI",Inter,ui-sans-serif,system-ui,sans-serif;
   font-size:25px;
-  font-weight:790;
+  font-weight:750;
+  font-variant-numeric:tabular-nums;
   line-height:1;
   letter-spacing:-.045em;
-  text-align:center;
-  text-shadow:0 0 18px rgba(174,196,255,.10);
+  text-align:left;
+  text-shadow:none;
 }
 .traffic-sparkline{
   position:absolute;
   right:15px;
-  bottom:8px;
+  bottom:9px;
   left:15px;
   width:calc(100% - 30px);
-  height:35px;
+  height:34px;
   overflow:visible;
-  opacity:.95;
+  opacity:.72;
 }
 .traffic-sparkline .traffic-line{
   fill:none;
   stroke:var(--accent);
-  stroke-width:1.7;
+  stroke-width:1.6;
   vector-effect:non-scaling-stroke;
-  filter:drop-shadow(0 0 4px color-mix(in srgb,var(--accent) 45%,transparent));
+  filter:none;
 }
 .traffic-sparkline .traffic-area{
-  fill:color-mix(in srgb,var(--accent) 10%,transparent);
+  fill:color-mix(in srgb,var(--accent) 7%,transparent);
 }
 
 @media(max-width:700px){
-  .traffic-section-head{align-items:flex-start}
-  .traffic-section-head p{display:none}
   .hero-traffic{grid-template-columns:1fr}
   .hero-traffic-item{min-height:126px}
 }
@@ -718,12 +752,273 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .toast{font-size:12px}
 }
 
+/* Unified cards: highlighted header, contained body and consistent depth. */
+.card.panel{
+  position:relative;
+  overflow:hidden;
+  padding:0 13px 13px;
+  border:1px solid rgba(132,149,180,.18);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 92% 0,rgba(124,108,255,.055),transparent 34%),
+    linear-gradient(155deg,rgba(15,23,38,.98),rgba(9,15,26,.96));
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.16),
+    inset 0 1px rgba(255,255,255,.025);
+  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.card.panel:hover{
+  border-color:rgba(142,157,190,.25);
+  box-shadow:
+    0 17px 40px rgba(0,0,0,.2),
+    inset 0 1px rgba(255,255,255,.035);
+}
+.card.panel>.panel-head{
+  position:relative;
+  min-height:48px;
+  margin:0 -13px 13px;
+  padding:10px 13px;
+  border-bottom:1px solid rgba(132,149,180,.14);
+  background:
+    linear-gradient(90deg,rgba(124,108,255,.105),rgba(24,34,53,.62) 42%,rgba(14,22,36,.52));
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.card.panel>.panel-head>div:first-child{min-width:0}
+.card.panel>.panel-head h2{
+  color:#eef2ff;
+  font-weight:760;
+  letter-spacing:-.012em;
+}
+.card.panel>.panel-head p{
+  margin-top:3px;
+  color:#8491aa;
+  line-height:1.4;
+}
+.card.panel>.panel-head .profiles-summary,
+.card.panel>.panel-head .firewall-summary{
+  margin-top:4px;
+  color:#a99eff;
+  font-size:11.5px;
+  font-weight:720;
+  letter-spacing:.005em;
+}
+.profiles-card,
+.global-firewall-card{
+  transition:padding-bottom .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.profiles-card.is-collapsed,
+.global-firewall-card.is-collapsed{
+  padding-bottom:0;
+}
+.profiles-card.is-collapsed>.panel-head,
+.global-firewall-card.is-collapsed>.panel-head{
+  margin-bottom:0;
+  border-bottom:0;
+  background:
+    linear-gradient(90deg,rgba(124,108,255,.08),rgba(21,31,49,.7) 48%,rgba(13,20,33,.62));
+}
+.firewall-collapse-btn{
+  border-color:rgba(132,149,180,.18);
+  border-radius:999px;
+  background:rgba(8,14,24,.48);
+  color:#aeb9ce;
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.firewall-collapse-btn svg{
+  width:15px;
+  height:15px;
+  transition:transform .22s ease;
+}
+.firewall-collapse-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.firewall-collapse-btn:hover{
+  border-color:rgba(124,108,255,.34);
+  background:rgba(124,108,255,.1);
+  color:#ddd9ff;
+}
+.settings-side>.card.panel{
+  padding:0 13px 13px;
+  border:1px solid rgba(132,149,180,.18);
+  background:
+    radial-gradient(circle at 92% 0,rgba(124,108,255,.055),transparent 34%),
+    linear-gradient(155deg,rgba(15,23,38,.98),rgba(9,15,26,.96));
+  box-shadow:0 14px 34px rgba(0,0,0,.16),inset 0 1px rgba(255,255,255,.025);
+}
+.settings-side>.card.panel>.panel-head{display:flex}
+.settings-side>.card.panel>.info-note{display:flex}
+.settings-side>.card.panel>.form-actions{
+  align-items:center;
+  justify-content:flex-end;
+  flex-direction:row;
+  margin-top:10px;
+}
+.settings-side>.card.panel>.form-actions .btn{width:auto}
+.profile-editor,
+.firewall-rule,
+.profile-link-card{
+  border-color:rgba(132,149,180,.14);
+  background:linear-gradient(145deg,rgba(16,25,41,.88),rgba(9,15,26,.72));
+  box-shadow:inset 0 1px rgba(255,255,255,.018);
+}
+.profile-editor:hover,
+.firewall-rule:hover,
+.profile-link-card:hover{
+  border-color:rgba(132,149,180,.24);
+  background:linear-gradient(145deg,rgba(19,29,47,.94),rgba(10,16,28,.78));
+}
+.profile-head-metrics .profile-badge,
+.profile-head-metrics .profile-traffic-group{
+  min-height:22px;
+  font-size:10px;
+}
+.profile-head-metrics .profile-sessions{width:74px}
+.profile-head-metrics .profile-online{width:68px}
+.profile-head-metrics .profile-port{width:112px}
+.profile-head-metrics .profile-traffic-group{width:290px}
+.profile-head-metrics .profile-traffic-group .profile-stat{width:88px}
+.profile-head-metrics .profile-traffic-group .profile-total{width:114px}
+.info-note{
+  border-color:rgba(124,108,255,.2);
+  background:linear-gradient(90deg,rgba(124,108,255,.09),rgba(124,108,255,.035));
+}
+.logs{
+  border-color:rgba(132,149,180,.13);
+  background:linear-gradient(180deg,rgba(6,11,20,.94),rgba(8,13,23,.98));
+}
+.view#logs.active{height:calc(100dvh - 78px);min-height:0;overflow:hidden}
+.view#logs .card.panel{height:100%;min-height:0;padding-top:13px}
+.view#logs .logs{height:auto;min-height:0;flex:1}
+.view#logs .toolbar-row{flex:none}
+@media(max-width:760px){
+  .card.panel{padding:0 10px 10px;border-radius:13px}
+  .card.panel>.panel-head{min-height:44px;margin:0 -10px 10px;padding:9px 10px}
+  .profiles-card.is-collapsed,.global-firewall-card.is-collapsed{padding-bottom:0}
+  .profiles-card.is-collapsed>.panel-head,.global-firewall-card.is-collapsed>.panel-head{margin-bottom:0}
+  .settings-side>.card.panel{padding:0 10px 10px}
+  .settings-side>.card.panel>.form-actions{align-items:stretch;flex-direction:column}
+  .settings-side>.card.panel>.form-actions .btn{width:100%}
+  .view#logs.active{height:calc(100dvh - 130px - env(safe-area-inset-bottom))}
+  .view#logs .card.panel{padding-top:10px}
+}
+
+/* Compact phone layout */
+@media(max-width:600px){
+  .main{padding-inline:7px}
+  .view{gap:10px}
+  .card.panel{padding:0 8px 8px;border-radius:12px}
+  .card.panel>.panel-head{
+    min-height:42px;
+    margin:0 -8px 8px;
+    padding:8px;
+    gap:8px
+  }
+  .panel-title h2{font-size:13px}
+  .panel-title p{font-size:10.5px;line-height:1.35}
+  .panel-collapse-btn{width:34px;height:27px}
+
+  .profile-editor{padding:8px;border-radius:10px}
+  .profile-editor-head{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto auto;
+    align-items:center;
+    gap:6px
+  }
+  .profile-summary{grid-column:1;grid-row:1;min-width:0}
+  .profile-status{width:9px;height:9px}
+  .profile-name-title{max-width:none;font-size:12px}
+  .profile-head-right{display:contents}
+  .profile-connect,
+  .edit-profile{
+    grid-row:1;
+    width:auto;
+    min-height:27px;
+    padding:4px 7px;
+    border-radius:8px;
+    font-size:9px;
+    white-space:nowrap
+  }
+  .profile-connect{grid-column:2}
+  .edit-profile{grid-column:3}
+  .profile-head-metrics{
+    grid-column:1/-1;
+    grid-row:2;
+    display:grid;
+    grid-template-columns:62px 68px minmax(0,1fr);
+    width:100%;
+    gap:4px
+  }
+  .profile-head-metrics .profile-online,
+  .profile-head-metrics .profile-sessions{
+    width:100%;
+    min-width:0
+  }
+  .profile-head-metrics .profile-traffic-group{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+    min-width:0;
+    max-width:none
+  }
+  .profile-head-metrics .profile-traffic-group .profile-stat,
+  .profile-head-metrics .profile-traffic-group .profile-total{
+    width:auto;
+    min-width:0;
+    padding-inline:3px;
+    font-size:9px
+  }
+  .profile-port{display:none}
+  .profile-edit-panel{margin-top:8px;padding-top:8px}
+  .profile-editor-grid{
+    grid-template-columns:42px minmax(100px,.36fr) minmax(150px,.64fr);
+    align-items:end;
+    gap:6px
+  }
+  .profile-enabled-field{
+    grid-column:1;
+    padding-top:0;
+    padding-bottom:7px
+  }
+
+  .firewall-rule{padding:8px;border-radius:10px}
+  .firewall-rule-top{margin-bottom:7px}
+  .firewall-rule-handle{min-height:26px;padding:4px 7px}
+  .profile-firewall-grid{
+    grid-template-columns:48px minmax(0,1fr) 84px;
+    gap:7px
+  }
+  .firewall-rule-enabled-field{
+    grid-column:1;
+    grid-row:1;
+    justify-content:center
+  }
+  .firewall-rule-name-field{
+    grid-column:2/-1;
+    grid-row:1
+  }
+  .profile-firewall-grid>.field:has(.firewall-rule-action){
+    grid-column:1/3
+  }
+  .profile-firewall-grid>.field:has(.firewall-rule-protocol){
+    grid-column:3
+  }
+  .profile-firewall-grid>.field:has(.firewall-rule-sources),
+  .profile-firewall-grid>.field:has(.firewall-rule-addresses),
+  .profile-firewall-grid>.field:has(.firewall-rule-ports){
+    grid-column:1/-1
+  }
+  .profile-firewall-grid .field{gap:4px}
+  .profile-firewall-grid label{font-size:9px}
+  .profile-firewall-grid input,
+  .profile-firewall-grid select{min-height:34px;padding:7px 9px}
+  .profile-firewall-grid .field-hint{margin-top:0}
+  .firewall-footer{margin-top:8px}
+}
+
 </style>
 </head>
 <body>
 <div class="shell">
   <aside class="sidebar">
-    <div class="brand"><div class="brand-mark"></div><div><strong>qWDTT</strong><span>Router control</span></div></div>
+    <div class="brand"><div class="brand-mark"></div><div><strong>qWDTT</strong><span>Server</span></div></div>
     <nav class="nav">
       <button class="nav-button active" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Обзор</span></button>
       <button class="nav-button" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.95 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.95a1.7 1.7 0 0 0-.34-1.88L4.2 7l2.83-2.83.06.06A1.7 1.7 0 0 0 8.95 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08a1.7 1.7 0 0 0 1.03 1.53 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 7l-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg><span>Настройки</span></button>
@@ -750,25 +1045,16 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     <section class="view active" id="overview">
       <div class="hero">
         <div class="hero-top">
-          <div class="eyebrow"><i class="status-dot" data-status-dot></i><span id="heroEyebrow">Проверяем состояние</span></div>
-        </div>
-        <div class="traffic-section-head">
-          <div>
-            <h2>Трафик в реальном времени</h2>
-            <p>Текущая скорость соединения и общий объём данных</p>
+          <div class="traffic-status-row">
+            <span class="traffic-live" id="trafficLive"><i></i><span>LIVE</span></span>
+            <span class="active-clients-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span id="activeClientsBadge">0</span></span>
           </div>
-          <span class="traffic-live" id="trafficLive"><i></i><span>LIVE</span></span>
         </div>
 
         <div class="hero-traffic">
           <div class="hero-traffic-item down">
             <div class="traffic-card-top">
-              <span class="traffic-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M12 3v14M6 11l6 6 6-6"/>
-                </svg>
-              </span>
-              <span class="hero-traffic-label">Входящая скорость</span>
+              <span class="traffic-kind-icon" title="Входящая скорость" aria-label="Входящая скорость"><span>Входящая</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v14"/><path d="m6.5 12.5 5.5 5.5 5.5-5.5"/></svg></span>
             </div>
             <div class="traffic-number-wrap">
               <strong class="hero-traffic-value" id="rxRate">0 бит/с</strong>
@@ -781,12 +1067,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
           <div class="hero-traffic-item up">
             <div class="traffic-card-top">
-              <span class="traffic-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                  <path d="M12 21V7M6 13l6-6 6 6"/>
-                </svg>
-              </span>
-              <span class="hero-traffic-label">Исходящая скорость</span>
+              <span class="traffic-kind-icon" title="Исходящая скорость" aria-label="Исходящая скорость"><span>Исходящая</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20V6"/><path d="m6.5 11.5 5.5-5.5 5.5 5.5"/></svg></span>
             </div>
             <div class="traffic-number-wrap">
               <strong class="hero-traffic-value" id="txRate">0 бит/с</strong>
@@ -799,14 +1080,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
           <div class="hero-traffic-item total">
             <div class="traffic-card-top">
-              <span class="traffic-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="m12 3 8 4-8 4-8-4 8-4Z"/>
-                  <path d="m4 12 8 4 8-4"/>
-                  <path d="m4 17 8 4 8-4"/>
-                </svg>
-              </span>
-              <span class="hero-traffic-label">Суммарный трафик</span>
+              <span class="traffic-kind-icon" title="Суммарный трафик" aria-label="Суммарный трафик"><span>Общий</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 4-8 4-8-4 8-4Z"/><path d="m4 12 8 4 8-4"/><path d="m4 17 8 4 8-4"/></svg></span>
             </div>
             <div class="traffic-number-wrap">
               <strong class="hero-traffic-value" id="totalTraffic">0 Б</strong>
@@ -821,13 +1095,13 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
       <div class="profiles-layout overview-profiles">
         <div class="card panel profiles-card is-collapsed">
-          <div class="panel-head"><div><h2>Профили подключения</h2><p>Настройки, состояние и ссылка каждого клиента в одной карточке</p><span class="profiles-summary" id="profilesSummary">Профилей: 0 · Включено: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleProfiles" type="button" aria-expanded="false">Развернуть</button></div></div>
+          <div class="panel-head"><div><h2>Профили подключения</h2><span class="profiles-summary" id="profilesSummary">Профилей: 0 · Включено: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleProfiles" type="button" aria-expanded="false" aria-label="Развернуть профили" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
           <div class="profile-editors" id="profileEditors"></div>
           <div class="profiles-footer"><button class="btn small secondary" id="addProfile" type="button">+ Профиль</button></div>
         </div>
       </div>
       <div class="card panel global-firewall-card is-collapsed">
-        <div class="panel-head"><div><h2>Общий firewall</h2><p>Единые правила доступа для всех подключённых профилей</p><span class="firewall-summary" id="firewallSummary">Правил: 0 · Активных: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleFirewall" type="button" aria-expanded="false">Развернуть</button></div></div>
+        <div class="panel-head"><div><h2>Общий firewall</h2><span class="firewall-summary" id="firewallSummary">Правил: 0 · Активных: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleFirewall" type="button" aria-expanded="false" aria-label="Развернуть firewall" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
         <div id="globalFirewallEditor"></div>
       </div>
     </section>
@@ -836,36 +1110,28 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
       <form id="configForm" class="settings-layout">
         <div class="settings-stack">
           <div class="card panel">
-            <div class="panel-head"><div><h2>Сервис</h2><p>Автозапуск и порт панели управления</p></div></div>
-            <div class="switch-row"><div class="switch-copy"><b>Запускать автоматически</b><span>Сервис будет активирован после загрузки роутера</span></div><label class="switch"><input id="enabled" type="checkbox"><span></span></label></div>
-            <div class="form-grid">
-              <div class="field"><label for="webListen">Порт веб-панели</label><div class="input-wrap"><input id="webListen" type="number" min="1" max="65535" required><span class="suffix">TCP</span></div></div>
+            <div class="panel-head"><div><h2>Общие</h2></div></div>
+            <div class="service-inline-row">
               <div class="field"><label for="wan">WAN-интерфейс</label><select id="wan"></select></div>
+              <div class="field"><label for="webListen">Порт веб-панели</label><div class="input-wrap"><input id="webListen" type="number" min="1" max="65535" required></div></div>
+              <div class="field"><label for="publicHost">Публичный IP или DDNS</label><div class="inline-field"><input id="publicHost" placeholder="vpn.example.com" required><button class="btn small secondary" id="detectPublicIP" type="button">Определить</button></div></div>
             </div>
             <input id="dataDir" type="hidden"><input id="mode" type="hidden" value="server"><input id="interface" type="hidden" value="wdtt0">
           </div>
 
           <div class="card panel">
-            <div class="panel-head"><div><h2>Сетевой сервер</h2><p>Адрес подключения и параметры туннеля</p></div></div>
-            <div class="form-grid">
-              <div class="field wide"><label for="publicHost">Публичный IP или DDNS</label><div class="inline-field"><input id="publicHost" placeholder="vpn.example.com" required><button class="btn small secondary" id="detectPublicIP" type="button">Определить</button></div></div>
-              <div class="field"><label for="listenAddr">DTLS-порт</label><div class="input-wrap"><input id="listenAddr" type="number" min="1" max="65535" required><span class="suffix">UDP</span></div></div>
-              <div class="field"><label for="wgPort">WireGuard-порт</label><div class="input-wrap"><input id="wgPort" type="number" min="1" max="65535" required><span class="suffix">UDP</span></div></div>
+            <div class="panel-head"><div><h2>Сервер</h2><p>Адрес подключения и параметры туннеля</p></div></div>
+            <div class="server-ports-row">
+              <div class="field"><label for="listenAddr">DTLS-порт</label><div class="input-wrap"><input id="listenAddr" type="number" min="1" max="65535" required></div></div>
               <div class="field"><label for="vpnPort">Локальный VPN-порт</label><input id="vpnPort" type="number" min="1" max="65535" required></div>
-              <div class="field"><label for="network">Сеть клиентов</label><input id="network" placeholder="10.66.66.0/24" required></div>
-              <div class="field wide"><label for="password">Пароль подключения</label><input id="password" type="text" autocomplete="off" required><div class="field-hint">Пароль входит в ссылку подключения — используйте уникальное значение.</div></div>
+              <div class="field"><label for="wgPort">WireGuard-порт</label><div class="input-wrap"><input id="wgPort" type="number" min="1" max="65535" required></div></div>
+              <div class="field"><label for="password">Пароль подключения</label><input id="password" type="text" autocomplete="off" required></div>
             </div>
           </div>
 
-        </div>
+          <div class="settings-save-fab" id="settingsSaveBar" hidden><button class="btn small" id="saveButton" type="submit">Сохранить</button></div>
 
-        <aside class="settings-side">
-          <div class="card panel">
-            <div class="panel-head"><div><h2>Применение</h2><p>Сервис будет безопасно перезапущен</p></div></div>
-            <div class="info-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg><span>Активные подключения кратковременно прервутся и смогут подключиться снова автоматически.</span></div>
-            <div class="form-actions"><button class="btn" id="saveButton" type="submit">Сохранить и применить</button><span class="message" id="message"></span></div>
-          </div>
-        </aside>
+        </div>
       </form>
     </section>
 
@@ -915,6 +1181,8 @@ const viewMeta={
 let appState=null,updateInfo=null,updateCheckPending=false,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),globalFirewall={rules:[]};
 const updateCheckInterval=30*60*1000;
 const trafficHistory={rx:[],tx:[],total:[]},trafficHistoryLimit=32;
+const trafficMotion={current:{rx:0,tx:0,total:0},chart:{rx:0,tx:0,total:0},target:{rx:0,tx:0,total:0},initialized:false,lastFrame:0,lastChart:0,lastNumbers:0,started:false};
+function setDirty(value){dirty=Boolean(value);const saveBar=$("settingsSaveBar");if(saveBar)saveBar.hidden=!dirty}
 
 function escapeHTML(value){
   return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
@@ -930,23 +1198,23 @@ function portOnly(value){
 }
 function csv(value){return Array.isArray(value)?value.join(", "):""}
 function setValue(id,value){const el=$(id);if(el)el.value=value??""}
-function formatBytes(value,rate=false){
+function formatBytes(value,rate=false,calm=false){
   let n=Number(value)||0,units=["Б","КБ","МБ","ГБ","ТБ"],i=0;
   while(n>=1024&&i<units.length-1){n/=1024;i++}
-  const digits=i===0?0:n>=100?0:n>=10?1:2;
+  const digits=calm?(i===0||n>=10?0:1):(i===0?0:n>=100?0:n>=10?1:2);
   return n.toFixed(digits)+" "+units[i]+(rate?"/с":"");
 }
-function formatRate(value){
+function formatRate(value,calm=false){
   let n=(Number(value)||0)*8,units=["бит/с","Кбит/с","Мбит/с","Гбит/с","Тбит/с"],i=0;
   while(n>=1000&&i<units.length-1){n/=1000;i++}
-  const digits=i===0?0:n>=100?0:n>=10?1:2;
+  const digits=calm?(i===0||n>=10?0:1):(i===0?0:n>=100?0:n>=10?1:2);
   return n.toFixed(digits)+" "+units[i];
 }
 function updateTrafficChart(name,value){
   const values=trafficHistory[name];
   values.push(Math.max(0,Number(value)||0));
   if(values.length>trafficHistoryLimit)values.shift();
-  const points=values.length===1?Array(trafficHistoryLimit).fill(values[0]):values;
+  const points=values.length<trafficHistoryLimit?[...Array(trafficHistoryLimit-values.length).fill(values[0]||0),...values]:values;
   const width=320,height=42,top=4,bottom=38;
   let min=name==="total"?Math.min(...points):0,max=Math.max(...points);
   if(max<=min)max=min+1;
@@ -955,17 +1223,51 @@ function updateTrafficChart(name,value){
     const y=bottom-(item-min)/(max-min)*(bottom-top);
     return [x,y];
   });
-  const line=coords.map(([x,y],index)=>(index?"L":"M")+x.toFixed(1)+" "+y.toFixed(1)).join(" ");
+  const line=coords.reduce((path,[x,y],index)=>{
+    if(index===0)return `M${x.toFixed(1)} ${y.toFixed(1)}`;
+    const [previousX,previousY]=coords[index-1],middle=(previousX+x)/2;
+    return `${path} C${middle.toFixed(1)} ${previousY.toFixed(1)},${middle.toFixed(1)} ${y.toFixed(1)},${x.toFixed(1)} ${y.toFixed(1)}`;
+  },"");
   const area=line+" L "+width+" "+height+" L 0 "+height+" Z";
   const chart=document.querySelector(`.traffic-sparkline[data-series="${name}"]`);
   if(!chart)return;
   chart.querySelector(".traffic-line").setAttribute("d",line);
   chart.querySelector(".traffic-area").setAttribute("d",area);
 }
-function updateTrafficCharts(traffic){
+function setTrafficTargets(traffic){
   const rx=Number(traffic.rxRate)||0,tx=Number(traffic.txRate)||0;
   const total=(Number(traffic.rxBytes)||0)+(Number(traffic.txBytes)||0);
-  updateTrafficChart("rx",rx);updateTrafficChart("tx",tx);updateTrafficChart("total",total);
+  trafficMotion.target={rx,tx,total};
+  if(!trafficMotion.initialized){
+    trafficMotion.current={...trafficMotion.target};
+    trafficMotion.chart={...trafficMotion.target};
+    trafficMotion.initialized=true;
+  }
+}
+function animateTraffic(now){
+  if(!trafficMotion.lastFrame)trafficMotion.lastFrame=now;
+  const elapsed=Math.min(100,now-trafficMotion.lastFrame),reduceMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  const numberEasing=reduceMotion?1:1-Math.exp(-elapsed/2600);
+  const chartEasing=reduceMotion?1:1-Math.exp(-elapsed/110);
+  for(const name of ["rx","tx","total"]){
+    const current=trafficMotion.current[name],chart=trafficMotion.chart[name],target=trafficMotion.target[name];
+    trafficMotion.current[name]=Math.abs(target-current)<.01?target:current+(target-current)*numberEasing;
+    trafficMotion.chart[name]=Math.abs(target-chart)<.01?target:chart+(target-chart)*chartEasing;
+  }
+  if(!trafficMotion.lastNumbers||now-trafficMotion.lastNumbers>=320){
+    $("rxRate").textContent=formatRate(trafficMotion.current.rx,true);
+    $("txRate").textContent=formatRate(trafficMotion.current.tx,true);
+    $("totalTraffic").textContent=formatBytes(trafficMotion.current.total,false,true);
+    trafficMotion.lastNumbers=now;
+  }
+  if(!trafficMotion.lastChart||now-trafficMotion.lastChart>=80){
+    updateTrafficChart("rx",trafficMotion.chart.rx);
+    updateTrafficChart("tx",trafficMotion.chart.tx);
+    updateTrafficChart("total",trafficMotion.chart.total);
+    trafficMotion.lastChart=now;
+  }
+  trafficMotion.lastFrame=now;
+  requestAnimationFrame(animateTraffic);
 }
 function toast(text,error=false){
   const el=document.createElement("div");el.className="toast"+(error?" error":"");el.textContent=text;
@@ -991,7 +1293,6 @@ function switchView(name){
 function renderStatus(running){
   document.querySelectorAll("[data-status-dot]").forEach(el=>el.classList.toggle("on",running));
   document.querySelectorAll("[data-status-text]").forEach(el=>el.textContent=running?"Сервер работает":"Сервер выключен");
-  $("heroEyebrow").textContent=running?"Соединения принимаются":"Транспорт остановлен";
   $("trafficLive").classList.toggle("offline",!running);
   $("trafficLive").querySelector("span").textContent=running?"LIVE":"OFFLINE";
   $("headerToggle").textContent=running?"Остановить":"Запустить";
@@ -999,21 +1300,19 @@ function renderStatus(running){
 function renderState(state,fillForm=false){
   appState=state;const c=state.config,s=c.server,r=c.routing,t=state.traffic||{},version="Версия "+(state.version||"dev");$("appVersionTop").textContent=version;
   renderStatus(state.running);
-  $("rxRate").textContent=formatRate(t.rxRate);$("txRate").textContent=formatRate(t.txRate);
-  $("totalTraffic").textContent=formatBytes((Number(t.rxBytes)||0)+(Number(t.txBytes)||0));
-  updateTrafficCharts(t);
+  setTrafficTargets(t);
   if(fillForm&&!dirty){
-    $("enabled").checked=!!c.enabled;setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||3333);
+    setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||3333);
     setValue("publicHost",s.publicHost);setValue("listenAddr",portOnly(s.listenAddr)||s.dtlsPort||56000);
     setValue("wgPort",s.wgPort||56001);setValue("vpnPort",s.vpnPort||9000);setValue("password",s.password);
-    setValue("network",s.network);setValue("interface",r.interface||"wdtt0");
+    setValue("interface",r.interface||"wdtt0");
     profiles=(s.profiles||[]).map(profile=>({...profile}));globalFirewall=c.firewall||{rules:[]};renderProfileEditors();updateProfilesSummary();renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();
   }
   updateProfileTelemetry(state.profileTraffic||{});
 }
 async function loadState(fillForm=false){
   try{renderState(await request("/api/qwdtt/state").then(r=>r.json()),fillForm)}
-  catch(error){if(authRedirecting)return;renderStatus(false);toast("Не удалось получить состояние: "+error.message,true)}
+  catch(_){if(authRedirecting)return;renderStatus(false)}
 }
 async function loadLinks(){
   try{
@@ -1047,8 +1346,8 @@ async function setServer(enabled){
 }
 function formConfig(){
   return {
-    enabled:$("enabled").checked,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,client:{},
-    server:{publicHost:$("publicHost").value.trim(),listenAddr:"0.0.0.0:"+$("listenAddr").value,dtlsPort:+$("listenAddr").value,wgPort:+$("wgPort").value,vpnPort:+$("vpnPort").value,password:$("password").value,network:$("network").value.trim(),vkHash:"",profiles:readProfiles()},
+    enabled:!!appState?.config?.enabled,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,client:{},
+    server:{publicHost:$("publicHost").value.trim(),listenAddr:"0.0.0.0:"+$("listenAddr").value,dtlsPort:+$("listenAddr").value,wgPort:+$("wgPort").value,vpnPort:+$("vpnPort").value,password:$("password").value,network:appState?.config?.server?.network||"10.66.66.0/24",vkHash:"",profiles:readProfiles()},
     firewall:{rules:readFirewallRules($("globalFirewallEditor"))},
     routing:{mode:"all",interface:$("interface").value||"wdtt0",wan:$("wan").value,clients:[],networks:[]}
   };
@@ -1067,7 +1366,7 @@ function firewallEditor(profile,index){
   const firewall=profile.firewall||{};
   const legacy=firewall.rules?.length?firewall.rules:(firewall.addresses?.length||firewall.ports?.length?[{action:firewall.addressMode==="block"||firewall.portMode==="block"?"block":"allow",protocol:"all",addresses:firewall.addresses||[],ports:firewall.ports||[]}]:[]);
   const ruleEditor=(rule,index)=>`<div class="firewall-rule" data-rule-index="${index}"><div class="firewall-rule-top"><b>Правило ${index+1}</b><div class="firewall-rule-actions"><button class="icon-btn firewall-rule-up" type="button" title="Выше">↑</button><button class="icon-btn firewall-rule-down" type="button" title="Ниже">↓</button><button class="icon-btn firewall-rule-remove" type="button" title="Удалить">×</button></div></div><div class="profile-firewall-grid"><div class="field"><label>Действие</label><select class="firewall-rule-action"><option value="allow" ${rule.action!=="block"?"selected":""}>Разрешить</option><option value="block" ${rule.action==="block"?"selected":""}>Запретить</option></select></div><div class="field"><label>Протокол</label><select class="firewall-rule-protocol"><option value="all" ${!rule.protocol||rule.protocol==="all"?"selected":""}>Все</option><option value="tcp" ${rule.protocol==="tcp"?"selected":""}>TCP</option><option value="udp" ${rule.protocol==="udp"?"selected":""}>UDP</option></select></div><div class="field"><label>Адреса / подсети</label><textarea class="firewall-rule-addresses" placeholder="192.168.1.0/24, 8.8.8.8">${escapeHTML((rule.addresses||[]).join(", "))}</textarea></div><div class="field"><label>Порты</label><input class="firewall-rule-ports" placeholder="80, 443, 1000-1100" value="${escapeHTML((rule.ports||[]).join(", "))}"><div class="field-hint">Пусто — любые порты</div></div></div></div>`;
-  return `<div class="profile-firewall"><div class="profile-firewall-head"><b>Правила доступа профиля</b><span>Правила применяются сверху вниз. Пустые адреса или порты означают «любые».</span></div><div class="firewall-rules">${legacy.map(ruleEditor).join("")}</div><button class="btn small secondary firewall-rule-add" type="button">+ Добавить правило</button></div>`;
+  return `<div class="profile-firewall"><div class="firewall-rules">${legacy.length?legacy.map(ruleEditor).join(""):'<div class="empty firewall-empty">Правила firewall пока не созданы</div>'}</div><button class="btn small secondary firewall-rule-add" type="button">+ Добавить правило</button></div>`;
 }
 function renderGlobalFirewall(firewall){
   const box=$("globalFirewallEditor");if(!box)return;box.innerHTML=firewallEditor({firewall},0);box.querySelectorAll(".firewall-rule").forEach((rule,index)=>{rule.draggable=true;rule.querySelectorAll(".firewall-rule-up,.firewall-rule-down").forEach(button=>button.remove());const data=firewall.rules?.[index]||{},name=rule.querySelector(".firewall-rule-top b"),nameInput=document.createElement("input");nameInput.className="firewall-rule-name";nameInput.placeholder=`Правило ${index+1}`;nameInput.value=data.name||`Правило ${index+1}`;if(name)name.replaceWith(nameInput);const protocol=rule.querySelector(".firewall-rule-protocol"),current=protocol.value;protocol.innerHTML='<option value="ipv4">IPv4</option><option value="tcp">TCP</option><option value="udp">UDP</option>';protocol.value=current==="all"||!current?"ipv4":current;const sourceField=document.createElement("div");sourceField.className="field";sourceField.innerHTML='<label>Адрес источника / подсети</label><input class="firewall-rule-sources" placeholder="10.66.66.2, 10.66.66.3, 192.168.1.0/24" value="'+escapeHTML((data.sourceAddresses||[]).join(", "))+'">';const destination=rule.querySelector(".firewall-rule-addresses"),destinationField=destination?.closest(".field");if(destination&&destinationField){const input=document.createElement("input");input.className="firewall-rule-addresses";input.placeholder="192.168.1.1, 192.168.1.0/24";input.value=destination.value.replace(/[\n]+/g,", ");destination.replaceWith(input);destinationField.querySelector("label")?.replaceChildren("Адрес назначения / подсети")};rule.querySelector(".profile-firewall-grid")?.prepend(sourceField)});
@@ -1088,23 +1387,24 @@ function setupFirewallFooter(){
 }
 function setupFirewallCollapse(){
   const card=document.querySelector(".global-firewall-card"),toggle=$("toggleFirewall");if(!card||!toggle)return;
-  const sync=()=>{const collapsed=card.classList.contains("is-collapsed");toggle.textContent=collapsed?"Развернуть":"Свернуть";toggle.setAttribute("aria-expanded",String(!collapsed))};
+  const sync=()=>{const collapsed=card.classList.contains("is-collapsed"),label=collapsed?"Развернуть firewall":"Свернуть firewall";toggle.setAttribute("aria-expanded",String(!collapsed));toggle.setAttribute("aria-label",label);toggle.title=label};
   toggle.onclick=()=>{card.classList.toggle("is-collapsed");sync()};sync();
 }
 function updateProfilesSummary(){
   const summary=$("profilesSummary");if(!summary)return;
   const enabled=profiles.filter(profile=>profile.enabled!==false).length;
   const telemetry=appState?.profileTraffic||{},active=profiles.filter(profile=>telemetry[profile.id]?.connected).length;
-  summary.textContent=`Профилей: ${profiles.length} · Включено: ${enabled} · Активно: ${active}`;
+  summary.textContent=`Профилей: ${profiles.length} · Включено: ${enabled}`;
+  $("activeClientsBadge").textContent=String(active);
 }
 function setupProfilesCollapse(){
   const card=document.querySelector(".profiles-card"),toggle=$("toggleProfiles");if(!card||!toggle)return;
-  const sync=()=>{const collapsed=card.classList.contains("is-collapsed");toggle.textContent=collapsed?"Развернуть":"Свернуть";toggle.setAttribute("aria-expanded",String(!collapsed))};
+  const sync=()=>{const collapsed=card.classList.contains("is-collapsed"),label=collapsed?"Развернуть профили":"Свернуть профили";toggle.setAttribute("aria-expanded",String(!collapsed));toggle.setAttribute("aria-label",label);toggle.title=label};
   toggle.onclick=()=>{card.classList.toggle("is-collapsed");sync()};sync();
 }
 function openProfilesCard(){
   const card=document.querySelector(".profiles-card");if(!card)return;
-  card.classList.remove("is-collapsed");const toggle=$("toggleProfiles");if(toggle){toggle.textContent="Свернуть";toggle.setAttribute("aria-expanded","true")}
+  card.classList.remove("is-collapsed");const toggle=$("toggleProfiles");if(toggle){toggle.setAttribute("aria-expanded","true");toggle.setAttribute("aria-label","Свернуть профили");toggle.title="Свернуть профили"}
 }
 function renderProfileEditors(){
   const box=$("profileEditors");
@@ -1114,18 +1414,18 @@ function renderProfileEditors(){
     <div class="profile-editor" data-id="${escapeHTML(profile.id)}" data-client-ip="${escapeHTML(profile.clientIP)}" data-traffic-profile="${escapeHTML(profile.id)}">
       <div class="profile-editor-head">
         <div class="profile-summary">
-          <span class="profile-status" title="Не подключён" aria-label="Не подключён"></span>
+          <span class="profile-status ${profile.enabled?"enabled":""}" title="${profile.enabled?"Профиль включён":"Профиль выключен"}" aria-label="${profile.enabled?"Профиль включён":"Профиль выключен"}"></span>
           <div class="profile-editor-title"><span class="profile-name-title">${escapeHTML(profile.name||"Профиль клиента")}</span></div>
         </div>
         <div class="profile-head-right">
-          <div class="profile-head-metrics"><span class="profile-badge profile-sessions">0 сессий</span><span class="profile-traffic-group"><span class="profile-stat down">↓ 0 бит/с</span><span class="profile-stat up">↑ 0 бит/с</span><span class="profile-total">Σ 0 Б</span></span><span class="profile-badge profile-port">WG ${escapeHTML(profile.clientIP||"автоматически")}</span></div>
-          <label class="switch"><input class="profile-enabled" type="checkbox" ${profile.enabled?"checked":""}><span></span></label>
+          <div class="profile-head-metrics"><span class="profile-badge profile-online">OFFLINE</span><span class="profile-badge profile-sessions">0 сессий</span><span class="profile-traffic-group"><span class="profile-stat down">↓ 0 бит/с</span><span class="profile-stat up">↑ 0 бит/с</span><span class="profile-total">Σ 0 Б</span></span><span class="profile-badge profile-port">${escapeHTML(profile.clientIP||"автоматически")}</span></div>
           <button class="btn small secondary profile-connect" type="button" data-profile-id="${escapeHTML(profile.id)}" ${profile.clientIP?"":"disabled"}>QR и ссылка</button>
           <button class="btn small ghost edit-profile" type="button" aria-expanded="false">Редактировать</button>
         </div>
       </div>
       <div class="profile-edit-panel">
         <div class="profile-editor-grid">
+          <div class="field profile-enabled-field"><label class="switch"><input class="profile-enabled" type="checkbox" ${profile.enabled?"checked":""}><span></span></label></div>
           <div class="field"><label>Название</label><input class="profile-name" value="${escapeHTML(profile.name)}" required></div>
           <div class="field"><label>VK hash</label><input class="profile-hash" value="${escapeHTML(normalizeVKHash(profile.vkHash))}" required></div>
         </div>
@@ -1139,9 +1439,10 @@ function renderProfileEditors(){
 function updateProfileTelemetry(telemetry){
   const sessionLabel=count=>{const n=Math.abs(Number(count)||0)%100,m=n%10;return `${count} ${n>10&&n<20?"сессий":m===1?"сессия":m>=2&&m<=4?"сессии":"сессий"}`};
   document.querySelectorAll("[data-traffic-profile]").forEach(card=>{
-    const metric=telemetry[card.dataset.trafficProfile]||{},status=card.querySelector(".profile-status"),sessions=card.querySelector(".profile-sessions");
-    const statusText=metric.connected?"Подключён":metric.lastSeen?"Не в сети":"Не подключён";
-    status.classList.toggle("connected",!!metric.connected);status.title=statusText;status.setAttribute("aria-label",statusText);
+    const metric=telemetry[card.dataset.trafficProfile]||{},status=card.querySelector(".profile-status"),online=card.querySelector(".profile-online"),sessions=card.querySelector(".profile-sessions");
+    const enabled=card.querySelector(".profile-enabled")?.checked!==false,statusText=enabled?"Профиль включён":"Профиль выключен";
+    status.classList.toggle("enabled",enabled);status.title=statusText;status.setAttribute("aria-label",statusText);
+    online.classList.toggle("connected",!!metric.connected);online.textContent=metric.connected?"ONLINE":"OFFLINE";
     sessions.textContent=sessionLabel(metric.sessions||0);
     card.querySelector(".down").textContent="↓ "+formatRate(metric.rxRate||0);
     card.querySelector(".up").textContent="↑ "+formatRate(metric.txRate||0);
@@ -1153,18 +1454,17 @@ function addProfile(){
   openProfilesCard();
   if(document.querySelector(".profile-editor"))profiles=readProfiles();
   profiles.push({id:"profile-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name:"Новый профиль",enabled:true,clientIP:"",vkHash:"",dtlsPort:+$("listenAddr").value||56000,accessMode:"all",firewall:{rules:[]}});
-  renderProfileEditors();dirty=true;
+  renderProfileEditors();setDirty(true);
   const card=$("profileEditors").lastElementChild,edit=card?.querySelector(".edit-profile");
   if(card&&edit){card.classList.add("editing");edit.classList.add("active");edit.textContent="Скрыть";edit.setAttribute("aria-expanded","true");card.querySelector(".profile-name")?.focus()}
 }
 async function saveConfig(event,button=$("saveButton")){
   event.preventDefault();if(busy)return;busy=true;
   const original=button.textContent;button.disabled=true;button.innerHTML='<i class="spinner"></i> Применение…';
-  $("message").textContent="";$("message").className="message";
   try{
     await request("/api/qwdtt/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(formConfig())});
-    dirty=false;await Promise.all([loadState(true),loadLinks()]);$("message").textContent="Настройки применены";toast("Конфигурация сохранена");
-  }catch(error){$("message").textContent=error.message;$("message").className="message error";toast("Ошибка: "+error.message,true)}
+    setDirty(false);await Promise.all([loadState(true),loadLinks()]);toast("Конфигурация сохранена");
+  }catch(error){toast("Ошибка: "+error.message,true)}
   finally{busy=false;button.disabled=false;button.textContent=original}
 }
 async function detectPublicIP(silent=false){
@@ -1175,7 +1475,7 @@ async function detectPublicIP(silent=false){
     const response=await request("/api/qwdtt/interface-ip?name="+encodeURIComponent(iface));
     const result=await response.json();
     if(!result.ip)throw new Error("IPv4-адрес не найден");
-    $("publicHost").value=result.ip;dirty=true;toast("IP интерфейса роутера определён");
+    $("publicHost").value=result.ip;setDirty(true);toast("IP интерфейса роутера определён");
   }catch(error){if(!silent&&!authRedirecting)toast("Не удалось определить IP: "+error.message,true)}
   finally{button.disabled=false;button.textContent=old}
 }
@@ -1224,14 +1524,14 @@ $("profileEditors").addEventListener("click",event=>{
     if(firewallAction.classList.contains("firewall-rule-remove")&&index>=0)profile.firewall.rules.splice(index,1);
     if(firewallAction.classList.contains("firewall-rule-up")&&index>0)[profile.firewall.rules[index-1],profile.firewall.rules[index]]=[profile.firewall.rules[index],profile.firewall.rules[index-1]];
     if(firewallAction.classList.contains("firewall-rule-down")&&index>=0&&index<profile.firewall.rules.length-1)[profile.firewall.rules[index+1],profile.firewall.rules[index]]=[profile.firewall.rules[index],profile.firewall.rules[index+1]];
-    renderProfileEditors();dirty=true;const refreshed=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===id),refreshedEdit=refreshed?.querySelector(".edit-profile");if(refreshed&&refreshedEdit){refreshed.classList.add("editing");refreshedEdit.classList.add("active");refreshedEdit.textContent="Скрыть";refreshedEdit.setAttribute("aria-expanded","true")}return;
+    renderProfileEditors();setDirty(true);const refreshed=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===id),refreshedEdit=refreshed?.querySelector(".edit-profile");if(refreshed&&refreshedEdit){refreshed.classList.add("editing");refreshedEdit.classList.add("active");refreshedEdit.textContent="Скрыть";refreshedEdit.setAttribute("aria-expanded","true")}return;
   }
   if(edit&&card){const open=card.classList.toggle("editing");edit.classList.toggle("active",open);edit.textContent=open?"Скрыть":"Редактировать";edit.setAttribute("aria-expanded",String(open));return}
   if(save){saveConfig(event,save);return}
-  if(remove){profiles=readProfiles().filter(profile=>profile.id!==remove.dataset.profileId);renderProfileEditors();dirty=true;saveConfig(event,remove);return}
+  if(remove){profiles=readProfiles().filter(profile=>profile.id!==remove.dataset.profileId);renderProfileEditors();setDirty(true);saveConfig(event,remove);return}
 });
 $("profileEditors").addEventListener("input",event=>{
-  dirty=true;
+  setDirty(true);
   if(event.target.classList.contains("profile-name")){
     const title=event.target.closest(".profile-editor")?.querySelector(".profile-name-title");
     if(title)title.textContent=event.target.value.trim()||"Профиль клиента";
@@ -1239,7 +1539,7 @@ $("profileEditors").addEventListener("input",event=>{
 });
 $("profileEditors").addEventListener("change",event=>{
   if(!event.target.classList.contains("profile-enabled"))return;
-  saveConfig({preventDefault(){}},event.target.closest(".profile-editor").querySelector(".save-profile"));
+  setDirty(true);
 });
 $("globalFirewallEditor").addEventListener("click",event=>{
   const action=event.target.closest(".firewall-rule-add,.firewall-rule-remove,.firewall-rule-up,.firewall-rule-down");if(!action)return;
@@ -1249,16 +1549,16 @@ $("globalFirewallEditor").addEventListener("click",event=>{
   if(action.classList.contains("firewall-rule-remove")&&index>=0)globalFirewall.rules.splice(index,1);
   if(action.classList.contains("firewall-rule-up")&&index>0)[globalFirewall.rules[index-1],globalFirewall.rules[index]]=[globalFirewall.rules[index],globalFirewall.rules[index-1]];
   if(action.classList.contains("firewall-rule-down")&&index>=0&&index<globalFirewall.rules.length-1)[globalFirewall.rules[index+1],globalFirewall.rules[index]]=[globalFirewall.rules[index],globalFirewall.rules[index+1]];
-  renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();dirty=true;
+  renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();setDirty(true);
 });
 let draggedFirewallIndex=-1;
 $("globalFirewallEditor").addEventListener("dragstart",event=>{if(event.target.closest("input,textarea,select,button,[contenteditable=\"true\"]")){event.preventDefault();return}const rule=event.target.closest(".firewall-rule");if(!rule)return;draggedFirewallIndex=Number(rule.dataset.ruleIndex);rule.classList.add("dragging");event.dataTransfer?.setData("text/plain",String(draggedFirewallIndex));});
 $("globalFirewallEditor").addEventListener("dragover",event=>{const rule=event.target.closest(".firewall-rule");if(!rule)return;event.preventDefault();document.querySelectorAll(".firewall-rule.drag-over").forEach(item=>item.classList.remove("drag-over"));rule.classList.add("drag-over");});
 $("globalFirewallEditor").addEventListener("dragend",event=>{event.target.closest(".firewall-rule")?.classList.remove("dragging");document.querySelectorAll(".firewall-rule.drag-over").forEach(item=>item.classList.remove("drag-over"));draggedFirewallIndex=-1;});
-$("globalFirewallEditor").addEventListener("drop",event=>{const target=event.target.closest(".firewall-rule");if(!target||draggedFirewallIndex<0)return;event.preventDefault();const targetIndex=Number(target.dataset.ruleIndex);globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};const [moved]=globalFirewall.rules.splice(draggedFirewallIndex,1);globalFirewall.rules.splice(targetIndex,0,moved);renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();dirty=true;draggedFirewallIndex=-1;});
-$("globalFirewallEditor").addEventListener("change",event=>{if(!event.target.classList.contains("firewall-rule-enabled")&&!event.target.classList.contains("firewall-rule-action"))return;globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};updateFirewallSummary(globalFirewall);dirty=true;});
+$("globalFirewallEditor").addEventListener("drop",event=>{const target=event.target.closest(".firewall-rule");if(!target||draggedFirewallIndex<0)return;event.preventDefault();const targetIndex=Number(target.dataset.ruleIndex);globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};const [moved]=globalFirewall.rules.splice(draggedFirewallIndex,1);globalFirewall.rules.splice(targetIndex,0,moved);renderGlobalFirewall(globalFirewall);updateFirewallSummary(globalFirewall);enhanceFirewallRuleControls(globalFirewall);layoutFirewallRuleNames();setupFirewallFooter();setDirty(true);draggedFirewallIndex=-1;});
+$("globalFirewallEditor").addEventListener("change",event=>{if(!event.target.classList.contains("firewall-rule-enabled")&&!event.target.classList.contains("firewall-rule-action"))return;globalFirewall={rules:readFirewallRules($("globalFirewallEditor"))};updateFirewallSummary(globalFirewall);setDirty(true);});
 $("profileEditors").addEventListener("click",event=>{const connect=event.target.closest(".profile-connect");if(connect)openQR(connect.dataset.profileId)});
-document.querySelectorAll("#configForm input,#configForm select").forEach(el=>el.addEventListener("input",()=>dirty=true));
+document.querySelectorAll("#configForm input,#configForm select").forEach(el=>["input","change"].forEach(type=>el.addEventListener(type,()=>setDirty(true))));
 $("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
 $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
@@ -1305,6 +1605,7 @@ setupProfilesCollapse();
 
 (async function init(){
   await loadState(true);checkUpdate();await Promise.all([loadLinks(),loadInterfaces()]);
+  if(!trafficMotion.started){trafficMotion.started=true;requestAnimationFrame(animateTraffic)}
   const publicHost=$("publicHost").value.trim();
   if(!publicHost||publicHost==="127.0.0.1"||publicHost==="0.0.0.0")await detectPublicIP(true);
   setInterval(()=>loadState(false),1000);setInterval(()=>{if($("logs").classList.contains("active"))loadLogs()},3000);setInterval(checkUpdate,updateCheckInterval);
