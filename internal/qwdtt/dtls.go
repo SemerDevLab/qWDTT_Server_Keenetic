@@ -49,9 +49,12 @@ func (c DTLSConfig) clientConfig() *dtls.Config {
 	return &dtls.Config{InsecureSkipVerify: true, CipherSuites: []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256}, ExtendedMasterSecret: dtls.RequireExtendedMasterSecret}
 }
 
-func (c DTLSConfig) serverConfig() *dtls.Config {
-	certificate, _ := selfsign.GenerateSelfSigned()
-	return &dtls.Config{Certificates: []tls.Certificate{certificate}, CipherSuites: []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256}, ExtendedMasterSecret: dtls.RequireExtendedMasterSecret}
+func (c DTLSConfig) serverConfig() (*dtls.Config, error) {
+	certificate, err := selfsign.GenerateSelfSigned()
+	if err != nil {
+		return nil, fmt.Errorf("generate DTLS certificate: %w", err)
+	}
+	return &dtls.Config{Certificates: []tls.Certificate{certificate}, CipherSuites: []dtls.CipherSuiteID{dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256}, ExtendedMasterSecret: dtls.RequireExtendedMasterSecret}, nil
 }
 
 func DialDTLS(ctx context.Context, c DTLSConfig) (net.Conn, error) {
@@ -105,9 +108,14 @@ func ListenProfileDTLS(c DTLSConfig, profiles []DTLSProfile) (*profileListener, 
 	if err != nil {
 		return nil, err
 	}
+	serverConfig, err := c.serverConfig()
+	if err != nil {
+		_ = inner.Close()
+		return nil, err
+	}
 	listener, err := dtls.NewListenerWithOptions(
 		inner,
-		dtls.WithCertificates(c.serverConfig().Certificates[0]),
+		dtls.WithCertificates(serverConfig.Certificates[0]),
 		dtls.WithExtendedMasterSecret(dtls.RequireExtendedMasterSecret),
 		dtls.WithCipherSuites(dtls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256),
 		// Keep this aligned with the original VPS server. The official client
