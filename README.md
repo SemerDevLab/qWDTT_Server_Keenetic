@@ -1,6 +1,6 @@
 # qWDTT для Keenetic
 
-Сервер защищённого туннеля для роутеров Keenetic с Entware. В релизах проекта доступны готовые IPK-пакеты для поддерживаемых архитектур Keenetic.
+Сервер защищённого туннеля для роутеров Keenetic с Entware на основе [proxy-turn-vk-android](https://github.com/SpaceNeuroX/proxy-turn-vk-android) В релизах проекта доступны готовые IPK-пакеты для поддерживаемых архитектур Keenetic.
 
 ## Возможности
 
