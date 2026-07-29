@@ -287,12 +287,12 @@ func WebHandler(cfg *Config, path string, logs *LogBook, runtime ...*Runtime) ht
 		_, _ = w.Write([]byte(`{"status":"ok","service":"qwdtt-server"}`))
 	})
 	attachUpdateEndpoints(m)
-	return protectWeb(m, auth)
+	return protectWeb(m, auth, currentConfig)
 }
 
-func protectWeb(next http.Handler, auth *webAuth) http.Handler {
+func protectWeb(next http.Handler, auth *webAuth, currentConfig func() Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/login" || r.URL.Path == "/healthz" || auth.valid(r) {
+		if r.URL.Path == "/login" || r.URL.Path == "/healthz" || !currentConfig().WebAuthEnabled() || auth.valid(r) {
 			next.ServeHTTP(w, r)
 			return
 		}

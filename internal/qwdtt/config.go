@@ -27,11 +27,18 @@ type Config struct {
 	Mode      Mode   `json:"mode"`
 	DataDir   string `json:"dataDir"`
 	WebListen string `json:"webListen"`
+	// WebAuth is a pointer so configurations created before this setting was
+	// introduced keep the existing secure default (authorization enabled).
+	WebAuth *bool `json:"webAuth,omitempty"`
 
 	Client   ClientConfig   `json:"client"`
 	Server   ServerConfig   `json:"server"`
 	Routing  RoutingConfig  `json:"routing"`
 	Firewall FirewallConfig `json:"firewall"`
+}
+
+func (c Config) WebAuthEnabled() bool {
+	return c.WebAuth == nil || *c.WebAuth
 }
 
 type ClientConfig struct {

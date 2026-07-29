@@ -81,7 +81,9 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .inline-field{display:flex;gap:8px}.inline-field input{flex:1}
 .switch-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:13px 0}.switch-copy b{display:block;font-size:13px}.switch-copy span{color:var(--muted);font-size:11px}
 .switch{position:relative;width:45px;height:25px;flex:none}.switch input{position:absolute;opacity:0}.switch span{position:absolute;inset:0;border-radius:999px;background:#293449;cursor:pointer;transition:.2s}.switch span:after{content:"";position:absolute;width:19px;height:19px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 2px 5px #0005;transition:.2s}.switch input:checked+span{background:var(--primary)}.switch input:checked+span:after{transform:translateX(20px)}
-.service-inline-row{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(170px,.65fr) minmax(300px,1.35fr);align-items:end;gap:15px}
+.service-inline-row{display:grid;grid-template-columns:max-content minmax(190px,.8fr) minmax(170px,.65fr) minmax(300px,1.35fr);align-items:end;gap:15px}
+.auth-toggle-control{display:flex;align-items:center;height:42px}
+.auth-toggle-control .switch{margin:0;transform:translateX(8px)}
 .server-ports-row{display:grid;grid-template-columns:repeat(3,minmax(125px,.7fr)) minmax(220px,1.3fr);gap:8px 9px}
 .form-actions{display:flex;align-items:center;gap:12px;margin-top:18px}.message{font-size:12px;color:var(--green)}.message.error{color:var(--red)}
 .info-note{display:flex;gap:10px;padding:12px;border:1px solid rgba(124,108,255,.16);border-radius:12px;background:rgba(124,108,255,.07);color:#aeb9d0;font-size:11px}.info-note svg{width:16px;flex:none;color:var(--primary-2)}
@@ -188,6 +190,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
   .inline-field{gap:6px}
   .switch-row{padding:6px 0}.switch-copy b{font-size:11px}.switch-copy span{font-size:9px}
   .switch{width:39px;height:21px}.switch span:after{width:15px;height:15px}.switch input:checked+span:after{transform:translateX(18px)}
+  .auth-toggle-control{height:34px}
   .form-actions{gap:8px;margin-top:11px}.message{font-size:10px}
   .info-note{gap:7px;padding:8px;border-radius:8px;font-size:9px}.info-note svg{width:14px}
   .profile-editors{gap:6px}.profile-editor{padding:8px;border-radius:9px}.profile-editor-grid{grid-template-columns:minmax(100px,.3fr) minmax(130px,.27fr) minmax(160px,.43fr);gap:6px}.profile-link-card{padding:6px}
@@ -436,6 +439,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 .switch{width:37px;height:20px}
 .switch span:after{width:14px;height:14px}
 .switch input:checked+span:after{transform:translateX(17px)}
+.auth-toggle-control{height:32px}
 .info-note{padding:7px;font-size:8px;line-height:1.45}
 .form-actions{margin-top:8px;gap:7px;align-items:flex-start;flex-direction:column}
 .form-actions .btn{width:100%}
@@ -1112,6 +1116,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
           <div class="card panel">
             <div class="panel-head"><div><h2>Общие</h2></div></div>
             <div class="service-inline-row">
+              <div class="field auth-toggle-field"><label for="webAuth">Авторизация</label><div class="auth-toggle-control"><label class="switch"><input id="webAuth" type="checkbox" checked><span></span></label></div></div>
               <div class="field"><label for="wan">WAN-интерфейс</label><select id="wan"></select></div>
               <div class="field"><label for="webListen">Порт веб-панели</label><div class="input-wrap"><input id="webListen" type="number" min="1" max="65535" required></div></div>
               <div class="field"><label for="publicHost">Публичный IP или DDNS</label><div class="inline-field"><input id="publicHost" placeholder="vpn.example.com" required><button class="btn small secondary" id="detectPublicIP" type="button">Определить</button></div></div>
@@ -1302,7 +1307,7 @@ function renderState(state,fillForm=false){
   renderStatus(state.running);
   setTrafficTargets(t);
   if(fillForm&&!dirty){
-    setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||3333);
+    setValue("dataDir",c.dataDir);setValue("webListen",portOnly(c.webListen)||3333);$("webAuth").checked=c.webAuth!==false;
     setValue("publicHost",s.publicHost);setValue("listenAddr",portOnly(s.listenAddr)||s.dtlsPort||56000);
     setValue("wgPort",s.wgPort||56001);setValue("vpnPort",s.vpnPort||9000);setValue("password",s.password);
     setValue("interface",r.interface||"wdtt0");
@@ -1346,7 +1351,7 @@ async function setServer(enabled){
 }
 function formConfig(){
   return {
-    enabled:!!appState?.config?.enabled,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,client:{},
+    enabled:!!appState?.config?.enabled,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,webAuth:$("webAuth").checked,client:{},
     server:{publicHost:$("publicHost").value.trim(),listenAddr:"0.0.0.0:"+$("listenAddr").value,dtlsPort:+$("listenAddr").value,wgPort:+$("wgPort").value,vpnPort:+$("vpnPort").value,password:$("password").value,network:appState?.config?.server?.network||"10.66.66.0/24",vkHash:"",profiles:readProfiles()},
     firewall:{rules:readFirewallRules($("globalFirewallEditor"))},
     routing:{mode:"all",interface:$("interface").value||"wdtt0",wan:$("wan").value,clients:[],networks:[]}
