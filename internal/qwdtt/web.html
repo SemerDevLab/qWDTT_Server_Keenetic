@@ -91,7 +91,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .profile-editors>.empty{min-height:64px}
 .profile-editor-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:0}.profile-editor-title{display:flex;align-items:center;gap:8px;min-width:0;font-weight:750}.profile-name-title{overflow:hidden;width:170px;flex:none;text-overflow:ellipsis;white-space:nowrap;font-size:13px}.profile-head-right{display:flex;align-items:center;justify-content:flex-end;gap:9px;min-width:0;margin-left:auto}.profile-head-metrics{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:7px}
 .profile-editor-grid{display:grid;grid-template-columns:58px minmax(105px,.2fr) minmax(260px,.8fr);gap:9px}.profile-actions{display:flex;align-items:center;gap:7px}.profile-port{width:98px;justify-content:center;overflow:hidden;color:var(--muted);font-size:10px;text-overflow:ellipsis}
-.profile-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;padding-left:6px}.profile-badge{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 7px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);color:#aab7cd;font-size:9px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}.profile-status{width:11px;height:11px;flex:none;border:2px solid #55627a;border-radius:50%;background:#222c3e;box-shadow:0 0 0 4px rgba(85,98,122,.08);transition:.2s}.profile-status.enabled{border-color:var(--green);background:var(--green);box-shadow:0 0 0 4px rgba(67,214,140,.1),0 0 10px rgba(67,214,140,.38)}.profile-online{width:64px;justify-content:center;color:#77849a}.profile-online.connected{border-color:rgba(67,214,140,.26);background:rgba(67,214,140,.08);color:var(--green)}.profile-sessions{width:66px;justify-content:center;overflow:hidden;color:#b8aefe;text-overflow:ellipsis}.profile-traffic-group{display:inline-flex;align-items:center;width:261px;min-height:23px;overflow:hidden;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);font-size:9px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}.profile-traffic-group span{box-sizing:border-box;overflow:hidden;padding:3px 6px;text-align:center;text-overflow:ellipsis}.profile-traffic-group .profile-stat{width:78px}.profile-traffic-group .profile-total{width:102px}.profile-traffic-group span+span{border-left:1px solid var(--line-soft)}.profile-stat.down{color:#60c9ff}.profile-stat.up{color:#aa92ff}.profile-total{color:#9aa8bf}
+.profile-summary{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0;padding-left:6px}.profile-badge{display:inline-flex;align-items:center;gap:5px;min-height:23px;padding:3px 7px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);color:#aab7cd;font-size:9px;font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}.profile-status{width:30px;justify-content:center;color:#77849a;transition:.2s}.profile-status svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.profile-status .status-on{display:none}.profile-status.enabled{border-color:rgba(67,214,140,.26);background:rgba(67,214,140,.08);color:var(--green);box-shadow:inset 0 0 8px rgba(67,214,140,.06)}.profile-status.enabled .status-on{display:block}.profile-status.enabled .status-off{display:none}.profile-online{width:64px;justify-content:center;color:#77849a}.profile-online.connected{border-color:rgba(67,214,140,.26);background:rgba(67,214,140,.08);color:var(--green)}.profile-sessions{width:66px;justify-content:center;overflow:hidden;color:#b8aefe;text-overflow:ellipsis}.profile-traffic-group{display:inline-flex;align-items:center;width:261px;min-height:23px;overflow:hidden;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.72);font-size:9px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}.profile-traffic-group span{box-sizing:border-box;overflow:hidden;padding:3px 6px;text-align:center;text-overflow:ellipsis}.profile-traffic-group .profile-stat{width:78px}.profile-traffic-group .profile-total{width:102px}.profile-traffic-group span+span{border-left:1px solid var(--line-soft)}.profile-stat.down{color:#60c9ff}.profile-stat.up{color:#aa92ff}.profile-total{color:#9aa8bf}
 .profile-edit-panel{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft)}.profile-editor.editing .profile-edit-panel{display:block;animation:enter .18s ease}.profile-footer{display:flex;justify-content:flex-end;gap:7px;margin-top:9px}.profile-footer .btn{min-height:28px;padding:5px 9px;font-size:9px}.edit-profile.active{border-color:rgba(124,108,255,.35);background:rgba(124,108,255,.12);color:#d7d2ff}
 .profile-enabled-field{display:flex;align-items:center;justify-content:center;padding-top:13px}.profile-enabled-field .switch{margin:0}
 .profile-firewall{grid-column:1/-1;padding:12px;border:1px solid rgba(124,108,255,.2);border-radius:10px;background:rgba(124,108,255,.05)}.profile-firewall-head{margin-bottom:10px}.profile-firewall-head b{font-size:12px}.profile-firewall-head span{display:block;margin-top:2px;color:var(--muted);font-size:11px}.profile-firewall-grid{display:grid;grid-template-columns:minmax(260px,1.35fr) 120px 105px minmax(300px,1.5fr) minmax(180px,.8fr);gap:9px}.profile-firewall textarea{min-height:62px;resize:vertical}
@@ -99,7 +99,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .firewall-rules{display:grid;gap:9px;margin-bottom:10px}.firewall-rule{padding:10px;border:1px solid var(--line-soft);border-radius:9px;background:rgba(8,13,24,.42)}.firewall-rule-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:#b9c4d8;font-size:11px}.firewall-rule-actions{display:flex;gap:4px}.firewall-rule-actions .icon-btn{width:25px;height:25px;font-size:13px}.firewall-rule-add{margin-top:2px}
 .firewall-rules>.firewall-empty{min-height:48px}
 .firewall-rule-name{width:min(280px,55%);padding:5px 8px;font-size:11px;font-weight:700}
-.firewall-rule-enabled-field .switch{margin:0}.firewall-rule .field-hint{display:none}.firewall-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}.global-firewall-card{margin-top:10px}.global-firewall-card.is-collapsed>#globalFirewallEditor{display:none}.firewall-panel-actions{display:flex;align-items:center;gap:7px}.firewall-collapse-btn{width:38px;min-width:38px;height:27px;min-height:27px;padding:0}.firewall-summary,.profiles-summary{display:block;margin-top:5px;color:#9a8eff;font-size:10px;font-weight:650}.profiles-card.is-collapsed>#profileEditors,.profiles-card.is-collapsed>.profiles-footer{display:none}.profiles-footer{display:flex;justify-content:flex-end;margin-top:10px}.firewall-rule-enabled-field{order:-1;display:flex;align-items:center;justify-content:center}
+.firewall-rule-enabled-field .switch{margin:0}.firewall-rule .field-hint{display:none}.firewall-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}.global-firewall-card{margin-top:10px}.global-firewall-card.is-collapsed>#globalFirewallEditor{display:none}.firewall-panel-actions{display:flex;align-items:center;gap:7px}.firewall-collapse-btn{width:38px;min-width:38px;height:27px;min-height:27px;padding:0}.firewall-summary,.profiles-summary{display:inline-flex;align-items:center;min-height:22px;margin-top:6px;padding:3px 8px;border:1px solid rgba(124,108,255,.24);border-radius:7px;background:linear-gradient(135deg,rgba(124,108,255,.13),rgba(124,108,255,.055));box-shadow:inset 0 1px rgba(255,255,255,.025);color:#b5aaff;font-size:9px;font-weight:720;letter-spacing:.015em}.profiles-card.is-collapsed>#profileEditors,.profiles-card.is-collapsed>.profiles-footer{display:none}.profiles-footer{display:flex;justify-content:flex-end;margin-top:10px}.firewall-rule-enabled-field{order:-1;display:flex;align-items:center;justify-content:center}
 .settings-side{grid-column:1/-1}.settings-side .card{padding:0;border:0;background:transparent;box-shadow:none}.settings-side .panel-head,.settings-side .info-note{display:none}.settings-side .form-actions{justify-content:flex-end;margin-top:10px}
 #logs{display:flex;flex-direction:column}.toolbar-row{order:2;display:flex;justify-content:flex-end;width:100%;margin-top:10px}.logs+.toolbar-row{order:2}
 .view#logs{display:none}.view#logs.active{display:block}.view#logs .card{display:flex;flex-direction:column}.view#logs .card>.toolbar-row{order:2;justify-content:flex-end;margin:10px 0 0}
@@ -114,8 +114,8 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .profile-identity{min-width:0}.profile-identity b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}.profile-identity span{color:var(--muted);font-size:9px}.profile-link-actions{display:flex;gap:5px}
 .profile-live{display:flex!important;align-items:center;gap:5px;margin-top:2px}.profile-live.connected{color:var(--green)!important}.profile-live:before{content:"";width:6px;height:6px;border-radius:50%;background:#59657a}.profile-live.connected:before{background:var(--green);box-shadow:0 0 8px rgba(67,214,140,.5)}
 .profile-speed{display:flex;gap:8px;color:#aebbd1;font-size:9px;white-space:nowrap}.profile-speed .down{color:#60c9ff}.profile-speed .up{color:#aa92ff}.editor-live{color:var(--muted);font-size:9px}.editor-live.connected{color:var(--green)}
-.log-toolbar{display:flex;gap:8px}.logs{height:min(62vh,610px);overflow:auto;padding:9px;border:1px solid var(--line-soft);border-radius:13px;background:#090e19;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;scrollbar-color:#33405a transparent}
-.log-line{display:grid;grid-template-columns:78px 56px minmax(0,1fr);gap:8px;padding:5px 7px;border-radius:7px}.log-line:hover{background:#11192a}.log-time{color:#586781}.log-level{font-weight:800}.log-level.INFO{color:#68b7ff}.log-level.ERROR{color:var(--red)}.log-level.WARN{color:var(--yellow)}.log-level.DEBUG{color:#9c8eff}.log-message{color:#b7c2d7;overflow-wrap:anywhere}.empty{display:grid;place-items:center;min-height:250px;color:var(--muted);text-align:center}
+.log-toolbar{display:flex;align-items:center;width:100%;gap:8px}.log-filters{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.log-filter{cursor:pointer}.log-filter input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.log-filter span{display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:27px;padding:0 8px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.58);color:#69778e;font:750 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;transition:.18s}.log-filter input:checked+span{border-color:rgba(124,108,255,.3);background:rgba(124,108,255,.12);color:#c2b9ff;box-shadow:inset 0 1px rgba(255,255,255,.025)}.log-filter[data-level="INFO"] input:checked+span{border-color:rgba(104,183,255,.28);background:rgba(104,183,255,.09);color:#68b7ff}.log-filter[data-level="WARN"] input:checked+span{border-color:rgba(255,196,92,.28);background:rgba(255,196,92,.09);color:var(--yellow)}.log-filter[data-level="ERROR"] input:checked+span{border-color:rgba(255,102,128,.3);background:rgba(255,102,128,.09);color:var(--red)}.log-actions{display:flex;gap:6px;margin-left:auto}.logs{height:min(62vh,610px);overflow:auto;padding:9px;border:1px solid var(--line-soft);border-radius:13px;background:#090e19;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;scrollbar-color:#33405a transparent}
+.log-line{display:grid;grid-template-columns:78px 56px minmax(0,1fr);gap:8px;padding:5px 7px;border-radius:7px}.log-line[hidden]{display:none}.log-line:hover{background:#11192a}.log-time{color:#586781}.log-level{font-weight:800}.log-level.INFO{color:#68b7ff}.log-level.ERROR{color:var(--red)}.log-level.WARN{color:var(--yellow)}.log-level.DEBUG{color:#9c8eff}.log-message{color:#b7c2d7;overflow-wrap:anywhere}.empty{display:grid;place-items:center;min-height:250px;color:var(--muted);text-align:center}
 .qr-modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.76);backdrop-filter:blur(12px);z-index:100}.qr-modal.open{display:grid}.qr-dialog{position:relative;width:min(430px,100%);padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center;animation:enter .2s ease}.qr-dialog h2{margin:0 0 4px;font-size:18px}.qr-dialog p{margin:0 0 15px;color:var(--muted);font-size:11px}.qr-dialog img{display:block;width:245px;max-width:100%;margin:0 auto;padding:9px;border-radius:14px;background:#fff}.qr-link-box{margin-top:13px;padding:9px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#090e19;text-align:left}.qr-link-box code{display:block;overflow-wrap:anywhere;color:#aebbd1;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.qr-copy{width:100%;margin-top:8px}.qr-close{position:absolute;right:13px;top:13px}
 .update-dialog{text-align:left}.update-dialog h2{margin-bottom:5px}.update-dialog>p{margin-bottom:18px}.update-versions{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:16px;border:1px solid var(--line-soft);border-radius:14px;background:#090e19}.update-version{min-width:0}.update-version span{display:block;margin-bottom:5px;color:var(--muted);font-size:10px}.update-version strong{display:block;overflow:hidden;font-size:15px;text-overflow:ellipsis;white-space:nowrap}.update-version.latest strong{color:var(--green)}.update-arrow{color:var(--primary-2);font-size:20px}.update-architecture{margin-top:10px;color:var(--muted);font-size:10px}.update-message{min-height:16px;margin-top:12px;color:var(--muted);font-size:11px}.update-message.error{color:var(--red)}.update-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 .toast-stack{position:fixed;right:22px;bottom:22px;display:grid;gap:8px;z-index:200}.toast{min-width:260px;max-width:380px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#192238;box-shadow:var(--shadow);animation:toastIn .22s ease}.toast.error{border-color:rgba(255,102,128,.35)}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
@@ -374,14 +374,14 @@ body:before{
   background:linear-gradient(135deg,rgba(16,24,39,.96),rgba(10,15,26,.76))
 }
 .profile-editor.editing{
+  padding:14px 16px;
   border-color:rgba(119,103,255,.32);
   box-shadow:0 0 0 2px rgba(119,103,255,.055)
 }
 .profile-editor-head{gap:8px}
 .profile-summary{gap:8px;padding-left:2px}
 .profile-name-title{width:148px;font-size:11px}
-.profile-status{width:9px;height:9px;border-width:1px;box-shadow:0 0 0 3px rgba(85,98,122,.07)}
-.profile-status.enabled{box-shadow:0 0 0 3px rgba(65,214,154,.08),0 0 9px rgba(65,214,154,.3)}
+.profile-status{width:30px}
 .profile-head-right{gap:6px}
 .profile-head-metrics{gap:5px}
 .profile-badge{
@@ -406,11 +406,12 @@ body:before{
 .profile-editor .switch input:checked+span:after{transform:translateX(16px)}
 .profile-edit-panel{margin-top:7px;padding-top:7px}
 .profile-editor-grid{
-  grid-template-columns:42px minmax(155px,185px) minmax(280px,1fr) minmax(180px,220px);
-  align-items:start;
+  grid-template-columns:42px minmax(80px,95px) minmax(240px,1fr) minmax(170px,210px) auto;
+  align-items:end;
   gap:8px
 }
 .profile-editor-grid .profile-enabled-field{grid-column:1;align-self:start;padding:24px 0 0}
+.profile-editor-grid .profile-footer{align-self:end;margin:0;white-space:nowrap}
 .profile-editor-grid .field-hint{min-height:11px}
 .profile-editor-grid .profile-hash{min-width:0}
 .profile-editor-grid .profile-workers{position:absolute;z-index:4;inset:0;width:100%;height:27px;margin:0;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer;opacity:0;appearance:none;-webkit-appearance:none;box-sizing:border-box}
@@ -941,6 +942,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .panel-collapse-btn{width:34px;height:27px}
 
   .profile-editor{padding:8px;border-radius:10px}
+  .profile-editor.editing{padding:12px}
   .profile-editor-head{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto auto;
@@ -948,7 +950,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     gap:6px
   }
   .profile-summary{grid-column:1;grid-row:1;min-width:0}
-  .profile-status{width:9px;height:9px}
+  .profile-status{width:30px}
   .profile-name-title{max-width:none;font-size:12px}
   .profile-head-right{display:contents}
   .profile-connect,
@@ -993,15 +995,25 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .profile-port{display:none}
   .profile-edit-panel{margin-top:8px;padding-top:8px}
   .profile-editor-grid{
-    grid-template-columns:42px minmax(100px,.36fr) minmax(150px,.64fr);
-    align-items:end;
-    gap:6px
+    grid-template-columns:minmax(0,1fr);
+    align-items:stretch;
+    gap:9px
   }
-  .profile-enabled-field{
-    grid-column:1;
-    padding-top:0;
-    padding-bottom:7px
+  .profile-editor-grid .profile-enabled-field{
+    grid-column:1/-1;
+    align-self:stretch;
+    justify-content:flex-start;
+    min-height:36px;
+    padding:0 9px;
+    gap:9px;
+    border:1px solid var(--line-soft);
+    border-radius:8px;
+    background:rgba(18,27,44,.48)
   }
+  .profile-enabled-field:after{content:"Профиль выключен";color:var(--muted);font-size:10px;font-weight:650}
+  .profile-enabled-field:has(input:checked):after{content:"Профиль включён";color:var(--green)}
+  .profile-editor-grid .profile-footer{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:7px}
+  .profile-editor-grid .profile-footer .btn{width:100%;min-height:34px}
 
   .firewall-rule{padding:8px;border-radius:10px}
   .firewall-rule-top{margin-bottom:7px}
@@ -1035,7 +1047,85 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .profile-firewall-grid input,
   .profile-firewall-grid select{min-height:34px;padding:7px 9px}
   .profile-firewall-grid .field-hint{margin-top:0}
-  .firewall-footer{margin-top:8px}
+  .firewall-footer{display:grid;grid-template-columns:1fr 1fr;margin-top:8px}
+  .firewall-footer .btn{width:100%;min-width:0}
+
+  .topbar{gap:8px}
+  .title{min-width:0}
+  .title h1{overflow:hidden;font-size:16px;text-overflow:ellipsis;white-space:nowrap}
+  .top-version-wrap{display:flex;min-width:0;gap:3px}
+  .top-version{
+    display:block;
+    max-width:72px;
+    overflow:hidden;
+    margin:0;
+    padding:4px 6px;
+    border:1px solid rgba(131,145,168,.14);
+    border-radius:7px;
+    background:rgba(13,20,33,.68);
+    font-size:8px;
+    line-height:1;
+    text-overflow:ellipsis;
+    white-space:nowrap
+  }
+  .update-indicator{width:25px;height:25px;border-radius:7px}
+  .update-indicator svg{width:13px;height:13px}
+  .top-actions{flex:none;gap:5px}
+  .connection-pill{
+    width:30px;
+    min-width:30px;
+    height:30px;
+    flex:0 0 30px;
+    justify-content:center;
+    padding:0;
+    border-radius:50%
+  }
+  .connection-pill .status-dot{
+    width:8px;
+    min-width:8px;
+    height:8px;
+    flex:0 0 8px;
+    aspect-ratio:1;
+    border-radius:50%;
+    box-shadow:0 0 0 3px rgba(89,101,122,.12)
+  }
+  .connection-pill .status-dot.on{box-shadow:0 0 0 3px rgba(67,214,140,.13),0 0 11px rgba(67,214,140,.48)}
+  #headerToggle{padding-inline:9px}
+  #headerToggle span{display:inline;font-size:9px}
+
+  .profile-editor-head{grid-template-columns:minmax(0,1fr) auto}
+  .profile-summary{grid-column:1;grid-row:1}
+  .edit-profile{grid-column:2;grid-row:1}
+  .profile-head-metrics{grid-column:1/-1;grid-row:2}
+  .profile-connect{grid-column:1/-1;grid-row:3;width:100%}
+  .profile-name-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .profiles-footer .btn{width:100%;min-height:34px}
+
+  .service-inline-row,.server-ports-row{gap:10px}
+  .inline-field{display:grid;grid-template-columns:minmax(0,1fr)}
+  .inline-field .btn{width:100%}
+  .settings-save-fab .btn{width:100%}
+
+  .view#logs .card>.toolbar-row{order:0;margin:0 0 8px}
+  .log-toolbar{display:grid;grid-template-columns:1fr;gap:7px}
+  .log-filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:100%;gap:4px}
+  .log-filter span{width:100%;min-width:0;padding-inline:3px}
+  .log-actions{display:grid;grid-template-columns:1fr 1fr;width:100%;margin-left:0}
+  .log-actions .btn{width:100%}
+  .logs{padding:6px}
+  .log-line{grid-template-columns:auto minmax(0,1fr);gap:2px 8px;padding:6px}
+  .log-level{text-align:right}
+  .log-message{grid-column:1/-1;padding-top:2px;line-height:1.45}
+
+  .qr-modal{align-items:center;padding:10px}
+  .qr-dialog{max-height:calc(100dvh - 20px);overflow:auto;padding:18px 14px;border-radius:15px}
+  .qr-dialog img{width:min(220px,72vw)}
+  .update-versions{grid-template-columns:1fr;padding:12px;text-align:center}
+  .update-arrow{transform:rotate(90deg)}
+  .update-dialog-actions{display:grid;grid-template-columns:1fr}
+  .update-dialog-actions .btn{width:100%}
+  .toast-stack{left:8px;right:8px;bottom:calc(72px + env(safe-area-inset-bottom))}
+  .toast{width:100%;min-width:0;max-width:none}
 }
 
 </style>
@@ -1120,13 +1210,13 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
       <div class="profiles-layout overview-profiles">
         <div class="card panel profiles-card is-collapsed">
-          <div class="panel-head"><div><h2>Профили подключения</h2><span class="profiles-summary" id="profilesSummary">Профилей: 0 · Включено: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleProfiles" type="button" aria-expanded="false" aria-label="Развернуть профили" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
+          <div class="panel-head"><div><h2>Профили</h2><span class="profiles-summary" id="profilesSummary">Профилей: 0 · Включено: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleProfiles" type="button" aria-expanded="false" aria-label="Развернуть профили" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
           <div class="profile-editors" id="profileEditors"></div>
           <div class="profiles-footer"><button class="btn small secondary" id="addProfile" type="button">+ Профиль</button></div>
         </div>
       </div>
       <div class="card panel global-firewall-card is-collapsed">
-        <div class="panel-head"><div><h2>Общий firewall</h2><span class="firewall-summary" id="firewallSummary">Правил: 0 · Активных: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleFirewall" type="button" aria-expanded="false" aria-label="Развернуть firewall" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
+        <div class="panel-head"><div><h2>Firewall</h2><span class="firewall-summary" id="firewallSummary">Правил: 0 · Активных: 0</span></div><div class="firewall-panel-actions"><button class="btn small secondary firewall-collapse-btn" id="toggleFirewall" type="button" aria-expanded="false" aria-label="Развернуть firewall" title="Развернуть"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div></div>
         <div id="globalFirewallEditor"></div>
       </div>
     </section>
@@ -1162,7 +1252,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     </section>
 
     <section class="view" id="logs">
-      <div class="toolbar-row"><div class="log-toolbar"><button class="btn small ghost" id="copyLogs">Копировать</button><button class="btn small danger" id="clearLogs">Очистить</button></div></div>
+      <div class="toolbar-row"><div class="log-toolbar"><div class="log-filters" id="logFilters" aria-label="Фильтр журнала"><label class="log-filter" data-level="INFO"><input type="checkbox" value="INFO" checked><span>INFO</span></label><label class="log-filter" data-level="WARN"><input type="checkbox" value="WARN" checked><span>WARN</span></label><label class="log-filter" data-level="ERROR"><input type="checkbox" value="ERROR" checked><span>ERROR</span></label><label class="log-filter" data-level="DEBUG"><input type="checkbox" value="DEBUG" checked><span>DEBUG</span></label></div><div class="log-actions"><button class="btn small ghost" id="copyLogs">Копировать</button><button class="btn small danger" id="clearLogs">Очистить</button></div></div></div>
       <div class="card panel"><div class="logs" id="logOutput"><div class="empty">Журнал пока пуст</div></div></div>
     </section>
   </main>
@@ -1401,7 +1491,7 @@ function firewallEditor(profile,index){
   const firewall=profile.firewall||{};
   const legacy=firewall.rules?.length?firewall.rules:(firewall.addresses?.length||firewall.ports?.length?[{action:firewall.addressMode==="block"||firewall.portMode==="block"?"block":"allow",protocol:"all",addresses:firewall.addresses||[],ports:firewall.ports||[]}]:[]);
   const ruleEditor=(rule,index)=>`<div class="firewall-rule" data-rule-index="${index}"><div class="firewall-rule-top"><b>Правило ${index+1}</b><div class="firewall-rule-actions"><button class="icon-btn firewall-rule-up" type="button" title="Выше">↑</button><button class="icon-btn firewall-rule-down" type="button" title="Ниже">↓</button><button class="icon-btn firewall-rule-remove" type="button" title="Удалить">×</button></div></div><div class="profile-firewall-grid"><div class="field"><label>Действие</label><select class="firewall-rule-action"><option value="allow" ${rule.action!=="block"?"selected":""}>Разрешить</option><option value="block" ${rule.action==="block"?"selected":""}>Запретить</option></select></div><div class="field"><label>Протокол</label><select class="firewall-rule-protocol"><option value="all" ${!rule.protocol||rule.protocol==="all"?"selected":""}>Все</option><option value="tcp" ${rule.protocol==="tcp"?"selected":""}>TCP</option><option value="udp" ${rule.protocol==="udp"?"selected":""}>UDP</option></select></div><div class="field"><label>Адреса / подсети</label><textarea class="firewall-rule-addresses" placeholder="192.168.1.0/24, 8.8.8.8">${escapeHTML((rule.addresses||[]).join(", "))}</textarea></div><div class="field"><label>Порты</label><input class="firewall-rule-ports" placeholder="80, 443, 1000-1100" value="${escapeHTML((rule.ports||[]).join(", "))}"><div class="field-hint">Пусто — любые порты</div></div></div></div>`;
-  return `<div class="profile-firewall"><div class="firewall-rules">${legacy.length?legacy.map(ruleEditor).join(""):'<div class="empty firewall-empty">Правила firewall пока не созданы</div>'}</div><button class="btn small secondary firewall-rule-add" type="button">+ Добавить правило</button></div>`;
+  return `<div class="profile-firewall"><div class="firewall-rules">${legacy.length?legacy.map(ruleEditor).join(""):'<div class="empty firewall-empty">Правил пока нет — создайте первое</div>'}</div><button class="btn small secondary firewall-rule-add" type="button">+ Добавить правило</button></div>`;
 }
 function renderGlobalFirewall(firewall){
   const box=$("globalFirewallEditor");if(!box)return;box.innerHTML=firewallEditor({firewall},0);box.querySelectorAll(".firewall-rule").forEach((rule,index)=>{rule.draggable=true;rule.querySelectorAll(".firewall-rule-up,.firewall-rule-down").forEach(button=>button.remove());const data=firewall.rules?.[index]||{},name=rule.querySelector(".firewall-rule-top b"),nameInput=document.createElement("input");nameInput.className="firewall-rule-name";nameInput.placeholder=`Правило ${index+1}`;nameInput.value=data.name||`Правило ${index+1}`;if(name)name.replaceWith(nameInput);const protocol=rule.querySelector(".firewall-rule-protocol"),current=protocol.value;protocol.innerHTML='<option value="ipv4">IPv4</option><option value="tcp">TCP</option><option value="udp">UDP</option>';protocol.value=current==="all"||!current?"ipv4":current;const sourceField=document.createElement("div");sourceField.className="field";sourceField.innerHTML='<label>Адрес источника / подсети</label><input class="firewall-rule-sources" placeholder="10.66.66.2, 10.66.66.3, 192.168.1.0/24" value="'+escapeHTML((data.sourceAddresses||[]).join(", "))+'">';const destination=rule.querySelector(".firewall-rule-addresses"),destinationField=destination?.closest(".field");if(destination&&destinationField){const input=document.createElement("input");input.className="firewall-rule-addresses";input.placeholder="192.168.1.1, 192.168.1.0/24";input.value=destination.value.replace(/[\n]+/g,", ");destination.replaceWith(input);destinationField.querySelector("label")?.replaceChildren("Адрес назначения / подсети")};rule.querySelector(".profile-firewall-grid")?.prepend(sourceField)});
@@ -1444,12 +1534,12 @@ function openProfilesCard(){
 function renderProfileEditors(){
   const box=$("profileEditors");
   updateProfilesSummary();
-  if(!profiles.length){box.innerHTML='<div class="empty">Создайте первый профиль подключения</div>';return}
+  if(!profiles.length){box.innerHTML='<div class="empty">Профилей пока нет — создайте первый</div>';return}
   box.innerHTML=profiles.map((profile,index)=>{const hashes=profileHashValues(profile),workers=profileWorkers(profile),max=Math.max(9,hashes.length*27);return `
     <div class="profile-editor" data-id="${escapeHTML(profile.id)}" data-client-ip="${escapeHTML(profile.clientIP)}" data-traffic-profile="${escapeHTML(profile.id)}">
       <div class="profile-editor-head">
         <div class="profile-summary">
-          <span class="profile-status ${profile.enabled?"enabled":""}" title="${profile.enabled?"Профиль включён":"Профиль выключен"}" aria-label="${profile.enabled?"Профиль включён":"Профиль выключен"}"></span>
+          <span class="profile-badge profile-status ${profile.enabled?"enabled":""}" title="${profile.enabled?"Профиль включён":"Профиль выключен"}" aria-label="${profile.enabled?"Профиль включён":"Профиль выключен"}"><svg class="status-on" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"></circle><path d="m6.7 10.1 2.1 2.2 4.6-4.7"></path></svg><svg class="status-off" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"></circle><path d="m7.5 7.5 5 5m0-5-5 5"></path></svg></span>
           <div class="profile-editor-title"><span class="profile-name-title">${escapeHTML(profile.name||"Профиль клиента")}</span></div>
         </div>
         <div class="profile-head-right">
@@ -1461,11 +1551,11 @@ function renderProfileEditors(){
       <div class="profile-edit-panel">
         <div class="profile-editor-grid">
           <div class="field profile-enabled-field"><label class="switch"><input class="profile-enabled" type="checkbox" ${profile.enabled?"checked":""}><span></span></label></div>
-          <div class="field"><label>Название</label><input class="profile-name" value="${escapeHTML(profile.name)}" required></div>
+          <div class="field profile-name-field"><label>Название</label><input class="profile-name" value="${escapeHTML(profile.name)}" required></div>
            <div class="field"><label>VK hash (до 4, через запятую)</label><input class="profile-hash" value="${escapeHTML(hashes.join(", "))}" placeholder="hash1, hash2, hash3, hash4" required></div>
            <div class="field"><label for="profile-workers-${index}">Потоки</label><div class="profile-workers-control"><div class="profile-workers-slider"><input class="profile-workers" id="profile-workers-${index}" type="range" min="9" max="${max}" step="9" value="${workers}"><span class="profile-worker-dots">${workerDots(max)}</span><span class="profile-worker-knob" aria-hidden="true"></span></div><output class="profile-workers-value">${workers}</output></div></div>
+          <div class="profile-footer"><button class="btn small danger remove-profile" type="button" data-profile-id="${escapeHTML(profile.id)}">Удалить профиль</button><button class="btn small save-profile" type="button">Сохранить</button></div>
         </div>
-        <div class="profile-footer"><button class="btn small danger remove-profile" type="button" data-profile-id="${escapeHTML(profile.id)}">Удалить профиль</button><button class="btn small save-profile" type="button">Сохранить</button></div>
       </div>
     </div>`}).join("");
   updateProfileTelemetry(appState?.profileTraffic||{});
@@ -1523,10 +1613,18 @@ async function loadLogs(){
     box.innerHTML=entries.map(item=>{
       const date=new Date(item.time),time=Number.isNaN(date.getTime())?String(item.time||""):date.toLocaleTimeString("ru-RU",{hour12:false});
       const level=String(item.level||"INFO").toUpperCase();
-      return `<div class="log-line"><span class="log-time">${escapeHTML(time)}</span><span class="log-level ${escapeHTML(level)}">${escapeHTML(level)}</span><span class="log-message">${escapeHTML(item.message)}</span></div>`;
+      return `<div class="log-line" data-log-level="${escapeHTML(level)}"><span class="log-time">${escapeHTML(time)}</span><span class="log-level ${escapeHTML(level)}">${escapeHTML(level)}</span><span class="log-message">${escapeHTML(item.message)}</span></div>`;
     }).join("");
+    applyLogFilters();
     box.scrollTop=box.scrollHeight;
   }catch(error){toast("Не удалось загрузить журнал: "+error.message,true)}
+}
+function applyLogFilters(){
+  const box=$("logOutput"),selected=new Set([...document.querySelectorAll("#logFilters input:checked")].map(input=>input.value)),rows=[...box.querySelectorAll(".log-line")];
+  box.querySelector(".log-filter-empty")?.remove();
+  let visible=0;
+  rows.forEach(row=>{const show=selected.has(row.dataset.logLevel);row.hidden=!show;if(show)visible++});
+  if(rows.length&&!visible)box.insertAdjacentHTML("beforeend",'<div class="empty log-filter-empty">Нет сообщений выбранных категорий</div>');
 }
 async function copyText(value){
   if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}
@@ -1617,6 +1715,7 @@ $("generatePassword").onclick=()=>{
 };
 $("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
 $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
+$("logFilters").addEventListener("change",applyLogFilters);
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
 function renderUpdate(info){
   if(!info)return;
