@@ -292,7 +292,12 @@ func WebHandler(cfg *Config, path string, logs *LogBook, runtime ...*Runtime) ht
 
 func protectWeb(next http.Handler, auth *webAuth, currentConfig func() Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/login" || r.URL.Path == "/healthz" || !currentConfig().WebAuthEnabled() || auth.valid(r) {
+		webAuthEnabled := currentConfig().WebAuthEnabled()
+		if r.URL.Path == "/login" && !webAuthEnabled {
+			http.Redirect(w, r, "/", http.StatusFound)
+			return
+		}
+		if r.URL.Path == "/login" || r.URL.Path == "/healthz" || !webAuthEnabled || auth.valid(r) {
 			next.ServeHTTP(w, r)
 			return
 		}
