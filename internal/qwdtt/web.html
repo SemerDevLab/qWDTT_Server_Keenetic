@@ -1612,6 +1612,7 @@ $("installUpdate").onclick=async()=>{
     const response=await request("/api/qwdtt/update/install",{method:"POST"}),result=await response.json();
     renderUpdate({...updateInfo,...result,latest:result.version||updateInfo?.latest});
     toast("Обновление запущено");
+    if($("webAuth")?.checked===false)window.location.replace("/");
   }
   catch(error){toast(error.message,true)}
 };
