@@ -406,9 +406,29 @@ body:before{
 .profile-editor .switch input:checked+span:after{transform:translateX(16px)}
 .profile-edit-panel{margin-top:7px;padding-top:7px}
 .profile-editor-grid{
-  grid-template-columns:58px minmax(105px,.2fr) minmax(260px,.8fr);
-  gap:6px
+  grid-template-columns:42px minmax(155px,185px) minmax(280px,1fr) minmax(180px,220px);
+  align-items:start;
+  gap:8px
 }
+.profile-editor-grid .profile-enabled-field{grid-column:1;align-self:start;padding:24px 0 0}
+.profile-editor-grid .field-hint{min-height:11px}
+.profile-editor-grid .profile-hash{min-width:0}
+.profile-editor-grid .profile-workers{position:absolute;z-index:4;inset:0;width:100%;height:27px;margin:0;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer;opacity:0;appearance:none;-webkit-appearance:none;box-sizing:border-box}
+.profile-workers-control{display:flex;align-items:center;gap:8px}
+.profile-workers-slider{position:relative;flex:1;min-width:0;height:27px}
+.profile-workers-control .profile-workers{min-width:0}
+.profile-worker-dots{position:absolute;z-index:1;inset:0 8px;display:flex;align-items:center;justify-content:space-between;pointer-events:none}
+.profile-worker-dots:before{content:"";position:absolute;inset:0;background:linear-gradient(#18243a,#18243a) center/100% 5px no-repeat}
+.profile-worker-dots i{position:relative;z-index:1;display:block;width:7px;height:7px;border:1px solid #a9bad5;border-radius:50%;background:#10192b;box-shadow:0 0 0 2px #10192b}
+.profile-worker-knob{position:absolute;z-index:3;top:50%;left:8px;width:16px;height:16px;border-radius:50%;background:#8bc5ff;box-shadow:0 0 0 3px rgba(139,197,255,.14);transform:translate(-50%,-50%);pointer-events:none}
+.profile-editor-grid .profile-workers:hover{border:0;box-shadow:none}
+.profile-workers::-webkit-slider-runnable-track{height:5px;border:0;border-radius:999px;background:transparent}
+.profile-workers::-webkit-slider-thumb{width:16px;height:16px;margin-top:-6px;border:0;border-radius:50%;background:#8bc5ff;box-shadow:0 0 0 3px rgba(139,197,255,.14);appearance:none}
+.profile-workers::-moz-range-track{height:5px;border:0;border-radius:999px;background:transparent}
+.profile-workers::-moz-range-progress{height:5px;border-radius:999px;background:transparent}
+.profile-workers::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:#8bc5ff;box-shadow:0 0 0 3px rgba(139,197,255,.14)}
+.profile-workers-value{display:inline-flex;width:36px;min-width:36px;box-sizing:border-box;align-items:center;justify-content:center;padding:2px 4px;border:1px solid rgba(124,108,255,.25);border-radius:5px;background:rgba(124,108,255,.1);color:#c9c2ff;font-size:10px;font-weight:750;text-align:center}
+.profile-workers + .field-hint{white-space:nowrap}
 .profile-footer{margin-top:7px}
 
 .section-heading{margin-bottom:8px}
@@ -493,6 +513,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .profile-head-metrics{width:100%}
   .profile-traffic-group{width:100%;max-width:228px}
   .profile-editor-grid,.profile-firewall-grid{grid-template-columns:1fr}
+  .profile-editor-grid .profile-enabled-field{padding:0;justify-content:flex-start}
   .settings-layout{grid-template-columns:1fr}
   .settings-side{position:static}
 }
@@ -1197,6 +1218,14 @@ function normalizeVKHash(value){
   if(index>=0)hash=hash.slice(index+marker.length);
   return hash.replace(/^\/+|[\/?#].*$/g,"").trim();
 }
+function normalizeVKHashes(value){
+  const values=Array.isArray(value)?value:[value];
+  return values.flatMap(item=>String(item??"").split(",")).map(normalizeVKHash).filter(Boolean).filter((hash,index,list)=>list.indexOf(hash)===index).slice(0,4);
+}
+function profileHashValues(profile){return normalizeVKHashes((profile.vkHashes&&profile.vkHashes.length)?profile.vkHashes:profile.vkHash)}
+function profileWorkers(profile){const count=profileHashValues(profile).length;let workers=Number(profile.workers)||9;const max=Math.max(9,count*27);return Math.min(Math.max(9,Math.round(workers/9)*9),max)}
+function workerDots(max){let dots="";for(let value=9;value<=max;value+=9)dots+=`<i aria-hidden="true"></i>`;return dots}
+function syncWorkerKnob(card){const slider=card?.querySelector(".profile-workers"),knob=card?.querySelector(".profile-worker-knob"),track=slider?.parentElement;if(!slider||!knob||!track)return;const max=Number(slider.max)||9,value=Number(slider.value)||9,ratio=max<=9?0:(value-9)/(max-9),inset=8,dotSize=7;knob.style.left=`${inset+dotSize/2+Math.max(0,track.clientWidth-inset*2-dotSize)*ratio}px`}
 function portOnly(value){
   const match=String(value||"").match(/:(\d+)$/);
   return match?match[1]:String(value||"").replace(/\D/g,"");
@@ -1362,8 +1391,9 @@ function readFirewallRules(container){
 }
 function readProfiles(){
   return [...document.querySelectorAll(".profile-editor")].map(card=>{
+    const hashes=normalizeVKHashes(card.querySelector(".profile-hash").value);
     return {id:card.dataset.id,name:card.querySelector(".profile-name").value.trim(),enabled:card.querySelector(".profile-enabled").checked,
-      clientIP:card.dataset.clientIp,vkHash:normalizeVKHash(card.querySelector(".profile-hash").value),dtlsPort:+$("listenAddr").value,accessMode:"all",
+      clientIP:card.dataset.clientIp,vkHash:hashes[0]||"",vkHashes:hashes,workers:+card.querySelector(".profile-workers").value||9,dtlsPort:+$("listenAddr").value,accessMode:"all",
       firewall:{}}
   });
 }
@@ -1415,7 +1445,7 @@ function renderProfileEditors(){
   const box=$("profileEditors");
   updateProfilesSummary();
   if(!profiles.length){box.innerHTML='<div class="empty">Создайте первый профиль подключения</div>';return}
-  box.innerHTML=profiles.map((profile,index)=>`
+  box.innerHTML=profiles.map((profile,index)=>{const hashes=profileHashValues(profile),workers=profileWorkers(profile),max=Math.max(9,hashes.length*27);return `
     <div class="profile-editor" data-id="${escapeHTML(profile.id)}" data-client-ip="${escapeHTML(profile.clientIP)}" data-traffic-profile="${escapeHTML(profile.id)}">
       <div class="profile-editor-head">
         <div class="profile-summary">
@@ -1432,13 +1462,15 @@ function renderProfileEditors(){
         <div class="profile-editor-grid">
           <div class="field profile-enabled-field"><label class="switch"><input class="profile-enabled" type="checkbox" ${profile.enabled?"checked":""}><span></span></label></div>
           <div class="field"><label>Название</label><input class="profile-name" value="${escapeHTML(profile.name)}" required></div>
-          <div class="field"><label>VK hash</label><input class="profile-hash" value="${escapeHTML(normalizeVKHash(profile.vkHash))}" required></div>
+           <div class="field"><label>VK hash (до 4, через запятую)</label><input class="profile-hash" value="${escapeHTML(hashes.join(", "))}" placeholder="hash1, hash2, hash3, hash4" required></div>
+           <div class="field"><label for="profile-workers-${index}">Потоки</label><div class="profile-workers-control"><div class="profile-workers-slider"><input class="profile-workers" id="profile-workers-${index}" type="range" min="9" max="${max}" step="9" value="${workers}"><span class="profile-worker-dots">${workerDots(max)}</span><span class="profile-worker-knob" aria-hidden="true"></span></div><output class="profile-workers-value">${workers}</output></div></div>
         </div>
         <div class="profile-footer"><button class="btn small danger remove-profile" type="button" data-profile-id="${escapeHTML(profile.id)}">Удалить профиль</button><button class="btn small save-profile" type="button">Сохранить</button></div>
       </div>
-    </div>`).join("");
+    </div>`}).join("");
   updateProfileTelemetry(appState?.profileTraffic||{});
   updateProfilesSummary();
+  document.querySelectorAll(".profile-editor").forEach(syncWorkerKnob);
   loadLinks();
 }
 function updateProfileTelemetry(telemetry){
@@ -1458,10 +1490,10 @@ function updateProfileTelemetry(telemetry){
 function addProfile(){
   openProfilesCard();
   if(document.querySelector(".profile-editor"))profiles=readProfiles();
-  profiles.push({id:"profile-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name:"Новый профиль",enabled:true,clientIP:"",vkHash:"",dtlsPort:+$("listenAddr").value||56000,accessMode:"all",firewall:{rules:[]}});
+   profiles.push({id:"profile-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),name:"Новый профиль",enabled:true,clientIP:"",vkHash:"",vkHashes:[],workers:9,dtlsPort:+$("listenAddr").value||56000,accessMode:"all",firewall:{rules:[]}});
   renderProfileEditors();setDirty(true);
   const card=$("profileEditors").lastElementChild,edit=card?.querySelector(".edit-profile");
-  if(card&&edit){card.classList.add("editing");edit.classList.add("active");edit.textContent="Скрыть";edit.setAttribute("aria-expanded","true");card.querySelector(".profile-name")?.focus()}
+   if(card&&edit){card.classList.add("editing");edit.classList.add("active");edit.textContent="Скрыть";edit.setAttribute("aria-expanded","true");syncWorkerKnob(card);card.querySelector(".profile-name")?.focus()}
 }
 async function saveConfig(event,button=$("saveButton")){
   event.preventDefault();if(busy)return;busy=true;
@@ -1531,7 +1563,7 @@ $("profileEditors").addEventListener("click",event=>{
     if(firewallAction.classList.contains("firewall-rule-down")&&index>=0&&index<profile.firewall.rules.length-1)[profile.firewall.rules[index+1],profile.firewall.rules[index]]=[profile.firewall.rules[index],profile.firewall.rules[index+1]];
     renderProfileEditors();setDirty(true);const refreshed=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===id),refreshedEdit=refreshed?.querySelector(".edit-profile");if(refreshed&&refreshedEdit){refreshed.classList.add("editing");refreshedEdit.classList.add("active");refreshedEdit.textContent="Скрыть";refreshedEdit.setAttribute("aria-expanded","true")}return;
   }
-  if(edit&&card){const open=card.classList.toggle("editing");edit.classList.toggle("active",open);edit.textContent=open?"Скрыть":"Редактировать";edit.setAttribute("aria-expanded",String(open));return}
+  if(edit&&card){const open=card.classList.toggle("editing");edit.classList.toggle("active",open);edit.textContent=open?"Скрыть":"Редактировать";edit.setAttribute("aria-expanded",String(open));if(open)requestAnimationFrame(()=>syncWorkerKnob(card));return}
   if(save){saveConfig(event,save);return}
   if(remove){profiles=readProfiles().filter(profile=>profile.id!==remove.dataset.profileId);renderProfileEditors();setDirty(true);saveConfig(event,remove);return}
 });
@@ -1541,8 +1573,17 @@ $("profileEditors").addEventListener("input",event=>{
     const title=event.target.closest(".profile-editor")?.querySelector(".profile-name-title");
     if(title)title.textContent=event.target.value.trim()||"Профиль клиента";
   }
-});
-$("profileEditors").addEventListener("change",event=>{
+  const card=event.target.closest(".profile-editor");
+  if(card&&event.target.classList.contains("profile-hash")){
+    const slider=card.querySelector(".profile-workers"),output=card.querySelector(".profile-workers-value"),max=Math.max(9,normalizeVKHashes(event.target.value).length*27);
+    slider.max=String(max);slider.value=String(Math.min(Number(slider.value)||9,max));if(output)output.value=slider.value;
+    const dots=card.querySelector(".profile-worker-dots");if(dots)dots.innerHTML=workerDots(max);syncWorkerKnob(card);
+  }
+  if(card&&event.target.classList.contains("profile-workers")){
+    const output=card.querySelector(".profile-workers-value");if(output)output.value=event.target.value;syncWorkerKnob(card);
+  }
+ });
+ $("profileEditors").addEventListener("change",event=>{
   if(!event.target.classList.contains("profile-enabled"))return;
   setDirty(true);
 });

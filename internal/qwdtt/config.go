@@ -71,6 +71,8 @@ type ConnectionProfile struct {
 	Enabled    bool           `json:"enabled"`
 	ClientIP   string         `json:"clientIP"`
 	VKHash     string         `json:"vkHash"`
+	VKHashes   []string       `json:"vkHashes,omitempty"`
+	Workers    int            `json:"workers,omitempty"`
 	DTLSPort   int            `json:"dtlsPort"`
 	AccessMode RouteMode      `json:"accessMode"`
 	Firewall   FirewallConfig `json:"firewall"`
@@ -153,6 +155,13 @@ func (c Config) Validate() error {
 		ids[profile.ID] = true
 		if profile.AccessMode != RouteAll && profile.AccessMode != RouteInternet {
 			return fmt.Errorf("profile %q accessMode must be %q or %q", profile.Name, RouteAll, RouteInternet)
+		}
+		hashes := profileHashes(profile)
+		if len(hashes) > 4 {
+			return fmt.Errorf("profile %q supports at most 4 VK hashes", profile.Name)
+		}
+		if profile.Workers != 0 && (profile.Workers < 9 || profile.Workers%9 != 0 || (len(hashes) > 0 && profile.Workers > len(hashes)*27)) {
+			return fmt.Errorf("profile %q workers must be a multiple of 9 and no more than 27 per VK hash", profile.Name)
 		}
 		if err := validateFirewall(profile.Firewall); err != nil {
 			return fmt.Errorf("profile %q firewall: %w", profile.Name, err)
@@ -277,6 +286,13 @@ func (c *Config) NormalizeProfiles() {
 			profile.Name = fmt.Sprintf("Профиль %d", i+1)
 		}
 		profile.VKHash = normalizeVKHash(profile.VKHash)
+		profile.VKHashes = normalizeVKHashes(profile.VKHashes, profile.VKHash)
+		if len(profile.VKHashes) > 0 {
+			profile.VKHash = profile.VKHashes[0]
+		}
+		if profile.Workers == 0 {
+			profile.Workers = 9
+		}
 		if profile.AccessMode == "" {
 			profile.AccessMode = RouteAll
 		}

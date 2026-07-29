@@ -69,6 +69,22 @@ func TestProfileLinksContainOwnPortAndHash(t *testing.T) {
 	}
 }
 
+func TestProfileLinkSupportsMultipleHashesAndWorkers(t *testing.T) {
+	cfg := validTestConfig()
+	profile := ConnectionProfile{ID: "phone", VKHashes: []string{"one", "two"}, Workers: 54}
+	link := cfg.ProfileQWDTTLink(profile)
+	if !strings.Contains(link, "hashes=one%2Ctwo") || !strings.Contains(link, "workers=54") {
+		t.Fatalf("unexpected multi-hash qWDTT link: %s", link)
+	}
+}
+
+func TestNormalizeVKHashesLimitsAndDeduplicates(t *testing.T) {
+	got := normalizeVKHashes([]string{"one, two", "two", "three", "four", "five"}, "")
+	if strings.Join(got, ",") != "one,two,three,four" {
+		t.Fatalf("unexpected hashes: %#v", got)
+	}
+}
+
 func TestNormalizeVKHashFromFullLink(t *testing.T) {
 	if got := normalizeVKHash("https://vk.ru/call/join/8Trt578L7Q22ZY4iWImAkUYk3NNAPwTVT1-Jxtxi3Wo"); got != "8Trt578L7Q22ZY4iWImAkUYk3NNAPwTVT1-Jxtxi3Wo" {
 		t.Fatalf("unexpected VK hash: %q", got)

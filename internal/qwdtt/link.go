@@ -34,7 +34,11 @@ func (c Config) ProfileQWDTTLink(profile ConnectionProfile) string {
 	if port == 0 {
 		port = 56000
 	}
-	return "qwdtt://config?name=" + url.QueryEscape(name) + "&peer=" + url.QueryEscape(normalizePublicHost(s.PublicHost)+":"+intString(port)) + "&hashes=" + url.QueryEscape(normalizeVKHash(profile.VKHash)) + "&workers=16&port=" + intString(vpnPort) + "&pass=" + url.QueryEscape(c.profilePassword(profile))
+	workers := profile.Workers
+	if workers == 0 {
+		workers = 9
+	}
+	return "qwdtt://config?name=" + url.QueryEscape(name) + "&peer=" + url.QueryEscape(normalizePublicHost(s.PublicHost)+":"+intString(port)) + "&hashes=" + url.QueryEscape(strings.Join(profileHashes(profile), ",")) + "&workers=" + intString(workers) + "&port=" + intString(vpnPort) + "&pass=" + url.QueryEscape(c.profilePassword(profile))
 }
 
 // LegacyLink is the URI consumed by the original qWDTT/WDTT clients.
@@ -55,7 +59,7 @@ func (c Config) ProfileLegacyLink(profile ConnectionProfile) string {
 	if vpnPort == 0 {
 		vpnPort = 9000
 	}
-	return "wdtt://" + normalizePublicHost(s.PublicHost) + ":" + intString(dtlsPort) + ":" + intString(wgPort) + ":" + intString(vpnPort) + ":" + url.PathEscape(c.profilePassword(profile)) + ":" + url.PathEscape(normalizeVKHash(profile.VKHash))
+	return "wdtt://" + normalizePublicHost(s.PublicHost) + ":" + intString(dtlsPort) + ":" + intString(wgPort) + ":" + intString(vpnPort) + ":" + url.PathEscape(c.profilePassword(profile)) + ":" + url.PathEscape(strings.Join(profileHashes(profile), ","))
 }
 
 func (c Config) profilePassword(profile ConnectionProfile) string {
@@ -112,6 +116,32 @@ func normalizeVKHash(value string) string {
 		value = value[:index]
 	}
 	return strings.TrimSpace(value)
+}
+
+func normalizeVKHashes(values []string, legacy string) []string {
+	if len(values) == 0 && strings.TrimSpace(legacy) != "" {
+		values = []string{legacy}
+	}
+	out := make([]string, 0, len(values))
+	seen := make(map[string]bool)
+	for _, value := range values {
+		for _, part := range strings.Split(value, ",") {
+			hash := normalizeVKHash(part)
+			if hash == "" || seen[hash] {
+				continue
+			}
+			seen[hash] = true
+			out = append(out, hash)
+		}
+	}
+	if len(out) > 4 {
+		out = out[:4]
+	}
+	return out
+}
+
+func profileHashes(profile ConnectionProfile) []string {
+	return normalizeVKHashes(profile.VKHashes, profile.VKHash)
 }
 
 func intString(v int) string {
