@@ -35,7 +35,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .nav-button:hover{background:var(--surface-2);color:var(--text)}.nav-button.active{color:#fff;background:linear-gradient(90deg,rgba(124,108,255,.2),rgba(124,108,255,.07));box-shadow:none}
 .nav-button svg{width:19px;height:19px;flex:none}.nav-button span{font-weight:650}
 .sidebar-foot{position:absolute;left:18px;right:18px;bottom:22px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
-.mini-status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.mini-status b{display:block;color:var(--text);font-size:13px}.top-version-wrap{display:flex;align-items:center;gap:6px}.top-version{margin:0 2px;color:#71809b;font-size:10px;white-space:nowrap}.update-indicator{position:relative;display:grid;place-items:center;width:27px;height:27px;padding:0;border:1px solid rgba(67,214,140,.35);border-radius:9px;background:rgba(67,214,140,.1);color:var(--green);cursor:pointer;box-shadow:0 0 16px rgba(67,214,140,.12);animation:updatePulse 2s ease-in-out infinite}.update-indicator[hidden]{display:none}.update-indicator:hover{border-color:var(--green);background:rgba(67,214,140,.17)}.update-indicator svg{width:15px;height:15px}.update-indicator:after{content:"";position:absolute;right:2px;top:2px;width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}@keyframes updatePulse{50%{box-shadow:0 0 22px rgba(67,214,140,.28)}}
+.mini-status{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted)}.mini-status b{display:block;color:var(--text);font-size:13px}.top-version-wrap{display:flex;align-items:center;gap:6px}.top-version{margin:0 2px;color:#71809b;font-size:10px;white-space:nowrap}.github-link{display:grid;place-items:center;width:27px;height:27px;flex:none;border:1px solid var(--line);border-radius:9px;background:rgba(16,22,37,.8);color:#8996aa;transition:.18s ease}.github-link:hover{border-color:rgba(255,255,255,.3);background:var(--surface-2);color:#fff;transform:translateY(-1px)}.github-link svg{width:15px;height:15px;fill:currentColor}.update-indicator{position:relative;display:grid;place-items:center;width:27px;height:27px;padding:0;border:1px solid rgba(67,214,140,.35);border-radius:9px;background:rgba(67,214,140,.1);color:var(--green);cursor:pointer;box-shadow:0 0 16px rgba(67,214,140,.12);animation:updatePulse 2s ease-in-out infinite}.update-indicator[hidden]{display:none}.update-indicator:hover{border-color:var(--green);background:rgba(67,214,140,.17)}.update-indicator svg{width:15px;height:15px}.update-indicator:after{content:"";position:absolute;right:2px;top:2px;width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}@keyframes updatePulse{50%{box-shadow:0 0 22px rgba(67,214,140,.28)}}
 .status-dot{width:9px;height:9px;border-radius:50%;background:#59657a;box-shadow:0 0 0 5px rgba(89,101,122,.1);transition:.2s}
 .status-dot.on{background:var(--green);box-shadow:0 0 0 5px rgba(67,214,140,.12),0 0 16px rgba(67,214,140,.5)}
 .main{min-width:0;padding:0 34px 40px}
@@ -1068,6 +1068,8 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
     text-overflow:ellipsis;
     white-space:nowrap
   }
+  .github-link{width:25px;height:25px;border-radius:7px}
+  .github-link svg{width:13px;height:13px}
   .update-indicator{width:25px;height:25px;border-radius:7px}
   .update-indicator svg{width:13px;height:13px}
   .top-actions{flex:none;gap:5px}
@@ -1148,6 +1150,9 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
       <div class="top-actions">
         <div class="top-version-wrap">
           <span class="top-version" id="appVersionTop">Версия —</span>
+          <a class="github-link" href="https://github.com/SemerDevLab/qWDTT_Server_Keenetic" target="_blank" rel="noopener noreferrer" title="Открыть репозиторий на GitHub" aria-label="Открыть репозиторий qWDTT Server Keenetic на GitHub">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.5 11.5 0 0 0-3.64 22.41c.58.11.79-.25.79-.56v-2.23c-3.22.7-3.9-1.37-3.9-1.37-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.57-.29-5.27-1.28-5.27-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.16 1.18a10.9 10.9 0 0 1 5.76 0c2.2-1.49 3.16-1.18 3.16-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.28 5.68.42.36.79 1.06.79 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .7Z"/></svg>
+          </a>
           <button class="update-indicator" id="updateIndicator" type="button" title="Доступно обновление" aria-label="Доступно обновление" hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 5-5m-5 5-5-5"/><path d="M5 20h14"/></svg>
           </button>
