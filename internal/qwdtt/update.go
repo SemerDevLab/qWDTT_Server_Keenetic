@@ -143,11 +143,11 @@ func compareReleaseVersions(left, right string) int {
 
 func checkForUpdate(ctx context.Context, logs *LogBook) (UpdateInfo, error) {
 	info := UpdateInfo{Current: ServerVersion(), Architecture: packageArchitecture(), Status: "idle"}
-	if logs != nil {
-		logs.Add("INFO", "update check started: current=%s architecture=%s url=%s", info.Current, info.Architecture, githubReleasesURL)
-	}
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, githubReleasesURL, nil)
 	if err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "update check request creation failed: %v", err)
+		}
 		return info, err
 	}
 	request.Header.Set("Accept", "application/vnd.github+json")
@@ -161,9 +161,6 @@ func checkForUpdate(ctx context.Context, logs *LogBook) (UpdateInfo, error) {
 		return info, fmt.Errorf("GitHub Releases: %w", err)
 	}
 	defer response.Body.Close()
-	if logs != nil {
-		logs.Add("INFO", "update check GitHub response: HTTP %d", response.StatusCode)
-	}
 	if response.StatusCode != http.StatusOK {
 		// GitHub returns 404 when there is no release marked as the latest one
 		// (for example, when assets were published under a named release). The
@@ -183,11 +180,11 @@ func checkForUpdate(ctx context.Context, logs *LogBook) (UpdateInfo, error) {
 		}
 		return info, fmt.Errorf("parse GitHub releases: %w", err)
 	}
-	if logs != nil {
-		logs.Add("INFO", "update check received %d GitHub releases", len(releases))
-	}
 	architecture := info.Architecture
 	if architecture == "" {
+		if logs != nil {
+			logs.Add("ERROR", "update check failed: unsupported router architecture")
+		}
 		return info, errors.New("unsupported router architecture")
 	}
 	for _, release := range releases {
@@ -209,23 +206,20 @@ func checkForUpdate(ctx context.Context, logs *LogBook) (UpdateInfo, error) {
 	}
 	if info.Latest == "" {
 		if logs != nil {
-			logs.Add("WARN", "update check found no IPK for architecture %s", architecture)
+			logs.Add("ERROR", "update check found no IPK for architecture %s", architecture)
 		}
 		return info, fmt.Errorf("releases have no IPK for architecture %s", architecture)
 	}
 	info.Available = info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0
-	if logs != nil {
-		logs.Add("INFO", "update check result: current=%s latest=%s asset=%s available=%t", info.Current, info.Latest, info.Asset, info.Available)
-	}
 	return info, nil
 }
 
 func checkReleasePage(ctx context.Context, info UpdateInfo, logs *LogBook) (UpdateInfo, error) {
-	if logs != nil {
-		logs.Add("INFO", "update check fallback: requesting release page %s", githubReleasePageURL)
-	}
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, githubReleasePageURL, nil)
 	if err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "update release page request creation failed: %v", err)
+		}
 		return info, err
 	}
 	request.Header.Set("User-Agent", "qWDTT-Control/"+ServerVersion())
@@ -237,9 +231,6 @@ func checkReleasePage(ctx context.Context, info UpdateInfo, logs *LogBook) (Upda
 		return info, fmt.Errorf("GitHub Releases page: %w", err)
 	}
 	defer response.Body.Close()
-	if logs != nil {
-		logs.Add("INFO", "update release page response: HTTP %d", response.StatusCode)
-	}
 	if response.StatusCode != http.StatusOK {
 		if logs != nil {
 			logs.Add("ERROR", "update release page returned HTTP %d", response.StatusCode)
@@ -248,6 +239,9 @@ func checkReleasePage(ctx context.Context, info UpdateInfo, logs *LogBook) (Upda
 	}
 	page, err := io.ReadAll(io.LimitReader(response.Body, 8<<20))
 	if err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "read GitHub Releases page failed: %v", err)
+		}
 		return info, fmt.Errorf("read GitHub Releases page: %w", err)
 	}
 	architecture := info.Architecture
@@ -268,12 +262,12 @@ func checkReleasePage(ctx context.Context, info UpdateInfo, logs *LogBook) (Upda
 		}
 	}
 	if info.Latest == "" {
+		if logs != nil {
+			logs.Add("ERROR", "update release page found no IPK for architecture %s", architecture)
+		}
 		return info, fmt.Errorf("release page has no IPK for architecture %s", architecture)
 	}
 	info.Available = info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0
-	if logs != nil {
-		logs.Add("INFO", "update release page result: current=%s latest=%s asset=%s available=%t", info.Current, info.Latest, info.Asset, info.Available)
-	}
 	return info, nil
 }
 

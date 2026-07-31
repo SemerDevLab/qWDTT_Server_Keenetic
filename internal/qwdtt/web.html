@@ -1489,7 +1489,7 @@ async function setServer(enabled){
 }
 function formConfig(){
   return {
-    enabled:!!appState?.config?.enabled,mode:"server",dataDir:$("dataDir").value,webListen:"0.0.0.0:"+$("webListen").value,webAuth:$("webAuth").checked,client:{},
+    enabled:!!appState?.config?.enabled,mode:"server",dataDir:$("dataDir").value||appState?.config?.dataDir||"/opt/etc/qwdtt",webListen:"0.0.0.0:"+$("webListen").value,webAuth:$("webAuth").checked,client:{},
     server:{publicHost:$("publicHost").value.trim(),listenAddr:"0.0.0.0:"+$("listenAddr").value,dtlsPort:+$("listenAddr").value,wgPort:+$("wgPort").value,vpnPort:+$("vpnPort").value,password:$("password").value,network:appState?.config?.server?.network||"10.66.66.0/24",vkHash:"",profiles:readProfiles()},
     firewall:{rules:readFirewallRules($("globalFirewallEditor"))},
     routing:{mode:"all",interface:$("interface").value||"wdtt0",wan:$("wan").value,clients:[],networks:[]}
@@ -1645,6 +1645,14 @@ function applyLogFilters(){
   rows.forEach(row=>{const show=selected.has(row.dataset.logLevel);row.hidden=!show;if(show)visible++});
   if(rows.length&&!visible)box.insertAdjacentHTML("beforeend",'<div class="empty log-filter-empty">Нет сообщений выбранных категорий</div>');
 }
+function restoreLogFilters(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("qwdtt.logFilters")||"null");
+    if(!Array.isArray(saved))return;
+    document.querySelectorAll("#logFilters input").forEach(input=>{input.checked=saved.includes(input.value)});
+  }catch(_){ }
+}
+restoreLogFilters();
 async function copyText(value){
   if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value);return}
   const area=document.createElement("textarea");area.value=value;area.style.cssText="position:fixed;opacity:0";document.body.appendChild(area);area.select();
@@ -1737,7 +1745,10 @@ $("generatePassword").onclick=()=>{
 };
 $("clearLogs").onclick=async()=>{try{await request("/api/qwdtt/logs",{method:"DELETE"});await loadLogs();toast("Журнал очищен")}catch(error){toast(error.message,true)}};
 $("copyLogs").onclick=async()=>{try{await copyText($("logOutput").innerText);toast("Журнал скопирован")}catch(_){toast("Не удалось скопировать",true)}};
-$("logFilters").addEventListener("change",applyLogFilters);
+$("logFilters").addEventListener("change",()=>{
+  applyLogFilters();
+  try{localStorage.setItem("qwdtt.logFilters",JSON.stringify([...document.querySelectorAll("#logFilters input:checked")].map(input=>input.value)))}catch(_){ }
+});
 const logCard=document.querySelector("#logs .card"),logToolbar=document.querySelector("#logs>.toolbar-row");if(logCard&&logToolbar)logCard.append(logToolbar);
 function renderUpdate(info){
   if(!info)return;

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -57,6 +59,9 @@ func (r *Runtime) Config() Config {
 }
 
 func (r *Runtime) ApplyConfig(cfg Config) error {
+	if strings.TrimSpace(cfg.DataDir) == "" {
+		cfg.DataDir = filepath.Dir(r.path)
+	}
 	cfg.NormalizeProfiles()
 	if err := cfg.Validate(); err != nil {
 		return err
