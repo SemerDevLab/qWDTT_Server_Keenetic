@@ -19,7 +19,11 @@ func add(w *tar.Writer, root, path string, mode func(string) int64) error {
 	n = filepath.ToSlash(n)
 	h, _ := tar.FileInfoHeader(info, "")
 	h.Name = n
-	h.Mode = mode(n)
+	if info.IsDir() {
+		h.Mode = 0755
+	} else {
+		h.Mode = mode(n)
+	}
 	if e = w.WriteHeader(h); e != nil {
 		return e
 	}
