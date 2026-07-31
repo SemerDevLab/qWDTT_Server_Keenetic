@@ -82,6 +82,11 @@ func WebHandler(cfg *Config, path string, logs *LogBook, runtime ...*Runtime) ht
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = w.Write([]byte(webPage))
 	})
+	m.HandleFunc("GET /favicon.svg", func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=86400")
+		w.Header().Set("Content-Type", "image/svg+xml")
+		_, _ = w.Write(appIcon)
+	})
 	m.HandleFunc("GET /api/qwdtt/state", func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
 		w.Header().Set("Content-Type", "application/json")
@@ -228,6 +233,21 @@ func WebHandler(cfg *Config, path string, logs *LogBook, runtime ...*Runtime) ht
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		_, _ = w.Write([]byte(current.ProfileQWDTTLink(profile)))
 	})
+	m.HandleFunc("GET /api/qwdtt/legacy-link-qr", func(w http.ResponseWriter, r *http.Request) {
+		current, profile, ok := requestedProfile(r)
+		if !ok {
+			http.Error(w, "profile not found", http.StatusNotFound)
+			return
+		}
+		png, err := qrcode.Encode(current.ProfileLegacyLink(profile), qrcode.Medium, 320)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write(png)
+	})
 	m.HandleFunc("GET /api/qwdtt/legacy-link", func(w http.ResponseWriter, r *http.Request) {
 		current, profile, ok := requestedProfile(r)
 		if !ok {
@@ -313,6 +333,9 @@ const loginPage = `<!doctype html><html lang="ru"><meta charset="utf-8"><meta na
 
 //go:embed web.html
 var webPage string
+
+//go:embed icon.svg
+var appIcon []byte
 
 const legacyWebPage = `<!doctype html>
 <html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

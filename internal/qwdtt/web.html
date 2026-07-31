@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d18">
-<title>qWDTT Control</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>qWDTT Server</title>
 <style>
 :root{
   color-scheme:dark;
@@ -27,9 +28,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .shell{display:grid;grid-template-columns:244px minmax(0,1fr);min-height:100vh}
 .sidebar{position:sticky;top:0;height:100vh;padding:24px 18px;border-right:1px solid var(--line-soft);background:rgba(10,14,25,.8);backdrop-filter:blur(18px);z-index:20}
 .brand{display:flex;align-items:center;gap:12px;padding:3px 8px 27px}
-.brand-mark{position:relative;width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,var(--primary-2),#6254ed);box-shadow:0 10px 26px rgba(124,108,255,.3)}
-.brand-mark:before,.brand-mark:after{content:"";position:absolute;border:2px solid white;border-radius:50%}
-.brand-mark:before{inset:9px}.brand-mark:after{inset:15px;background:#fff}
+.brand-mark{display:block;width:38px;height:38px;border-radius:12px;box-shadow:0 10px 26px rgba(124,108,255,.3)}
 .brand strong{display:block;font-size:17px;letter-spacing:-.02em}.brand span{display:block;color:var(--muted);font-size:11px}
 .nav{display:grid;gap:5px}.nav-button{display:flex;align-items:center;gap:11px;width:100%;padding:11px 12px;border:0;border-radius:11px;background:transparent;color:var(--muted);cursor:pointer;text-align:left;transition:.18s ease}
 .nav-button:hover{background:var(--surface-2);color:var(--text)}.nav-button.active{color:#fff;background:linear-gradient(90deg,rgba(124,108,255,.2),rgba(124,108,255,.07));box-shadow:none}
@@ -116,7 +115,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
 .profile-speed{display:flex;gap:8px;color:#aebbd1;font-size:9px;white-space:nowrap}.profile-speed .down{color:#60c9ff}.profile-speed .up{color:#aa92ff}.editor-live{color:var(--muted);font-size:9px}.editor-live.connected{color:var(--green)}
 .log-toolbar{display:flex;align-items:center;width:100%;gap:8px}.log-filters{display:flex;align-items:center;flex-wrap:wrap;gap:5px}.log-filter{cursor:pointer}.log-filter input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.log-filter span{display:inline-flex;align-items:center;justify-content:center;min-width:54px;height:27px;padding:0 8px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(18,27,44,.58);color:#69778e;font:750 9px/1 ui-monospace,SFMono-Regular,Consolas,monospace;transition:.18s}.log-filter input:checked+span{border-color:rgba(124,108,255,.3);background:rgba(124,108,255,.12);color:#c2b9ff;box-shadow:inset 0 1px rgba(255,255,255,.025)}.log-filter[data-level="INFO"] input:checked+span{border-color:rgba(104,183,255,.28);background:rgba(104,183,255,.09);color:#68b7ff}.log-filter[data-level="WARN"] input:checked+span{border-color:rgba(255,196,92,.28);background:rgba(255,196,92,.09);color:var(--yellow)}.log-filter[data-level="ERROR"] input:checked+span{border-color:rgba(255,102,128,.3);background:rgba(255,102,128,.09);color:var(--red)}.log-actions{display:flex;gap:6px;margin-left:auto}.logs{height:min(62vh,610px);overflow:auto;padding:9px;border:1px solid var(--line-soft);border-radius:13px;background:#090e19;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;scrollbar-color:#33405a transparent}
 .log-line{display:grid;grid-template-columns:78px 56px minmax(0,1fr);gap:8px;padding:5px 7px;border-radius:7px}.log-line[hidden]{display:none}.log-line:hover{background:#11192a}.log-time{color:#586781}.log-level{font-weight:800}.log-level.INFO{color:#68b7ff}.log-level.ERROR{color:var(--red)}.log-level.WARN{color:var(--yellow)}.log-level.DEBUG{color:#9c8eff}.log-message{color:#b7c2d7;overflow-wrap:anywhere}.empty{display:grid;place-items:center;min-height:250px;color:var(--muted);text-align:center}
-.qr-modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.76);backdrop-filter:blur(12px);z-index:100}.qr-modal.open{display:grid}.qr-dialog{position:relative;width:min(430px,100%);padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center;animation:enter .2s ease}.qr-dialog h2{margin:0 0 4px;font-size:18px}.qr-dialog p{margin:0 0 15px;color:var(--muted);font-size:11px}.qr-dialog img{display:block;width:245px;max-width:100%;margin:0 auto;padding:9px;border-radius:14px;background:#fff}.qr-link-box{margin-top:13px;padding:9px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#090e19;text-align:left}.qr-link-box code{display:block;overflow-wrap:anywhere;color:#aebbd1;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.qr-copy{width:100%;margin-top:8px}.qr-close{position:absolute;right:13px;top:13px}
+.qr-modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,6,12,.76);backdrop-filter:blur(12px);z-index:100}.qr-modal.open{display:grid}.qr-dialog{position:relative;width:min(640px,100%);padding:24px;border:1px solid var(--line);border-radius:20px;background:var(--surface);box-shadow:var(--shadow);text-align:center;animation:enter .2s ease}.qr-dialog h2{margin:0 0 4px;font-size:18px}.qr-dialog p{margin:0 0 15px;color:var(--muted);font-size:11px}.qr-dialog img{display:block;width:245px;max-width:100%;margin:0 auto;padding:9px;border-radius:14px;background:#fff}.qr-pair{display:grid;grid-template-columns:1fr 1fr;gap:18px;text-align:left}.qr-item{display:flex;flex-direction:column;min-width:0}.qr-item h3{margin:0 0 8px;font-size:13px;text-align:center}.qr-item img{width:100%;margin:0}.qr-link-box{height:154px;margin-top:13px;padding:9px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#090e19;text-align:left;overflow:hidden}.qr-link-box code{display:block;max-height:100%;overflow:auto;overflow-wrap:anywhere;color:#aebbd1;font:9px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.qr-copy{width:100%;margin-top:8px}.qr-close{position:absolute;right:13px;top:13px}@media(max-width:640px){.qr-pair{grid-template-columns:1fr;gap:16px}}
 .update-dialog{text-align:left}.update-dialog h2{margin-bottom:5px}.update-dialog>p{margin-bottom:18px}.update-versions{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:16px;border:1px solid var(--line-soft);border-radius:14px;background:#090e19}.update-version{min-width:0}.update-version span{display:block;margin-bottom:5px;color:var(--muted);font-size:10px}.update-version strong{display:block;overflow:hidden;font-size:15px;text-overflow:ellipsis;white-space:nowrap}.update-version.latest strong{color:var(--green)}.update-arrow{color:var(--primary-2);font-size:20px}.update-architecture{margin-top:10px;color:var(--muted);font-size:10px}.update-message{min-height:16px;margin-top:12px;color:var(--muted);font-size:11px}.update-message.error{color:var(--red)}.update-dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
 .toast-stack{position:fixed;right:22px;bottom:22px;display:grid;gap:8px;z-index:200}.toast{min-width:260px;max-width:380px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#192238;box-shadow:var(--shadow);animation:toastIn .22s ease}.toast.error{border-color:rgba(255,102,128,.35)}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}}
 .spinner{width:14px;height:14px;border:2px solid #ffffff55;border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
@@ -137,8 +136,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
   .shell{grid-template-columns:196px minmax(0,1fr)}
   .sidebar{padding:15px 12px}
   .brand{gap:9px;padding:1px 7px 15px}
-  .brand-mark{width:31px;height:31px;border-radius:9px}
-  .brand-mark:before{inset:7px}.brand-mark:after{inset:12px}
+  .brand-mark{width:36px;height:36px;border-radius:10px}
   .brand strong{font-size:15px}.brand span{font-size:10px}
   .nav{gap:3px}.nav-button{gap:9px;padding:8px 10px;border-radius:9px}
   .nav-button svg{width:17px;height:17px}.nav-button span{font-size:12px}
@@ -198,7 +196,7 @@ select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#7
   .log-toolbar{gap:6px}
   .logs{height:calc(100vh - 142px);padding:6px;font-size:10px}
   .log-line{grid-template-columns:65px 47px minmax(0,1fr);gap:6px;padding:3px 5px}
-  .qr-dialog{padding:20px}.qr-dialog img{width:230px}
+  .qr-dialog{padding:20px}.qr-dialog>img{width:230px}
   .toast-stack{right:14px;bottom:14px}.toast{min-width:220px;padding:9px 11px;font-size:11px}
 }
 
@@ -250,8 +248,7 @@ body:before{
 }
 .brand{gap:9px;padding:3px 7px 14px}
 .brand-mark{
-  width:30px;height:30px;border-radius:9px;
-  background:linear-gradient(145deg,#9b91ff 0%,#7564ff 48%,#5545d7 100%);
+  width:42px;height:42px;border-radius:12px;
   box-shadow:0 7px 20px rgba(119,103,255,.28),inset 0 1px rgba(255,255,255,.22)
 }
 .brand strong{font-size:14px}
@@ -484,11 +481,11 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 .log-line:hover{background:#111a2a}
 
 .qr-dialog{
-  width:min(380px,100%);
+  width:min(640px,100%);
   padding:18px;
   border-radius:16px
 }
-.qr-dialog img{width:220px}
+.qr-dialog>img{width:220px}
 .toast{border-radius:10px}
 
 @media(max-width:1100px){
@@ -1121,7 +1118,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 
   .qr-modal{align-items:center;padding:10px}
   .qr-dialog{max-height:calc(100dvh - 20px);overflow:auto;padding:18px 14px;border-radius:15px}
-  .qr-dialog img{width:min(220px,72vw)}
+  .qr-dialog>img{width:min(220px,72vw)}
   .update-versions{grid-template-columns:1fr;padding:12px;text-align:center}
   .update-arrow{transform:rotate(90deg)}
   .update-dialog-actions{display:grid;grid-template-columns:1fr}
@@ -1135,7 +1132,7 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 <body>
 <div class="shell">
   <aside class="sidebar">
-    <div class="brand"><div class="brand-mark"></div><div><strong>qWDTT</strong><span>Server</span></div></div>
+    <div class="brand"><img class="brand-mark" src="/favicon.svg" alt="qWDTT"><div><strong>qWDTT</strong><span>Server</span></div></div>
     <nav class="nav">
       <button class="nav-button active" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Обзор</span></button>
       <button class="nav-button" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V21h-4v-.08A1.7 1.7 0 0 0 8.95 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.95a1.7 1.7 0 0 0-.34-1.88L4.2 7l2.83-2.83.06.06A1.7 1.7 0 0 0 8.95 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08a1.7 1.7 0 0 0 1.03 1.53 1.7 1.7 0 0 0 1.88-.34l.06-.06L19.8 7l-.06.06a1.7 1.7 0 0 0-.34 1.88A1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg><span>Настройки</span></button>
@@ -1266,10 +1263,11 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
 <div class="qr-modal" id="qrModal">
   <div class="qr-dialog">
     <button class="icon-btn qr-close" id="qrClose" type="button">×</button>
-    <h2>Подключение qWDTT</h2><p>Отсканируйте код официальным приложением</p>
-    <img id="qrImage" alt="QR-код подключения">
-    <div class="qr-link-box"><code id="qrLink">Загрузка ссылки…</code></div>
-    <button class="btn small secondary qr-copy" id="qrCopy" type="button">Копировать ссылку</button>
+    <h2>Подключение</h2><p>Выберите формат для нужного приложения</p>
+    <div class="qr-pair">
+      <section class="qr-item"><h3>qWDTT</h3><img id="qrImage" alt="QR-код qWDTT"><div class="qr-link-box"><code id="qrLink">Загрузка ссылки…</code></div><button class="btn small secondary qr-copy" id="qrCopy" type="button">Копировать для qWDTT</button></section>
+      <section class="qr-item"><h3>WDTT</h3><img id="legacyQrImage" alt="QR-код WDTT"><div class="qr-link-box"><code id="legacyQrLink">Загрузка ссылки…</code></div><button class="btn small secondary qr-copy" id="legacyQrCopy" type="button">Копировать для WDTT</button></section>
+    </div>
   </div>
 </div>
 <div class="qr-modal" id="updateModal" role="dialog" aria-modal="true" aria-labelledby="updateModalTitle">
@@ -1299,7 +1297,7 @@ const viewMeta={
   settings:["Настройки","Конфигурация сервера и маршрутизации"],
   logs:["Журнал","Диагностика работы сервиса"]
 };
-let appState=null,updateInfo=null,updateCheckPending=false,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),globalFirewall={rules:[]};
+let appState=null,updateInfo=null,updateCheckPending=false,dirty=false,busy=false,authRedirecting=false,profiles=[],profileLinks=new Map(),legacyProfileLinks=new Map(),globalFirewall={rules:[]};
 const updateCheckInterval=30*60*1000;
 const trafficHistory={rx:[],tx:[],total:[]},trafficHistoryLimit=32;
 const trafficMotion={current:{rx:0,tx:0,total:0},chart:{rx:0,tx:0,total:0},target:{rx:0,tx:0,total:0},initialized:false,lastFrame:0,lastChart:0,lastNumbers:0,started:false};
@@ -1447,9 +1445,10 @@ async function loadLinks(){
   try{
     const list=appState?.config?.server?.profiles||[];
     if(!list.length)return;
-    const links=await Promise.all(list.map(profile=>request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(profile.id)).then(r=>r.text())));
+    const [links,legacyLinks]=await Promise.all([Promise.all(list.map(profile=>request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(profile.id)).then(r=>r.text()))),Promise.all(list.map(profile=>request("/api/qwdtt/legacy-link?id="+encodeURIComponent(profile.id)).then(r=>r.text())))]);
     list.forEach((profile,index)=>{
       profileLinks.set(profile.id,links[index].trim());
+      legacyProfileLinks.set(profile.id,legacyLinks[index].trim());
       const card=[...document.querySelectorAll(".profile-editor")].find(item=>item.dataset.id===profile.id);
       if(!card)return;
       card.querySelector(".profile-connect").disabled=false;
@@ -1642,15 +1641,18 @@ $("headerToggle").onclick=()=>setServer(!appState?.running);
 $("configForm").onsubmit=saveConfig;$("detectPublicIP").onclick=detectPublicIP;
 async function openQR(id=""){
   $("qrImage").src="/api/qwdtt/link-qr?t="+Date.now()+(id?"&id="+encodeURIComponent(id):"");
+  $("legacyQrImage").src="/api/qwdtt/legacy-link-qr?t="+Date.now()+(id?"&id="+encodeURIComponent(id):"");
   $("qrLink").textContent=profileLinks.get(id)||"Загрузка ссылки…";$("qrCopy").dataset.link=profileLinks.get(id)||"";
+  $("legacyQrLink").textContent=legacyProfileLinks.get(id)||"Загрузка ссылки…";$("legacyQrCopy").dataset.link=legacyProfileLinks.get(id)||"";
   $("qrModal").classList.add("open");
-  if(id&&!profileLinks.has(id)){
-    try{const link=(await request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(id)).then(r=>r.text())).trim();profileLinks.set(id,link);$("qrLink").textContent=link;$("qrCopy").dataset.link=link}
-    catch(error){$("qrLink").textContent="Не удалось загрузить ссылку";toast(error.message,true)}
+  if(id&&(!profileLinks.has(id)||!legacyProfileLinks.has(id))){
+    try{const [link,legacyLink]=await Promise.all([request("/api/qwdtt/qwdtt-link?id="+encodeURIComponent(id)).then(r=>r.text()),request("/api/qwdtt/legacy-link?id="+encodeURIComponent(id)).then(r=>r.text())]);profileLinks.set(id,link.trim());legacyProfileLinks.set(id,legacyLink.trim());$("qrLink").textContent=link.trim();$("qrCopy").dataset.link=link.trim();$("legacyQrLink").textContent=legacyLink.trim();$("legacyQrCopy").dataset.link=legacyLink.trim()}
+    catch(error){$("qrLink").textContent="Не удалось загрузить ссылку";$("legacyQrLink").textContent="Не удалось загрузить ссылку";toast(error.message,true)}
   }
 }
 $("qrClose").onclick=()=>$("qrModal").classList.remove("open");$("qrModal").onclick=e=>{if(e.target===$("qrModal"))$("qrModal").classList.remove("open")};
 $("qrCopy").onclick=async()=>{const link=$("qrCopy").dataset.link;if(!link)return;try{await copyText(link);toast("Ссылка профиля скопирована")}catch(_){toast("Не удалось скопировать",true)}};
+$("legacyQrCopy").onclick=async()=>{const link=$("legacyQrCopy").dataset.link;if(!link)return;try{await copyText(link);toast("Ссылка WDTT скопирована")}catch(_){toast("Не удалось скопировать",true)}};
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("qrModal").classList.remove("open")});
 $("addProfile").onclick=addProfile;
 $("profileEditors").addEventListener("click",event=>{
