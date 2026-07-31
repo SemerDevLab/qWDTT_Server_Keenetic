@@ -18,8 +18,9 @@ import (
 	"time"
 )
 
-const githubLatestReleaseURL = "https://api.github.com/repos/Mikhail-Semerkov/qWDTT_Server_Keenetic/releases/latest"
-const githubReleasePageURL = "https://github.com/Mikhail-Semerkov/qWDTT_Server_Keenetic/releases/expanded_assets/Release"
+const githubRepository = "SemerDevLab/qWDTT_Server_Keenetic"
+const githubReleasesURL = "https://api.github.com/repos/" + githubRepository + "/releases?per_page=100"
+const githubReleasePageURL = "https://github.com/" + githubRepository + "/releases"
 
 var releaseAssetPattern = regexp.MustCompile(`^qwdtt_([0-9]+(?:\.[0-9]+)*)-([0-9]+)_([^/]+)-kn\.ipk$`)
 
@@ -140,9 +141,12 @@ func compareReleaseVersions(left, right string) int {
 	return 0
 }
 
-func checkForUpdate(ctx context.Context) (UpdateInfo, error) {
+func checkForUpdate(ctx context.Context, logs *LogBook) (UpdateInfo, error) {
 	info := UpdateInfo{Current: ServerVersion(), Architecture: packageArchitecture(), Status: "idle"}
-	request, err := http.NewRequestWithContext(ctx, http.MethodGet, githubLatestReleaseURL, nil)
+	if logs != nil {
+		logs.Add("INFO", "update check started: current=%s architecture=%s url=%s", info.Current, info.Architecture, githubReleasesURL)
+	}
+	request, err := http.NewRequestWithContext(ctx, http.MethodGet, githubReleasesURL, nil)
 	if err != nil {
 		return info, err
 	}
@@ -151,43 +155,75 @@ func checkForUpdate(ctx context.Context) (UpdateInfo, error) {
 	client := &http.Client{Timeout: 20 * time.Second}
 	response, err := client.Do(request)
 	if err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "update check request failed: %v", err)
+		}
 		return info, fmt.Errorf("GitHub Releases: %w", err)
 	}
 	defer response.Body.Close()
+	if logs != nil {
+		logs.Add("INFO", "update check GitHub response: HTTP %d", response.StatusCode)
+	}
 	if response.StatusCode != http.StatusOK {
-		if response.StatusCode == http.StatusForbidden {
-			return checkReleasePage(ctx, info)
+		// GitHub returns 404 when there is no release marked as the latest one
+		// (for example, when assets were published under a named release). The
+		// releases page still contains the downloadable IPK assets in that case.
+		if response.StatusCode == http.StatusForbidden || response.StatusCode == http.StatusNotFound {
+			return checkReleasePage(ctx, info, logs)
+		}
+		if logs != nil {
+			logs.Add("ERROR", "update check GitHub returned HTTP %d", response.StatusCode)
 		}
 		return info, fmt.Errorf("GitHub Releases returned HTTP %d", response.StatusCode)
 	}
-	var release githubRelease
-	if err := json.NewDecoder(io.LimitReader(response.Body, 2<<20)).Decode(&release); err != nil {
-		return info, fmt.Errorf("parse GitHub release: %w", err)
+	var releases []githubRelease
+	if err := json.NewDecoder(io.LimitReader(response.Body, 2<<20)).Decode(&releases); err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "update check response parse failed: %v", err)
+		}
+		return info, fmt.Errorf("parse GitHub releases: %w", err)
 	}
-	if release.Draft || release.Prerelease {
-		return info, errors.New("latest GitHub release is not stable")
+	if logs != nil {
+		logs.Add("INFO", "update check received %d GitHub releases", len(releases))
 	}
 	architecture := info.Architecture
 	if architecture == "" {
 		return info, errors.New("unsupported router architecture")
 	}
-	for _, asset := range release.Assets {
-		match := releaseAssetPattern.FindStringSubmatch(asset.Name)
-		if len(match) != 4 || match[3] != architecture {
+	for _, release := range releases {
+		if release.Draft || release.Prerelease {
 			continue
 		}
-		info.Latest = match[1] + "-" + match[2]
-		info.Asset = asset.Name
-		info.DownloadURL = asset.BrowserDownloadURL
-		if info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0 {
-			info.Available = true
+		for _, asset := range release.Assets {
+			match := releaseAssetPattern.FindStringSubmatch(asset.Name)
+			if len(match) != 4 || match[3] != architecture {
+				continue
+			}
+			candidate := match[1] + "-" + match[2]
+			if info.Latest == "" || compareReleaseVersions(info.Latest, candidate) < 0 {
+				info.Latest = candidate
+				info.Asset = asset.Name
+				info.DownloadURL = asset.BrowserDownloadURL
+			}
 		}
-		return info, nil
 	}
-	return info, fmt.Errorf("release has no IPK for architecture %s", architecture)
+	if info.Latest == "" {
+		if logs != nil {
+			logs.Add("WARN", "update check found no IPK for architecture %s", architecture)
+		}
+		return info, fmt.Errorf("releases have no IPK for architecture %s", architecture)
+	}
+	info.Available = info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0
+	if logs != nil {
+		logs.Add("INFO", "update check result: current=%s latest=%s asset=%s available=%t", info.Current, info.Latest, info.Asset, info.Available)
+	}
+	return info, nil
 }
 
-func checkReleasePage(ctx context.Context, info UpdateInfo) (UpdateInfo, error) {
+func checkReleasePage(ctx context.Context, info UpdateInfo, logs *LogBook) (UpdateInfo, error) {
+	if logs != nil {
+		logs.Add("INFO", "update check fallback: requesting release page %s", githubReleasePageURL)
+	}
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, githubReleasePageURL, nil)
 	if err != nil {
 		return info, err
@@ -195,10 +231,19 @@ func checkReleasePage(ctx context.Context, info UpdateInfo) (UpdateInfo, error) 
 	request.Header.Set("User-Agent", "qWDTT-Control/"+ServerVersion())
 	response, err := (&http.Client{Timeout: 20 * time.Second}).Do(request)
 	if err != nil {
+		if logs != nil {
+			logs.Add("ERROR", "update release page request failed: %v", err)
+		}
 		return info, fmt.Errorf("GitHub Releases page: %w", err)
 	}
 	defer response.Body.Close()
+	if logs != nil {
+		logs.Add("INFO", "update release page response: HTTP %d", response.StatusCode)
+	}
 	if response.StatusCode != http.StatusOK {
+		if logs != nil {
+			logs.Add("ERROR", "update release page returned HTTP %d", response.StatusCode)
+		}
 		return info, fmt.Errorf("GitHub Releases page returned HTTP %d", response.StatusCode)
 	}
 	page, err := io.ReadAll(io.LimitReader(response.Body, 8<<20))
@@ -215,13 +260,21 @@ func checkReleasePage(ctx context.Context, info UpdateInfo) (UpdateInfo, error) 
 		if len(assetMatch) != 4 {
 			continue
 		}
-		info.Latest = assetMatch[1] + "-" + assetMatch[2]
-		info.Asset = assetMatch[2]
-		info.DownloadURL = "https://github.com/Mikhail-Semerkov/qWDTT_Server_Keenetic/releases/download/" + match[1] + "/" + match[2]
-		info.Available = info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0
-		return info, nil
+		candidate := assetMatch[1] + "-" + assetMatch[2]
+		if info.Latest == "" || compareReleaseVersions(info.Latest, candidate) < 0 {
+			info.Latest = candidate
+			info.Asset = match[2]
+			info.DownloadURL = "https://github.com/" + githubRepository + "/releases/download/" + match[1] + "/" + match[2]
+		}
 	}
-	return info, fmt.Errorf("release page has no IPK for architecture %s", architecture)
+	if info.Latest == "" {
+		return info, fmt.Errorf("release page has no IPK for architecture %s", architecture)
+	}
+	info.Available = info.Current == "dev" || compareReleaseVersions(info.Current, info.Latest) < 0
+	if logs != nil {
+		logs.Add("INFO", "update release page result: current=%s latest=%s asset=%s available=%t", info.Current, info.Latest, info.Asset, info.Available)
+	}
+	return info, nil
 }
 
 func installUpdate(ctx context.Context, info UpdateInfo) error {
@@ -325,13 +378,16 @@ exit "$STATUS"
 	return nil
 }
 
-func attachUpdateEndpoints(m *http.ServeMux) {
+func attachUpdateEndpoints(m *http.ServeMux, logs *LogBook) {
 	state := &updateState{info: UpdateInfo{Current: ServerVersion(), Architecture: packageArchitecture(), Status: "idle"}}
 	m.HandleFunc("GET /api/qwdtt/update/check", func(w http.ResponseWriter, r *http.Request) {
 		ctx, cancel := context.WithTimeout(r.Context(), 25*time.Second)
 		defer cancel()
-		info, err := checkForUpdate(ctx)
+		info, err := checkForUpdate(ctx, logs)
 		if err != nil {
+			if logs != nil {
+				logs.Add("ERROR", "update check finished with error: %v", err)
+			}
 			info.Error = err.Error()
 			info.Status = "error"
 			state.set(info)

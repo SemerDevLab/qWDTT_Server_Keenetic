@@ -306,7 +306,7 @@ func WebHandler(cfg *Config, path string, logs *LogBook, runtime ...*Runtime) ht
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"status":"ok","service":"qwdtt-server"}`))
 	})
-	attachUpdateEndpoints(m)
+	attachUpdateEndpoints(m, logs)
 	return protectWeb(m, auth, currentConfig)
 }
 

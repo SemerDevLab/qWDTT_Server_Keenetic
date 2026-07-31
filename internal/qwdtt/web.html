@@ -1127,6 +1127,21 @@ select{background-position:calc(100% - 13px) 13px,calc(100% - 8px) 13px}
   .toast{width:100%;min-width:0;max-width:none}
 }
 
+  .top-version-wrap .update-indicator{order:1}
+  .top-version-wrap .github-link{order:2}
+  .update-dialog{width:min(480px,100%);padding:20px}
+  .update-dialog h2{font-size:17px}
+  .update-dialog>p{max-width:500px;margin-bottom:12px;line-height:1.45}
+  .update-versions{gap:10px;padding:12px 14px}
+  .update-version span{margin-bottom:3px}
+  .update-version strong{font-size:14px}
+  .update-architecture{margin-top:8px;font-size:9px}
+  .update-message{min-height:0;margin-top:8px}
+  .update-dialog-actions{margin-top:14px}
+  @media(min-width:641px){
+    .update-versions{grid-template-columns:minmax(105px,auto) auto minmax(105px,auto);justify-content:center;gap:24px}
+    .update-arrow{display:flex;align-items:center;justify-content:center}
+  }
 </style>
 </head>
 <body>
@@ -1767,7 +1782,7 @@ setupFirewallCollapse();
 setupProfilesCollapse();
 
 (async function init(){
-  await loadState(true);checkUpdate();await Promise.all([loadLinks(),loadInterfaces()]);
+  await loadState(true);await checkUpdate();await Promise.all([loadLinks(),loadInterfaces()]);
   if(!trafficMotion.started){trafficMotion.started=true;requestAnimationFrame(animateTraffic)}
   const publicHost=$("publicHost").value.trim();
   if(!publicHost||publicHost==="127.0.0.1"||publicHost==="0.0.0.0")await detectPublicIP(true);
