@@ -66,7 +66,7 @@ func (b WGBackend) Setup(ctx context.Context) error {
 	return b.Runner.Run(ctx, "ip", "addr", "replace", b.Address, "dev", b.Interface)
 }
 func (b WGBackend) AddPeer(ctx context.Context, pub, ip string) error {
-	return b.Runner.Run(ctx, "wg", "set", b.Interface, "peer", pub, "allowed-ips", ip+"/32", "persistent-keepalive", "25")
+	return b.Runner.Run(ctx, "wg", "set", b.Interface, "peer", pub, "allowed-ips", ip+"/32", "persistent-keepalive", "0")
 }
 func ensureKeyPair(dir string) (string, string, error) {
 	if e := os.MkdirAll(dir, 0700); e != nil {

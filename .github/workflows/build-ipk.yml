@@ -1,0 +1,40 @@
+name: Build IPK
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Версия пакета"
+        default: "0.1.0"
+      release:
+        description: "Номер релиза (должен быть больше, чем у оригинального репозитория)"
+        default: "42-1"
+
+jobs:
+  build:
+    # Скрипты проекта написаны под Windows PowerShell (пути с "\"), поэтому windows-latest.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Run tests
+        shell: pwsh
+        run: go test ./...
+
+      - name: Build binaries
+        shell: pwsh
+        run: ./scripts/build-qwdtt.ps1 -Version "${{ inputs.version }}" -Release "${{ inputs.release }}"
+
+      - name: Package IPK
+        shell: pwsh
+        run: ./scripts/package-qwdtt.ps1 -Version "${{ inputs.version }}" -Release "${{ inputs.release }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qwdtt-ipk-${{ inputs.version }}-${{ inputs.release }}
+          path: dist/ipk/*.ipk
+          if-no-files-found: error
